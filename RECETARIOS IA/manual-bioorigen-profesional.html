@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Recetas - Bio Origen</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --color-primary: #2D5016;
+            --color-secondary: #F97316;
+            --color-accent: #10B981;
+            --color-text: #1F2937;
+            --color-text-light: #6B7280;
+            --color-bg: #FFFFFF;
+            --color-bg-light: #F9FAFB;
+            --color-border: #E5E7EB;
+        }
+        
+        body {
+            font-family: 'Lora', serif;
+            color: var(--color-text);
+            line-height: 1.7;
+            background: var(--color-bg);
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            color: var(--color-primary);
+            font-weight: 900;
+            letter-spacing: -0.02em;
+        }
+        
+        h2 {
+            font-size: 2.25rem;
+            color: var(--color-primary);
+            border-bottom: 4px solid var(--color-secondary);
+            padding-bottom: 0.5rem;
+            margin-top: 3rem;
+        }
+        
+        h3 {
+            font-size: 1.75rem;
+            color: var(--color-text);
+        }
+        
+        h4 {
+            font-size: 1.25rem;
+            color: var(--color-text);
+            font-weight: 600;
+        }
+        
+        /* Portada */
+        .cover {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, var(--color-primary) 0%, #1a3009 100%);
+            color: white;
+            text-align: center;
+            page-break-after: always;
+            padding: 3rem;
+        }
+        
+        .cover-logo {
+            font-size: 5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .cover h1 {
+            color: white;
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .cover .subtitle {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 300;
+        }
+        
+        .cover .tagline {
+            font-size: 1.25rem;
+            margin-top: 2rem;
+            padding: 1rem 2rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .cover .version {
+            margin-top: 4rem;
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+        
+        /* Contenedor principal */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 3rem;
+        }
+        
+        /* Página */
+        .page {
+            page-break-after: always;
+        }
+        
+        .page:last-child {
+            page-break-after: auto;
+        }
+        
+        /* Índice */
+        .toc {
+            background: var(--color-bg-light);
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+        
+        .toc h2 {
+            border-bottom: none;
+            margin-top: 0;
+        }
+        
+        .toc ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .toc li {
+            padding: 0.75rem 0;
+            border-bottom: 1px dotted var(--color-border);
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .toc li:last-child {
+            border-bottom: none;
+        }
+        
+        .toc a {
+            color: var(--color-text);
+            text-decoration: none;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .toc a:hover {
+            color: var(--color-primary);
+        }
+        
+        /* Badges y etiquetas */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+            margin-right: 0.5rem;
+        }
+        
+        .badge-difficulty {
+            background: var(--color-accent);
+            color: white;
+        }
+        
+        .badge-time {
+            background: var(--color-secondary);
+            color: white;
+        }
+        
+        .badge-temp {
+            background: #EF4444;
+            color: white;
+        }
+        
+        /* Tarjeta de receta */
+        .recipe-card {
+            background: white;
+            border: 2px solid var(--color-border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        .recipe-header {
+            border-bottom: 3px solid var(--color-primary);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .recipe-header h3 {
+            margin: 0;
+            color: var(--color-primary);
+        }
+        
+        .recipe-meta {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        /* Listas */
+        ul, ol {
+            margin: 1rem 0;
+            padding-left: 2rem;
+        }
+        
+        li {
+            margin: 0.5rem 0;
+        }
+        
+        /* Cajas de información */
+        .info-box {
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            border-left: 4px solid;
+        }
+        
+        .info-box.tip {
+            background: #DBEAFE;
+            border-color: #3B82F6;
+        }
+        
+        .info-box.warning {
+            background: #FEF3C7;
+            border-color: #F59E0B;
+        }
+        
+        .info-box.important {
+            background: #FECACA;
+            border-color: #EF4444;
+        }
+        
+        .info-box .icon {
+            font-size: 1.5rem;
+            margin-right: 0.5rem;
+        }
+        
+        /* Tabla */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--color-border);
+        }
+        
+        th {
+            background: var(--color-primary);
+            color: white;
+            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
+        }
+        
+        tr:hover {
+            background: var(--color-bg-light);
+        }
+        
+        /* Código */
+        code, pre {
+            background: #1F2937;
+            color: #10B981;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        
+        pre {
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        
+        /* Sección numerada */
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2rem;
+            height: 2rem;
+            background: var(--color-secondary);
+            color: white;
+            border-radius: 50%;
+            font-weight: 700;
+            margin-right: 0.75rem;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        /* Footer */
+        .page-footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: var(--color-text-light);
+            font-size: 0.875rem;
+            border-top: 1px solid var(--color-border);
+            margin-top: 3rem;
+        }
+        
+        /* Estilo de impresión */
+        @media print {
+            body {
+                background: white;
+            }
+            
+            .page {
+                page-break-after: always;
+            }
+            
+            .cover {
+                page-break-after: always;
+            }
+            
+            h2, h3 {
+                page-break-after: avoid;
+            }
+            
+            .recipe-card {
+                page-break-inside: avoid;
+            }
+        }
+        
+        /* Separadores decorativos */
+        .separator {
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--color-secondary), transparent);
+            margin: 3rem 0;
+        }
+        
+        /* Checklist */
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .checklist li {
+            padding: 0.5rem 0;
+            padding-left: 2rem;
+            position: relative;
+        }
+        
+        .checklist li:before {
+            content: "□";
+            position: absolute;
+            left: 0;
+            font-size: 1.5rem;
+            color: var(--color-accent);
+        }
+    </style>
+</head>
+<body>
+
+<!-- PORTADA -->
+<div class="cover">
+    <div class="cover-logo">📖</div>
+    <h1>MANUAL DE RECETAS</h1>
+    <div class="subtitle">DESHIDRATADOR BIO ORIGEN</div>
+    <div class="tagline">
+        Guía Completa de Deshidratación de Alimentos<br>
+        3 Niveles: Básico | Intermedio | Avanzado
+    </div>
+    <div class="version">
+        Versión 1.0 - 2026<br>
+        Para modelos FA-6, FA-10T, FA-10MT
+    </div>
+</div>
+
+<!-- ÍNDICE -->
+<div class="page">
+    <div class="container">
+        <div class="toc">
+            <h2>📑 Índice</h2>
+            <ul>
+                <li><a href="#intro"><span>Introducción</span><span>3</span></a></li>
+                <li><a href="#consejos"><span>Consejos Generales</span><span>5</span></a></li>
+                <li><a href="#basico"><span>📗 Nivel Básico (5 recetas)</span><span>9</span></a></li>
+                <li><a href="#intermedio"><span>📘 Nivel Intermedio (4 recetas)</span><span>20</span></a></li>
+                <li><a href="#avanzado"><span>📕 Nivel Avanzado (3 recetas)</span><span>33</span></a></li>
+                <li><a href="#apendice"><span>📚 Apéndice y Recursos</span><span>47</span></a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- INTRODUCCIÓN -->
+<div class="page" id="intro">
+    <div class="container">
+        <h2>🎯 Introducción</h2>
+        
+        <h3>¿Qué es la deshidratación?</h3>
+        <p>La deshidratación es un método de conservación que elimina el agua de los alimentos mediante calor controlado y circulación de aire. Este proceso:</p>
+        
+        <ul>
+            <li><strong>Preserva nutrientes</strong> (hasta 95% de vitaminas y minerales)</li>
+            <li><strong>Extiende vida útil</strong> (hasta 12 meses)</li>
+            <li><strong>Reduce espacio</strong> de almacenamiento</li>
+            <li><strong>Concentra sabores</strong> naturales</li>
+            <li><strong>Elimina aditivos</strong> y conservantes</li>
+        </ul>
+        
+        <h3>Ventajas de usar un deshidratador Bio Origen</h3>
+        
+        <div class="recipe-card">
+            <ul>
+                <li>🌡️ <strong>Control preciso de temperatura</strong> (35°C - 70°C)</li>
+                <li>💨 <strong>Circulación uniforme de aire</strong></li>
+                <li>⚡ <strong>Eficiencia energética</strong></li>
+                <li>🔇 <strong>Funcionamiento silencioso</strong></li>
+                <li>🧼 <strong>Fácil limpieza</strong> con bandejas extraíbles</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- CONSEJOS GENERALES -->
+<div class="page" id="consejos">
+    <div class="container">
+        <h2>🛡️ Consejos Generales y Mejores Prácticas</h2>
+        
+        <h3>✨ Uso de láminas antiadherentes</h3>
+        
+        <div class="recipe-card">
+            <h4>¿Cuándo usar láminas?</h4>
+            <ul>
+                <li>Frutas muy jugosas (tomate, fresa, mango)</li>
+                <li>Purés y leather de frutas</li>
+                <li>Salsas y condimentos líquidos</li>
+                <li>Hierbas frescas pequeñas</li>
+            </ul>
+            
+            <h4>Beneficios:</h4>
+            <ul>
+                <li>Evita que los alimentos se peguen</li>
+                <li>Facilita la limpieza</li>
+                <li>Permite deshidratar líquidos y semi-líquidos</li>
+                <li>Reutilizables cientos de veces</li>
+            </ul>
+            
+            <div class="info-box tip">
+                <span class="icon">💡</span>
+                <strong>Tip Pro:</strong> Engrasa ligeramente con aceite de coco antes de usar para resultados aún mejores.
+            </div>
+        </div>
+        
+        <h3>🔪 Preparación de alimentos</h3>
+        
+        <div class="info-box important">
+            <span class="icon">⚠️</span>
+            <strong>Regla de oro:</strong> Cortar en tamaños uniformes para deshidratación pareja.
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Alimento</th>
+                    <th>Grosor Recomendado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Frutas</td>
+                    <td>3-5 mm</td>
+                </tr>
+                <tr>
+                    <td>Verduras</td>
+                    <td>3-6 mm</td>
+                </tr>
+                <tr>
+                    <td>Carnes (jerky)</td>
+                    <td>3-4 mm</td>
+                </tr>
+                <tr>
+                    <td>Hierbas</td>
+                    <td>Hojas enteras</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>🌡️ Temperaturas recomendadas</h3>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Temperatura</th>
+                    <th>Alimentos</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>35-40°C</strong></td>
+                    <td>Hierbas y especias</td>
+                </tr>
+                <tr>
+                    <td><strong>45-50°C</strong></td>
+                    <td>Frutas delicadas (fresas, kiwi)</td>
+                </tr>
+                <tr>
+                    <td><strong>55-60°C</strong></td>
+                    <td>Frutas firmes (manzana, pera)</td>
+                </tr>
+                <tr>
+                    <td><strong>60-65°C</strong></td>
+                    <td>Verduras</td>
+                </tr>
+                <tr>
+                    <td><strong>65-70°C</strong></td>
+                    <td>Carnes y pescados</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- NIVEL BÁSICO -->
+<div class="page" id="basico">
+    <div class="container">
+        <h2>📗 NIVEL BÁSICO</h2>
+        <p class="subtitle">Recetas simples y rápidas (30 minutos - 12 horas)</p>
+        
+        <div class="separator"></div>
+        
+        <!-- RECETA 1 -->
+        <div class="recipe-card">
+            <div class="recipe-header">
+                <h3>🍎 Chips de Manzana Clásica</h3>
+                <div class="recipe-meta">
+                    <span class="badge badge-difficulty">⭐ Muy Fácil</span>
+                    <span class="badge badge-time">⏱️ 6-8 horas</span>
+                    <span class="badge badge-temp">🌡️ 55°C</span>
+                </div>
+            </div>
+            
+            <h4>Ingredientes</h4>
+            <ul>
+                <li>4 manzanas (verdes, rojas o mix)</li>
+                <li>2 cucharadas de jugo de limón</li>
+                <li>1 taza de agua</li>
+                <li>Canela en polvo (opcional)</li>
+            </ul>
+            
+            <h4>Equipamiento necesario</h4>
+            <ul>
+                <li>Cuchillo afilado o mandolina</li>
+                <li>Bol grande</li>
+                <li>Bandejas del deshidratador</li>
+            </ul>
+            
+            <h4>Paso a paso</h4>
+            
+            <p><span class="step-number">1</span><strong>Preparación (10 min)</strong></p>
+            <ul>
+                <li>Lavar bien las manzanas</li>
+                <li>Remover el centro con descorazonador o cuchillo</li>
+                <li>Cortar en rodajas de 3-4 mm de grosor</li>
+            </ul>
+            
+            <div class="info-box tip">
+                <span class="icon">💡</span>
+                <strong>Tip:</strong> Usar mandolina para cortes uniformes
+            </div>
+            
+            <p><span class="step-number">2</span><strong>Pre-tratamiento (5 min)</strong></p>
+            <ul>
+                <li>Mezclar agua con jugo de limón en bol</li>
+                <li>Sumergir rodajas de manzana 5 minutos</li>
+                <li>Escurrir y secar con papel absorbente</li>
+            </ul>
+            
+            <div class="info-box warning">
+                <span class="icon">⚠️</span>
+                <strong>Importante:</strong> Este paso evita la oxidación
+            </div>
+            
+            <p><span class="step-number">3</span><strong>Deshidratación</strong></p>
+            <ul>
+                <li>Distribuir rodajas en bandejas SIN superposición</li>
+                <li>Dejar espacio entre cada rodaja para circulación de aire</li>
+                <li>Configurar deshidratador a 55°C</li>
+                <li>Tiempo: 6-8 horas</li>
+            </ul>
+            
+            <h4>Variaciones creativas</h4>
+            <ul>
+                <li><strong>Chips saladas:</strong> sal marina + pimienta</li>
+                <li><strong>Chips picantes:</strong> chile en polvo</li>
+                <li><strong>Chips dulces:</strong> azúcar de coco + vainilla</li>
+            </ul>
+        </div>
+        
+        <!-- Más recetas seguirían el mismo patrón... -->
+        
+    </div>
+</div>
+
+<!-- PIE DE PÁGINA -->
+<div class="page-footer">
+    <p><strong>Bio Origen</strong> - Manual de Recetas para Deshidratador</p>
+    <p>Versión 1.0 - 2026 | Modelos FA-6, FA-10T, FA-10MT</p>
+    <p>Para más información: <a href="https://bioorigen.com.ar">bioorigen.com.ar</a></p>
+</div>
+
+</body>
+</html>

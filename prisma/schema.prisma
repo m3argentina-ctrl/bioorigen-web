@@ -1,0 +1,199 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String   @db.Text
+  price       Float
+  salePrice   Float?
+  stock       Int
+  category    String
+  linea       String?
+  featured    Boolean  @default(false)
+  images      String[]
+  specs       Json?
+  dataSheet   String?
+  videoUrl    String?
+  weightGrams Int?
+  heightCm    Float?
+  widthCm     Float?
+  lengthCm    Float?
+  rating      Float?
+  reviewCount Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Recipe {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  emoji       String   @default("🌿")
+  description String   @db.Text
+  category    String
+  difficulty  String
+  time        String
+  temperature String
+  ingredients String[]
+  equipment   String[]
+  steps       String[]
+  variations  String[]
+  uses        String[]
+  image       String   @default("")
+  images      String[]
+  featured    Boolean  @default(false)
+  season      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      String   @default("admin")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Banner {
+  id          String   @id @default(cuid())
+  title       String
+  subtitle    String?
+  description String?  @db.Text
+  image       String
+  buttonText  String?
+  buttonLink  String?
+  bgColor     String   @default("#4A7C59")
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([order])
+  @@index([active])
+}
+
+model ValueProp {
+  id        String   @id @default(cuid())
+  icon      String   @default("Sprout")
+  title     String
+  text      String
+  order     Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([order])
+  @@index([active])
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  image       String?
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([order])
+  @@index([active])
+}
+
+model SiteConfig {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String   @db.Text
+  description String?
+  updatedAt   DateTime @updatedAt
+}
+
+model Order {
+  id                 String   @id @default(cuid())
+  customerEmail      String
+  customerName       String
+  customerPhone      String
+  customerAddress    String   @db.Text
+  items              Json
+  subtotal           Float
+  shipping           Float
+  discount           Float    @default(0)
+  total              Float
+  status             String   @default("pending")
+  paymentMethod      String   @default("mercadopago")
+  mercadoPagoId      String?
+  paymentStatus      String?
+  shippingCarrier    String?
+  shippingMethod     String?
+  shippingIsFree     Boolean  @default(false)
+  shippingFreeReason String?
+  openpayId          String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([customerEmail])
+  @@index([status])
+}
+
+model PaymentConfig {
+  id                   String   @id @default(cuid())
+  bankTransferEnabled  Boolean  @default(false)
+  bankTransferDiscount Int      @default(0)
+  bankName             String   @default("")
+  bankHolder           String   @default("")
+  bankCbu              String   @default("")
+  bankAlias            String   @default("")
+  bankNote             String   @default("")
+  openpayEnabled       Boolean  @default(false)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+}
+
+model ShippingConfig {
+  id                String   @id @default(cuid())
+  andreaniEnabled   Boolean  @default(true)
+  andreaniDomicilio Float    @default(13000)
+  andreaniSucursal  Float    @default(11000)
+  andreaniDays      String   @default("2-4 días")
+  andreaniInsurance Boolean  @default(true)
+  correoEnabled     Boolean  @default(true)
+  correoDomicilio   Float    @default(19000)
+  correoSucursal    Float    @default(16000)
+  correoDays        String   @default("6-10 días")
+  correoInsurance   Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model FreeShippingConfig {
+  id            String    @id @default(cuid())
+  enabled       Boolean   @default(true)
+  name          String
+  type          String    @default("minimum_amount")
+  minimumAmount Float?
+  campaignName  String?
+  startDate     DateTime?
+  endDate       DateTime?
+  freeZipCodes  String[]  @default([])
+  productIds    String[]  @default([])
+  categories    String[]  @default([])
+  couponCode    String?
+  applyAndreani Boolean   @default(true)
+  applyCorreo   Boolean   @default(true)
+  priority      Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}

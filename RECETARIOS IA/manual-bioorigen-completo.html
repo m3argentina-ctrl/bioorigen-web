@@ -1,0 +1,1761 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Recetas - Bio Origen</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --color-primary: #2D5016;
+            --color-secondary: #F97316;
+            --color-accent: #10B981;
+            --color-text: #1F2937;
+            --color-text-light: #6B7280;
+            --color-bg: #FFFFFF;
+            --color-bg-light: #F9FAFB;
+            --color-border: #E5E7EB;
+        }
+        
+        body {
+            font-family: 'Lora', serif;
+            color: var(--color-text);
+            line-height: 1.7;
+            background: var(--color-bg);
+            font-size: 11pt;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            page-break-after: avoid;
+        }
+        
+        h1 { font-size: 2.5rem; color: var(--color-primary); font-weight: 900; }
+        h2 { font-size: 1.75rem; color: var(--color-primary); border-bottom: 3px solid var(--color-secondary); padding-bottom: 0.5rem; margin-top: 2rem; }
+        h3 { font-size: 1.4rem; color: var(--color-text); }
+        h4 { font-size: 1.1rem; color: var(--color-text); font-weight: 600; }
+        
+        .cover {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, var(--color-primary) 0%, #1a3009 100%);
+            color: white;
+            text-align: center;
+            page-break-after: always;
+            padding: 3rem;
+        }
+        
+        .cover h1 { color: white; font-size: 3.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .cover .subtitle { font-size: 1.5rem; font-family: 'Montserrat', sans-serif; font-weight: 300; margin-top: 1rem; }
+        .cover .tagline { font-size: 1.1rem; margin-top: 2rem; padding: 1rem 2rem; background: rgba(255,255,255,0.1); border-radius: 50px; }
+        .cover .version { margin-top: 3rem; opacity: 0.8; }
+        
+        .container { max-width: 900px; margin: 0 auto; padding: 1.5rem 2rem; }
+        .page { page-break-after: always; }
+        .page:last-child { page-break-after: auto; }
+        
+        ul, ol { margin: 0.75rem 0; padding-left: 2rem; }
+        li { margin: 0.4rem 0; }
+        
+        .recipe-card {
+            background: white;
+            border: 2px solid var(--color-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            page-break-inside: avoid;
+        }
+        
+        .recipe-header {
+            border-bottom: 3px solid var(--color-primary);
+            padding-bottom: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+            margin-right: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .badge-difficulty { background: var(--color-accent); color: white; }
+        .badge-time { background: var(--color-secondary); color: white; }
+        .badge-temp { background: #EF4444; color: white; }
+        
+        .info-box {
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border-left: 4px solid;
+            page-break-inside: avoid;
+        }
+        
+        .info-box.tip { background: #DBEAFE; border-color: #3B82F6; }
+        .info-box.warning { background: #FEF3C7; border-color: #F59E0B; }
+        .info-box.important { background: #FECACA; border-color: #EF4444; }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            page-break-inside: avoid;
+        }
+        
+        th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--color-border); }
+        th { background: var(--color-primary); color: white; font-weight: 600; font-family: 'Montserrat', sans-serif; }
+        tr:last-child td { border-bottom: none; }
+        
+        code, pre {
+            background: #1F2937;
+            color: #10B981;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        pre { padding: 1rem; overflow-x: auto; margin: 1rem 0; }
+        
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.75rem;
+            height: 1.75rem;
+            background: var(--color-secondary);
+            color: white;
+            border-radius: 50%;
+            font-weight: 700;
+            margin-right: 0.5rem;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+        }
+        
+        .separator {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--color-secondary), transparent);
+            margin: 2rem 0;
+        }
+        
+        .page-footer {
+            text-align: center;
+            padding: 1.5rem 0;
+            color: var(--color-text-light);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--color-border);
+            margin-top: 2rem;
+        }
+        
+        @media print {
+            body { background: white; }
+            .page { page-break-after: always; }
+            .cover { page-break-after: always; }
+            h2, h3 { page-break-after: avoid; }
+            .recipe-card, .info-box, table { page-break-inside: avoid; }
+        }
+        
+        p { margin: 0.5rem 0; }
+        strong { font-weight: 600; color: var(--color-text); }
+        em { font-style: italic; }
+        
+        .level-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            margin: 1rem 0;
+        }
+        
+        .level-basico { background: #D1FAE5; color: #065F46; }
+        .level-intermedio { background: #DBEAFE; color: #1E40AF; }
+        .level-avanzado { background: #FEE2E2; color: #991B1B; }
+    </style>
+</head>
+<body>
+
+<div class="cover">
+    <div style="font-size: 4rem; margin-bottom: 2rem;">📖</div>
+    <h1>MANUAL DE RECETAS</h1>
+    <div class="subtitle">DESHIDRATADOR BIO ORIGEN</div>
+    <div class="tagline">
+        Guía Completa de Deshidratación de Alimentos<br>
+        3 Niveles: Básico | Intermedio | Avanzado
+    </div>
+    <div class="version">
+        Versión 1.0 - 2026<br>
+        Modelos FA-6, FA-10T, FA-10MT
+    </div>
+</div>
+
+<div class="container">
+<h1>📖 MANUAL DE RECETAS - DESHIDRATADOR BIO ORIGEN</h1>
+<h2>Guía Completa de Deshidratación de Alimentos</h2>
+<h4>3 Niveles: Básico | Intermedio | Avanzado</h4>
+<div class="separator"></div>
+<h2>🎯 INTRODUCCIÓN</h2>
+<h4>¿Qué es la deshidratación?</h4>
+<p>La deshidratación es un método de conservación que elimina el agua de los alimentos mediante calor controlado y circulación de aire. Este proceso:</p>
+<ul>
+<li>✅ <strong>Preserva nutrientes</strong> (hasta 95% de vitaminas y minerales)</li>
+<li>✅ <strong>Extiende vida útil</strong> (hasta 12 meses)</li>
+<li>✅ <strong>Reduce espacio</strong> de almacenamiento</li>
+<li>✅ <strong>Concentra sabores</strong> naturales</li>
+<li>✅ <strong>Elimina aditivos</strong> y conservantes</li>
+</ul>
+<h4>Ventajas de usar un deshidratador Bio Origen</h4>
+<ul>
+<li>🌡️ <strong>Control preciso de temperatura</strong> (35°C - 70°C)</li>
+<li>💨 <strong>Circulación uniforme de aire</strong></li>
+<li>⚡ <strong>Eficiencia energética</strong></li>
+<li>🔇 <strong>Funcionamiento silencioso</strong></li>
+<li>🧼 <strong>Fácil limpieza</strong> con bandejas extraíbles</li>
+</ul>
+<div class="separator"></div>
+<h2>🛡️ CONSEJOS GENERALES Y MEJORES PRÁCTICAS</h2>
+<h4>✨ Uso de láminas antiadherentes</h4>
+<p><strong>¿Cuándo usar láminas?</strong></p>
+<ul>
+<li>Frutas muy jugosas (tomate, fresa, mango)</li>
+<li>Purés y leather de frutas</li>
+<li>Salsas y condimentos líquidos</li>
+<li>Hierbas frescas pequeñas</li>
+</ul>
+<p><strong>Beneficios:</strong></p>
+<ul>
+<li>Evita que los alimentos se peguen</li>
+<li>Facilita la limpieza</li>
+<li>Permite deshidratar líquidos y semi-líquidos</li>
+<li>Reutilizables cientos de veces</li>
+</ul>
+<p><strong>Tip Pro:</strong> Engrasa ligeramente con aceite de coco antes de usar para resultados aún mejores.</p>
+<h4>🔪 Preparación de alimentos</h4>
+<p><strong>Regla de oro:</strong> Cortar en tamaños uniformes para deshidratación pareja.</p>
+<p><strong>Grosores recomendados:</strong></p>
+<ul>
+<li>Frutas: 3-5 mm</li>
+<li>Verduras: 3-6 mm</li>
+<li>Carnes (jerky): 3-4 mm</li>
+<li>Hierbas: hojas enteras</li>
+</ul>
+<p><strong>Pre-tratamientos:</strong></p>
+<p><strong>Baño ácido</strong> (para frutas que se oxidan):</p>
+<ul>
+<li>1 taza agua + 2 cdas jugo de limón</li>
+<li>Sumergir 5 minutos</li>
+</ul>
+<p><strong>Blanqueado</strong> (para vegetales):</p>
+<ul>
+<li>Hervir 2-3 minutos</li>
+<li>Enfriar en agua helada</li>
+<li>Secar bien antes de deshidratar</li>
+</ul>
+<h4>🌡️ Temperaturas recomendadas</h4>
+<pre><code>
+35-40°C → Hierbas y especias
+45-50°C → Frutas delicadas (fresas, kiwi)
+55-60°C → Frutas firmes (manzana, pera)
+60-65°C → Verduras
+65-70°C → Carnes y pescados
+</code></pre>
+<h4>📦 Almacenamiento correcto</h4>
+<p><strong>Enfriamiento completo:</strong> Esperar 30-60 min antes de guardar</p>
+<p><strong>Test de humedad:</strong> Doblar la pieza - debe quebrarse, no doblarse</p>
+<p><strong>Recipientes herméticos:</strong> Frascos de vidrio o bolsas selladas al vacío</p>
+<p><strong>Lugar fresco y oscuro:</strong> Despensa cerrada o alacena</p>
+<p><strong>Etiquetado:</strong> Fecha de elaboración y tipo de alimento</p>
+<p><strong>Vida útil:</strong></p>
+<ul>
+<li>Frutas: 6-12 meses</li>
+<li>Verduras: 8-12 meses</li>
+<li>Hierbas: 12-18 meses</li>
+<li>Carnes: 1-2 meses (refrigeradas)</li>
+</ul>
+<div class="separator"></div>
+<div class="page"><span class="level-badge level-basico">📗 NIVEL BÁSICO</span>
+<h2>Recetas simples y rápidas (30 minutos - 12 horas)</h2>
+<div class="separator"></div>
+<div class="recipe-card"><div class="recipe-header"><h3>🍎 RECETA 1: CHIPS DE MANZANA CLÁSICA</h3>
+<div class="recipe-meta"><span class="badge badge-difficulty">⭐ Muy Fácil</span>
+<span class="badge badge-time">⏱️ 6-8 horas</span>
+<span class="badge badge-temp">🌡️ 55°C</span></div>
+<h4>Ingredientes</h4>
+<ul>
+<li>4 manzanas (verdes, rojas o mix)</li>
+<li>2 cucharadas de jugo de limón</li>
+<li>1 taza de agua</li>
+<li>Canela en polvo (opcional)</li>
+</ul>
+<h4>Equipamiento necesario</h4>
+<ul>
+<li>Cuchillo afilado o mandolina</li>
+<li>Bol grande</li>
+<li>Bandejas del deshidratador</li>
+</ul>
+<h4>Paso a paso</h4>
+<p><span class="step-number">1</span><strong>Preparación (10 min)</strong></p>
+<ul>
+<li>Lavar bien las manzanas</li>
+<li>Remover el centro con descorazonador o cuchillo</li>
+<li>Cortar en rodajas de 3-4 mm de grosor</li>
+</ul>
+<div class="info-box tip"><span style="font-size: 1.5rem; margin-right: 0.5rem;">💡</span>**Tip:** Usar mandolina para cortes uniformes</div>
+<p><span class="step-number">2</span><strong>Pre-tratamiento (5 min)</strong></p>
+<ul>
+<li>Mezclar agua con jugo de limón en bol</li>
+<li>Sumergir rodajas de manzana 5 minutos</li>
+<li>Escurrir y secar con papel absorbente</li>
+</ul>
+<div class="info-box warning"><span style="font-size: 1.5rem; margin-right: 0.5rem;">⚠️</span>**Importante:** Este paso evita la oxidación</div>
+<p><span class="step-number">3</span><strong>Condimentado (opcional)</strong></p>
+<ul>
+<li>Espolvorear canela en ambos lados</li>
+<li>Probar también con: jengibre, cardamomo, o sin nada</li>
+</ul>
+<p><span class="step-number">4</span><strong>Colocación</strong></p>
+<ul>
+<li>Distribuir rodajas en bandejas SIN superposición</li>
+<li>Dejar espacio entre cada rodaja para circulación de aire</li>
+</ul>
+<p><span class="step-number">5</span><strong>Deshidratación</strong></p>
+<ul>
+<li>Configurar deshidratador a 55°C</li>
+<li>Tiempo: 6-8 horas</li>
+<li>Revisar a las 6 horas</li>
+</ul>
+<p><span class="step-number">6</span><strong>Test de cocción</strong></p>
+<ul>
+<li>Las chips deben estar secas al tacto</li>
+<li>Flexibles pero no blandas</li>
+<li>Si están húmedas: continuar 1-2 horas más</li>
+</ul>
+<p><span class="step-number">7</span><strong>Enfriamiento y almacenamiento</strong></p>
+<ul>
+<li>Dejar enfriar completamente (30 min)</li>
+<li>Guardar en frasco hermético de vidrio</li>
+<li>Duración: 6-12 meses</li>
+</ul>
+<h4>Variaciones creativas</h4>
+<ul>
+<li><strong>Chips saladas:</strong> sal marina + pimienta</li>
+<li><strong>Chips picantes:</strong> chile en polvo</li>
+<li><strong>Chips dulces:</strong> azúcar de coco + vainilla</li>
+</ul>
+<h4>Usos sugeridos</h4>
+<ul>
+<li>Snack directo</li>
+<li>Decoración de postres</li>
+<li>En cereales o yogur</li>
+<li>Para niños (lunch box)</li>
+</ul>
+<div class="separator"></div>
+<div class="recipe-card"><div class="recipe-header"><h3>🍌 RECETA 2: PLÁTANOS DESHIDRATADOS</h3>
+<div class="recipe-meta"><span class="badge badge-difficulty">⭐ Muy Fácil</span>
+<span class="badge badge-time">⏱️ 8-12 horas</span>
+<span class="badge badge-temp">🌡️ 55°C</span></div>
+<h4>Ingredientes</h4>
+<ul>
+<li>4-6 plátanos maduros (pero firmes)</li>
+<li>Jugo de limón (opcional, para sabor)</li>
+</ul>
+<h4>Paso a paso</h4>
+<p><span class="step-number">1</span><strong>Selección</strong></p>
+<ul>
+<li>Elegir plátanos amarillos con puntos marrones</li>
+<li>Evitar plátanos verdes (muy duros)</li>
+<li>Evitar plátanos muy maduros (muy blandos)</li>
+</ul>
+<p><span class="step-number">2</span><strong>Preparación</strong></p>
+<ul>
+<li>Pelar los plátanos</li>
+<li>Cortar en rodajas de 4-5 mm</li>
+<li>Alternar corte: rodajas o diagonal</li>
+</ul>
+<div class="info-box tip"><span style="font-size: 1.5rem; margin-right: 0.5rem;">💡</span>**Tip:** Corte diagonal = chips más grandes y vistosas</div>
+<p><span class="step-number">3</span><strong>Pre-tratamiento (opcional)</strong></p>
+<ul>
+<li>Rociar con jugo de limón</li>
+<li>Esto añade un toque ácido y previene oscurecimiento</li>
+</ul>
+<p><span class="step-number">4</span><strong>Deshidratación</strong></p>
+<ul>
+<li>Colocar en bandejas sin superposición</li>
+<li>Temperatura: 55°C</li>
+<li>Tiempo: 8-12 horas (depende del grosor)</li>
+</ul>
+<p><span class="step-number">5</span><strong>Punto perfecto</strong></p>
+<ul>
+<li>Textura crocante como chip</li>
+<li>Color marrón claro/dorado</li>
+<li>No deben estar pegajosas</li>
+</ul>
+<h4>Variaciones</h4>
+<ul>
+<li><strong>Plátano crujiente:</strong> corte fino (3mm) + 60°C</li>
+<li><strong>Plátano masticable:</strong> corte grueso (6mm) + 50°C</li>
+<li><strong>Plátano chocolate:</strong> bañar en chocolate derretido después</li>
+</ul>
+<div class="separator"></div>
+<div class="recipe-card"><div class="recipe-header"><h3>🍓 RECETA 3: FRESAS DESHIDRATADAS</h3>
+<div class="recipe-meta"><span class="badge badge-difficulty">⭐ Fácil</span>
+<span class="badge badge-time">⏱️ 8-12 horas</span>
+<span class="badge badge-temp">🌡️ 50°C</span></div>
+<h4>Ingredientes</h4>
+<ul>
+<li>500g fresas frescas</li>
+<li>Láminas antiadherentes (recomendado)</li>
+</ul>
+<h4>Paso a paso</h4>
+<p><span class="step-number">1</span><strong>Limpieza</strong></p>
+<ul>
+<li>Lavar fresas bajo agua fría</li>
+<li>Remover tallos verdes</li>
+<li>Secar completamente con papel</li>
+</ul>
+<p><span class="step-number">2</span><strong>Corte</strong></p>
+<ul>
+<li>Fresas pequeñas: mitades</li>
+<li>Fresas grandes: cuartos o rodajas de 5mm</li>
+</ul>
+<p>⚠️ <strong>Clave:</strong> Todas del mismo tamaño</p>
+<p><span class="step-number">3</span><strong>Colocación</strong></p>
+<ul>
+<li>Usar láminas antiadherentes</li>
+<li>Distribuir sin que se toquen</li>
+</ul>
+<p>💡 <strong>Por qué láminas:</strong> Las fresas son muy jugosas y podrían gotear</p>
+<p><span class="step-number">4</span><strong>Deshidratación</strong></p>
+<ul>
+<li>50°C durante 8-12 horas</li>
+<li>Revisar a las 8 horas</li>
+<li>Deben estar secas pero flexibles</li>
+</ul>
+<p><span class="step-number">5</span><strong>Resultado final</strong></p>
+<ul>
+<li>Textura gomosa/masticable</li>
+<li>No deben estar crujientes</li>
+<li>Color rojo oscuro intenso</li>
+</ul>
+<h4>Usos</h4>
+<ul>
+<li>Cereales y granola</li>
+<li>Té de frutas casero</li>
+<li>Decoración de tortas</li>
+<li>Trail mix energético</li>
+</ul>
+<div class="separator"></div>
+<div class="recipe-card"><div class="recipe-header"><h3>🥕 RECETA 4: CHIPS DE ZANAHORIA</h3>
+<div class="recipe-meta"><span class="badge badge-difficulty">⭐ Fácil</span>
+<span class="badge badge-time">⏱️ 6-10 horas</span>
+<span class="badge badge-temp">🌡️ 60°C</span></div>
+<h4>Ingredientes</h4>
+<ul>
+<li>6 zanahorias grandes</li>
+<li>1 cucharadita de sal</li>
+<li>1/2 cucharadita de ajo en polvo</li>
+<li>1/2 cucharadita de pimentón dulce</li>
+</ul>
+<h4>Paso a paso</h4>
+<p><span class="step-number">1</span><strong>Preparación</strong></p>
+<ul>
+<li>Pelar zanahorias</li>
+<li>Cortar en rodajas finas (2-3mm) con mandolina</li>
+</ul>
+<div class="info-box tip"><span style="font-size: 1.5rem; margin-right: 0.5rem;">💡</span>**Tip:** Cuanto más fino, más crocante</div>
+<p><span class="step-number">2</span><strong>Condimentado</strong></p>
+<ul>
+<li>Mezclar especias en bol pequeño</li>
+<li>Espolvorear sobre rodajas</li>
+<li>Mezclar bien con las manos</li>
+</ul>
+<p><span class="step-number">3</span><strong>Deshidratación</strong></p>
+<ul>
+<li>Distribuir en bandejas</li>
+<li>60°C por 6-10 horas</li>
+<li>Revisar cada 2 horas después de las 6h</li>
+</ul>
+<p><span class="step-number">4</span><strong>Test de crujiente</strong></p>
+<ul>
+<li>Deben quebrar al doblar</li>
+<li>Sonido crocante al morder</li>
+<li>Si están blandas: 1-2 horas más</li>
+</ul>
+<h4>Variaciones</h4>
+<ul>
+<li><strong>Chips dulces:</strong> canela + azúcar mascabo</li>
+<li><strong>Chips picantes:</strong> cayena + comino</li>
+<li><strong>Chips herbales:</strong> romero + tomillo</li>
+</ul>
+<div class="separator"></div>
+<div class="recipe-card"><div class="recipe-header"><h3>🌿 RECETA 5: HIERBAS AROMÁTICAS</h3>
+<div class="recipe-meta"><span class="badge badge-difficulty">⭐ Muy Fácil</span>
+<span class="badge badge-time">⏱️ 2-4 horas</span>
+<span class="badge badge-temp">🌡️ 35°C</span></div>
+<h4>Hierbas recomendadas</h4>
+<ul>
+<li>Perejil</li>
+<li>Cilantro</li>
+<li>Albahaca</li>
+<li>Orégano</li>
+<li>Tomillo</li>
+<li>Romero</li>
+</ul>
+<h4>Paso a paso</h4>
+<p><span class="step-number">1</span><strong>Cosecha</strong></p>
+<ul>
+<li>Cortar en la mañana después del rocío</li>
+<li>Elegir hojas frescas y verdes</li>
+<li>Descartar hojas amarillas o marchitas</li>
+</ul>
+<p><span class="step-number">2</span><strong>Limpieza</strong></p>
+<ul>
+<li>Lavar suavemente bajo agua fría</li>
+<li>Sacudir exceso de agua</li>
+<li>Secar con papel absorbente o centrifugadora de lechugas</li>
+</ul>
+<div class="info-box warning"><span style="font-size: 1.5rem; margin-right: 0.5rem;">⚠️</span>**Crítico:** Deben estar completamente secas</div>
+<p><span class="step-number">3</span><strong>Preparación</strong></p>
+<ul>
+<li>Separar hojas de tallos (opcional)</li>
+<li>Dejar hojas enteras o picadas gruesas</li>
+</ul>
+<p><span class="step-number">4</span><strong>Deshidratación</strong></p>
+<ul>
+<li>Distribuir en una sola capa</li>
+<li>35°C por 2-4 horas</li>
+<li>Revisar cada hora</li>
+</ul>
+<p>💡 <strong>Por qué baja temperatura:</strong> Preserva aceites esenciales y aroma</p>
+<p><span class="step-number">5</span><strong>Punto perfecto</strong></p>
+<ul>
+<li>Hojas crujientes que se desmenuzan</li>
+<li>Color verde oscuro</li>
+<li>Aroma intenso</li>
+</ul>
+<p><span class="step-number">6</span><strong>Almacenamiento</strong></p>
+<ul>
+<li>Triturar con mortero o molinillo (opcional)</li>
+<li>Guardar en frascos de vidrio oscuro</li>
+<li>Etiqueta con nombre y fecha</li>
+<li>Duración: 12-18 meses</li>
+</ul>
+<h4>Usos</h4>
+<ul>
+<li>Condimento para cocina</li>
+<li>Tés e infusiones</li>
+<li>Sales de hierbas caseras</li>
+<li>Aceites aromáticos</li>
+</ul>
+<div class="separator"></div>
+<div class="page"><span class="level-badge level-intermedio">📘 NIVEL INTERMEDIO</span>
+<h2>Recetas con más pasos y técnicas</h2>
+<div class="separator"></div>
+<div class="recipe-card"><div class="recipe-header"><h3>🍅 RECETA 6: TOMATES SECOS EN ACEITE</h3>
+<div class="recipe-meta"><span class="badge badge-difficulty">⭐⭐ Intermedio</span>
+<span class="badge badge-time">⏱️ 8-12 horas deshidratación + 24h maceración</span>
+<span class="badge badge-temp">🌡️ 60°C</span></div>
+<h4>Ingredientes</h4>
+<p><strong>Para deshidratar:</strong></p>
+<ul>
+<li>1 kg tomates peritas (roma)</li>
+<li>1 cucharadita sal gruesa</li>
+<li>1/2 cucharadita azúcar</li>
+<li>Láminas antiadherentes</li>
+</ul>
+<p><strong>Para conserva:</strong></p>
+<ul>
+<li>300 ml aceite de oliva extra virgen</li>
+<li>4 dientes de ajo laminados</li>
+<li>1 ramita romero fresco</li>
+<li>1 ramita tomillo fresco</li>
+<li>1 cucharadita orégano seco</li>
+<li>1/2 cucharadita pimienta negra</li>
+</ul>
+<h4>Paso a paso</h4>
+<p><strong>PARTE 1: Deshidratación</strong></p>
+<p><span class="step-number">1</span><strong>Selección</strong></p>
+<ul>
+<li>Elegir tomates peritas maduros pero firmes</li>
+<li>Sin magulladuras ni partes blandas</li>
+</ul>
+<p><span class="step-number">2</span><strong>Corte</strong></p>
+<ul>
+<li>Lavar y secar tomates</li>
+<li>Cortar por la mitad a lo largo</li>
+<li>Remover semillas con cucharita (opcional)</li>
+</ul>
+<div class="info-box tip"><span style="font-size: 1.5rem; margin-right: 0.5rem;">💡</span>**Tip:** Remover semillas = deshidratación más rápida</div>
+<p><span class="step-number">3</span><strong>Pre-salado</strong></p>
+<ul>
+<li>Colocar mitades con corte hacia arriba</li>
+<li>Espolvorear sal y azúcar</li>
+<li>Dejar reposar 15 minutos (sueltan agua)</li>
+</ul>
+<p><span class="step-number">4</span><strong>Colocación</strong></p>
+<ul>
+<li>Usar láminas antiadherentes</li>
+<li>Corte hacia arriba</li>
+<li>No superponer</li>
+</ul>
+<p><span class="step-number">5</span><strong>Deshidratación</strong></p>
+<ul>
+<li>60°C durante 8-12 horas</li>
+<li>Revisar a las 8 horas</li>
+<li>Deben estar secos pero flexibles</li>
+<li>NO completamente crocantes</li>
+</ul>
+<p><span class="step-number">6</span><strong>Test de punto</strong></p>
+<ul>
+<li>Textura gomosa</li>
+<li>No deben soltar líquido al presionar</li>
+<li>Color rojo intenso oscuro</li>
+</ul>
+<p><strong>PARTE 2: Conserva en aceite</strong></p>
+<p><span class="step-number">7</span><strong>Esterilización del frasco</strong></p>
+<ul>
+<li>Hervir frasco de vidrio 10 minutos</li>
+<li>Dejar secar completamente</li>
+</ul>
+<p><span class="step-number">8</span><strong>Armado de capas</strong></p>
+<ul>
+<li>Capa de tomates secos</li>
+<li>Ajo laminado + hierbas</li>
+<li>Repetir hasta llenar frasco</li>
+<li>Presionar suavemente</li>
+</ul>
+<p><span class="step-number">9</span><strong>Cubrimiento con aceite</strong></p>
+<ul>
+<li>Verter aceite de oliva hasta cubrir completamente</li>
+<li>Dejar 1cm de espacio arriba</li>
+<li>Eliminar burbujas con cuchillo</li>
+</ul>
+<p><span class="step-number">10</span><strong>Maceración</strong></p>
+<ul>
+<li>Tapar herméticamente</li>
+<li>Dejar en heladera 24-48 horas antes de usar</li>
+<li>Agitar suavemente cada 12 horas</li>
+</ul>
+<h4>Almacenamiento</h4>
+<ul>
+<li>Refrigerado: 2-3 meses</li>
+<li>Siempre cubrir con aceite</li>
+<li>Usar cuchara limpia para servir</li>
+</ul>
+<h4>Usos gourmet</h4>
+<ul>
+<li>Bruschetta italiana</li>
+<li>Ensalada caprese</li>
+<li>Pasta con tomates secos</li>
+<li>Pizza casera</li>
+<li>Focaccia</li>
+<li>Quesos y tabla de fiambres</li>
+</ul>
+<div class="separator"></div>
+<div class="recipe-card"><div class="recipe-header"><h3>🥔 RECETA 7: CHIPS DE VEGETALES MIXTOS</h3>
+<div class="recipe-meta"><span class="badge badge-difficulty">⭐⭐ Intermedio</span>
+<span class="badge badge-time">⏱️ 8-12 horas</span>
+<span class="badge badge-temp">🌡️ 60-65°C</span></div>
+<h4>Ingredientes</h4>
+<p><strong>Vegetales (elegir 3-4):</strong></p>
+<ul>
+<li>2 remolachas medianas</li>
+<li>2 batatas/boniatos</li>
+<li>2 zanahorias grandes</li>
+<li>1 calabacín/zucchini</li>
+<li>1 berenjena</li>
+</ul>
+<p><strong>Condimentos base:</strong></p>
+<ul>
+<li>2 cucharadas aceite de oliva</li>
+<li>1 cucharadita sal marina</li>
+<li>1/2 cucharadita pimienta negra</li>
+</ul>
+<p><strong>Mezclas de especias (elegir):</strong></p>
+<p><em>Mezcla BBQ:</em></p>
+<ul>
+<li>1 cdta pimentón ahumado</li>
+<li>1/2 cdta ajo en polvo</li>
+<li>1/2 cdta cebolla en polvo</li>
+<li>1/4 cdta cayena</li>
+</ul>
+<p><em>Mezcla Mediterránea:</em></p>
+<ul>
+<li>1 cdta orégano</li>
+<li>1/2 cdta albahaca</li>
+<li>1/2 cdta tomillo</li>
+<li>1/4 cdta romero</li>
+</ul>
+<p><em>Mezcla Oriental:</em></p>
+<ul>
+<li>1 cdta jengibre en polvo</li>
+<li>1/2 cdta ajo en polvo</li>
+<li>1/4 cdta cinco especias chinas</li>
+</ul>
+<h4>Paso a paso</h4>
+<p><span class="step-number">1</span><strong>Preparación base</strong></p>
+<ul>
+<li>Lavar todos los vegetales</li>
+<li>Pelar remolachas y batatas</li>
+<li>Dejar piel en zanahorias (opcional)</li>
+</ul>
+<p><span class="step-number">2</span><strong>Corte uniforme</strong></p>
+<ul>
+<li>Usar mandolina a 2-3mm</li>
+<li>Mantener mismo grosor en todos</li>
+<li>Más fino = más crocante</li>
+</ul>
+<p>⚠️ <strong>Seguridad:</strong> Usar protector de dedos en mandolina</p>
+<p><span class="step-number">3</span><strong>Pre-tratamiento por vegetal</strong></p>
+<p><em>Remolacha:</em></p>
+<ul>
+<li>Sumergir en agua fría 5 min</li>
+<li>Secar completamente</li>
+</ul>
+<p><em>Batata:</em></p>
+<ul>
+<li>Sumergir en agua con limón 5 min</li>
+<li>Secar bien</li>
+</ul>
+<p><em>Berenjena:</em></p>
+<ul>
+<li>Salar y dejar 10 min</li>
+<li>Enjuagar y secar</li>
+</ul>
+<p><em>Calabacín:</em></p>
+<ul>
+<li>Secar muy bien (tiene mucha agua)</li>
+</ul>
+<p><span class="step-number">4</span><strong>Marinado</strong></p>
+<ul>
+<li>En bol grande: aceite + especias elegidas</li>
+<li>Agregar rodajas de UN vegetal a la vez</li>
+<li>Mezclar bien con manos</li>
+<li>Repetir con cada tipo</li>
+</ul>
+<p>💡 <strong>Pro tip:</strong> Un bol por cada vegetal con distinta mezcla</p>
+<p><span class="step-number">5</span><strong>Distribución</strong></p>
+<ul>
+<li>Colocar cada tipo en bandeja separada</li>
+<li>NO mezclar en misma bandeja (tiempos diferentes)</li>
+<li>Sin superposición</li>
+</ul>
+<p><span class="step-number">6</span><strong>Deshidratación escalonada</strong></p>
+<p><em>Inicio:</em></p>
+<ul>
+<li>Comenzar con remolacha y zanahoria (60°C, 10-12h)</li>
+</ul>
+<p><em>Después de 2h:</em></p>
+<ul>
+<li>Agregar batata (60°C, 8-10h)</li>
+</ul>
+<p><em>Después de 4h:</em></p>
+<ul>
+<li>Agregar calabacín y berenjena (65°C, 6-8h)</li>
+</ul>
+<p>💡 <strong>Por qué escalonado:</strong> Cada vegetal tiene distinto contenido de agua</p>
+<p><span class="step-number">7</span><strong>Monitoreo</strong></p>
+<ul>
+<li>Revisar cada vegetal independientemente</li>
+<li>Remover las que estén listas</li>
+<li>Continuar con las que faltan</li>
+</ul>
+<p><span class="step-number">8</span><strong>Test de crocancia</strong></p>
+<ul>
+<li>Deben quebrar al doblar</li>
+<li>Sonido crocante</li>
+<li>Sin partes blandas</li>
+</ul>
+<p><span class="step-number">9</span><strong>Enfriamiento</strong></p>
+<ul>
+<li>Dejar 30 min a temperatura ambiente</li>
+<li>NO guardar calientes</li>
+</ul>
+<p><span class="step-number">10</span><strong>Empacado</strong></p>
+<ul>
+<li>Mezclar todos los chips en frasco grande</li>
+<li>O separar por tipo</li>
+<li>Sellar herméticamente</li>
+</ul>
+<h4>Presentación gourmet</h4>
+<ul>
+<li>Servir en bowl de madera</li>
+<li>Acompañar con dips:</li>
+<li>Hummus</li>
+<li>Guacamole</li>
+<li>Queso crema con hierbas</li>
+<li>Salsa de yogur</li>
+</ul>
+<h4>Tips de Chef</h4>
+<ul>
+<li>Las chips seguirán crujiendo al enfriar</li>
+<li>Si están blandas al día siguiente: 1h más en deshidratador</li>
+<li>Agregar sal AL FINAL para control perfecto</li>
+</ul>
+<div class="separator"></div>
+<div class="recipe-card"><div class="recipe-header"><h3>🥭 RECETA 8: LEATHER/LÁMINAS DE FRUTA (Roll-ups)</h3>
+<div class="recipe-meta"><span class="badge badge-difficulty">⭐⭐ Intermedio</span>
+<span class="badge badge-time">⏱️ 6-8 horas</span>
+<span class="badge badge-temp">🌡️ 55°C</span></div>
+<h4>Ingredientes base</h4>
+<p><strong>Opción 1: Fresa-Plátano</strong></p>
+<ul>
+<li>300g fresas frescas</li>
+<li>2 plátanos maduros</li>
+<li>1 cucharada miel (opcional)</li>
+<li>Jugo de 1/2 limón</li>
+</ul>
+<p><strong>Opción 2: Mango-Ananá</strong></p>
+<ul>
+<li>2 mangos maduros</li>
+<li>1/2 ananá/piña</li>
+<li>1 cucharadita extracto de vainilla</li>
+</ul>
+<p><strong>Opción 3: Manzana-Canela</strong></p>
+<ul>
+<li>4 manzanas rojas</li>
+<li>1 cucharadita canela en polvo</li>
+<li>2 cucharadas azúcar mascabo</li>
+</ul>
+<h4>Equipamiento especial</h4>
+<ul>
+<li><strong>CRÍTICO:</strong> Láminas antiadherentes o papel pergamino</li>
+<li>Licuadora o procesadora de alimentos</li>
+<li>Espátula de silicona</li>
+</ul>
+<h4>Paso a paso</h4>
+<p><span class="step-number">1</span><strong>Preparación de fruta</strong></p>
+<ul>
+<li>Lavar toda la fruta</li>
+<li>Pelar mango, ananá, plátanos</li>
+<li>Remover semillas de fresa</li>
+<li>Cortar en trozos grandes</li>
+</ul>
+<p><span class="step-number">2</span><strong>Procesado</strong></p>
+<ul>
+<li>Colocar fruta en licuadora</li>
+<li>Procesar hasta puré completamente liso</li>
+<li>Debe quedar textura de yogur líquido</li>
+</ul>
+<div class="info-box tip"><span style="font-size: 1.5rem; margin-right: 0.5rem;">💡</span>**Tip:** Si queda muy espeso, agregar 1-2 cdas agua</div>
+<p><span class="step-number">3</span><strong>Endulzado (opcional)</strong></p>
+<ul>
+<li>Probar el puré</li>
+<li>Si la fruta no está muy madura: agregar miel/azúcar</li>
+<li>Mezclar bien</li>
+</ul>
+<p><span class="step-number">4</span><strong>Acidulación</strong></p>
+<ul>
+<li>Agregar jugo de limón</li>
+<li>Previene oxidación</li>
+<li>Realza sabor</li>
+</ul>
+<p><span class="step-number">5</span><strong>Preparación de bandejas</strong></p>
+<ul>
+<li>Forrar bandejas con láminas antiadherentes</li>
+<li>Debe cubrir TODA la superficie</li>
+<li>Sin arrugas</li>
+</ul>
+<div class="info-box warning"><span style="font-size: 1.5rem; margin-right: 0.5rem;">⚠️</span>**Importante:** Sin láminas se pegará y arruinará</div>
+<p><span class="step-number">6</span><strong>Vertido del puré</strong></p>
+<ul>
+<li>Verter puré en el centro de la bandeja</li>
+<li>Usar espátula para esparcir uniformemente</li>
+<li>Grosor ideal: 3-4mm</li>
+</ul>
+<p>💡 <strong>Técnica:</strong> Más grueso en centro, más fino en bordes</p>
+<p><span class="step-number">7</span><strong>Nivelado perfecto</strong></p>
+<ul>
+<li>Inclinar bandeja en todas direcciones</li>
+<li>Buscar grosor parejo</li>
+<li>Evitar zonas muy finas (se quemarán)</li>
+</ul>
+<p><span class="step-number">8</span><strong>Deshidratación</strong></p>
+<ul>
+<li>55°C durante 6-8 horas</li>
+<li>NO abrir deshidratador primeras 4 horas</li>
+</ul>
+<p><span class="step-number">9</span><strong>Verificación de punto</strong></p>
+<ul>
+<li>Tocar con dedo el centro</li>
+<li>NO debe pegar</li>
+<li>Bordes pueden despegarse fácilmente</li>
+<li>Textura como cuero/leather</li>
+</ul>
+<p><span class="step-number">10</span><strong>Despegado</strong></p>
+<ul>
+<li>Mientras aún tibio (más fácil)</li>
+<li>Levantar con cuidado desde una esquina</li>
+<li>Debe salir en una pieza</li>
+</ul>
+<p><span class="step-number">11</span><strong>Cortado</strong></p>
+<ul>
+<li>Cortar en tiras de 3-4cm de ancho</li>
+<li>Usar tijeras o cuchillo</li>
+<li>Enrollar cada tira</li>
+</ul>
+<p><span class="step-number">12</span><strong>Almacenamiento</strong></p>
+<ul>
+<li>Envolver roll-ups en papel pergamino</li>
+<li>Atar con cinta natural</li>
+<li>Guardar en frasco hermético</li>
+<li>Duración: 2-3 meses</li>
+</ul>
+<h4>Variaciones creativas</h4>
+<p><strong>Tropical Mix:</strong></p>
+<ul>
+<li>Mango + coco rallado + lima</li>
+</ul>
+<p><strong>Berry Blast:</strong></p>
+<ul>
+<li>Frutillas + arándanos + frambuesas</li>
+</ul>
+<p><strong>Green Detox:</strong></p>
+<ul>
+<li>Manzana + espinaca + jengibre + miel</li>
+</ul>
+<p><strong>Chocolate Dreams:</strong></p>
+<ul>
+<li>Plátano + cacao en polvo + dátiles</li>
+</ul>
+<h4>Usos</h4>
+<ul>
+<li>Snack para niños (alternativa a gominolas)</li>
+<li>Lunch box escolar</li>
+<li>Senderismo y camping</li>
+<li>Post-entrenamiento</li>
+</ul>
+<div class="separator"></div>
+<div class="recipe-card"><div class="recipe-header"><h3>🌶️ RECETA 9: CONDIMENTO EN POLVO CASERO</h3>
+<div class="recipe-meta"><span class="badge badge-difficulty">⭐⭐ Intermedio</span>
+<span class="badge badge-time">⏱️ 6-10 horas + molienda</span>
+<span class="badge badge-temp">🌡️ 50-60°C</span></div>
+<h4>Ingredientes</h4>
+<p><strong>Mix Italiano:</strong></p>
+<ul>
+<li>4 tomates</li>
+<li>1 pimiento rojo</li>
+<li>3 dientes ajo</li>
+<li>10g albahaca fresca</li>
+<li>10g orégano fresco</li>
+<li>1 cucharadita sal</li>
+</ul>
+<p><strong>Mix Mexicano:</strong></p>
+<ul>
+<li>3 chiles jalapeños</li>
+<li>2 tomates</li>
+<li>1 cebolla blanca</li>
+<li>5g cilantro</li>
+<li>1 cucharadita comino</li>
+<li>1 cucharadita pimentón</li>
+</ul>
+<p><strong>Mix Oriental:</strong></p>
+<ul>
+<li>1 trozo jengibre (50g)</li>
+<li>4 dientes ajo</li>
+<li>1 cebolla</li>
+<li>10g cilantro</li>
+<li>1 cucharadita cúrcuma</li>
+</ul>
+<h4>Paso a paso</h4>
+<p><span class="step-number">1</span><strong>Preparación de vegetales</strong></p>
+<ul>
+<li>Lavar todo muy bien</li>
+<li>Secar completamente</li>
+</ul>
+<p><em>Tomates y pimientos:</em></p>
+<ul>
+<li>Cortar en cuartos</li>
+<li>Remover semillas</li>
+</ul>
+<p><em>Ajo:</em></p>
+<ul>
+<li>Pelar</li>
+<li>Laminar fino</li>
+</ul>
+<p><em>Cebollas:</em></p>
+<ul>
+<li>Pelar</li>
+<li>Cortar en aros finos</li>
+</ul>
+<p><em>Hierbas:</em></p>
+<ul>
+<li>Separar hojas de tallos</li>
+</ul>
+<p><span class="step-number">2</span><strong>Pre-salado (solo tomates)</strong></p>
+<ul>
+<li>Espolvorear sal</li>
+<li>Dejar 15 min</li>
+<li>Secar líquido con papel</li>
+</ul>
+<p><span class="step-number">3</span><strong>Distribución estratégica</strong></p>
+<ul>
+<li>Cada ingrediente en bandeja separada</li>
+<li>Usar láminas para ajo y hierbas</li>
+</ul>
+<p>💡 <strong>Por qué separado:</strong> Distintos tiempos</p>
+<p><span class="step-number">4</span><strong>Deshidratación escalonada</strong></p>
+<p><em>Inicio - Hierbas:</em></p>
+<ul>
+<li>50°C por 2-4 horas</li>
+<li>Primero en salir</li>
+</ul>
+<p><em>Continúa - Ajo y cebolla:</em></p>
+<ul>
+<li>60°C por 4-6 horas</li>
+</ul>
+<p><em>Al final - Tomates y chiles:</em></p>
+<ul>
+<li>60°C por 8-10 horas</li>
+</ul>
+<p><span class="step-number">5</span><strong>Test de sequedad</strong></p>
+<ul>
+<li>TODO debe estar COMPLETAMENTE seco</li>
+<li>Debe quebrarse al doblar</li>
+<li>Sin humedad al tacto</li>
+</ul>
+<div class="info-box warning"><span style="font-size: 1.5rem; margin-right: 0.5rem;">⚠️</span>**Crítico:** Cualquier humedad = moho en polvo</div>
+<p><span class="step-number">6</span><strong>Enfriamiento</strong></p>
+<ul>
+<li>Dejar enfriar 1 hora completa</li>
+<li>A temperatura ambiente</li>
+</ul>
+<p><span class="step-number">7</span><strong>Molienda</strong></p>
+<ul>
+<li>Usar molinillo de café o especias</li>
+<li>Procesar en tandas pequeñas</li>
+<li>Pulverizar hasta polvo fino</li>
+</ul>
+<div class="info-box tip"><span style="font-size: 1.5rem; margin-right: 0.5rem;">💡</span>**Tip:** Limpiar molinillo entre mezclas diferentes</div>
+<p><span class="step-number">8</span><strong>Tamizado (opcional)</strong></p>
+<ul>
+<li>Pasar por colador fino</li>
+<li>Re-moler trozos grandes</li>
+</ul>
+<p><span class="step-number">9</span><strong>Mezcla final</strong></p>
+<ul>
+<li>Combinar todos los polvos del mismo mix</li>
+<li>Mezclar muy bien</li>
+<li>Agregar especias secas al final</li>
+</ul>
+<p><span class="step-number">10</span><strong>Almacenamiento</strong></p>
+<ul>
+<li>Frascos de vidrio oscuro</li>
+<li>Herméticamente cerrados</li>
+<li>Lugar fresco y seco</li>
+<li>Duración: 12 meses</li>
+</ul>
+<h4>Usos en cocina</h4>
+<ul>
+<li>Salsas y guisos (1-2 cdtas)</li>
+<li>Adobos para carnes</li>
+<li>Condimento para popcorn</li>
+<li>Aderezos para ensalada</li>
+<li>Marinadas</li>
+</ul>
+<div class="separator"></div>
+<div class="page"><span class="level-badge level-avanzado">📕 NIVEL AVANZADO</span>
+<h2>Recetas complejas con múltiples técnicas</h2>
+<div class="separator"></div>
+<div class="recipe-card"><div class="recipe-header"><h3>🥩 RECETA 10: BEEF JERKY ARGENTINO</h3>
+<div class="recipe-meta"><span class="badge badge-difficulty">⭐⭐⭐ Avanzado</span>
+<span class="badge badge-time">⏱️ 24h marinado + 6-10h deshidratación</span>
+<span class="badge badge-temp">🌡️ 70°C</span></div>
+<h4>Ingredientes</h4>
+<p><strong>Carne:</strong></p>
+<ul>
+<li>1 kg nalga o cuadril (corte magro)</li>
+<li>CRÍTICO: Sin grasa visible</li>
+</ul>
+<p><strong>Marinada base:</strong></p>
+<ul>
+<li>120 ml salsa de soja</li>
+<li>60 ml salsa inglesa</li>
+<li>60 ml vinagre de manzana</li>
+<li>2 cucharadas azúcar mascabo</li>
+<li>2 cucharaditas sal ahumada</li>
+<li>2 cucharaditas pimienta negra molida</li>
+<li>1 cucharadita ajo en polvo</li>
+<li>1 cucharadita cebolla en polvo</li>
+<li>1/2 cucharadita pimentón ahumado</li>
+</ul>
+<p><strong>Variante chimichurri:</strong></p>
+<ul>
+<li>Agregar: orégano, perejil seco, comino, chile triturado</li>
+</ul>
+<h4>Equipamiento especial</h4>
+<ul>
+<li>Cuchillo de filetear MUY afilado</li>
+<li>Bolsas Ziploc grandes</li>
+<li>Papel absorbente</li>
+</ul>
+<h4>Paso a paso</h4>
+<p><strong>DÍA 1: Preparación y marinado</strong></p>
+<p><span class="step-number">1</span><strong>Pre-congelado (TRICK PRO)</strong></p>
+<ul>
+<li>Congelar carne 2-3 horas</li>
+<li>Punto: semi-congelada</li>
+<li>Más fácil de cortar finamente</li>
+</ul>
+<p>💡 <strong>Secreto:</strong> Esto permite cortes perfectos</p>
+<p><span class="step-number">2</span><strong>Limpieza exhaustiva</strong></p>
+<ul>
+<li>Sacar del freezer</li>
+<li>Remover TODA la grasa visible</li>
+<li>Remover nervios y tendones</li>
+<li>Solo músculo magro</li>
+</ul>
+<div class="info-box warning"><span style="font-size: 1.5rem; margin-right: 0.5rem;">⚠️</span>**Crítico:** Grasa = rancidez rápida</div>
+<p><span class="step-number">3</span><strong>Corte estratégico</strong></p>
+<ul>
+<li>Identificar dirección de fibras</li>
+<li>Cortar A FAVOR de la fibra = masticable</li>
+<li>Cortar CONTRA la fibra = tierno</li>
+</ul>
+<p>💡 <strong>Recomendado:</strong> Contra la fibra</p>
+<ul>
+<li>Grosor: 3-4mm (muy importante)</li>
+<li>Usar cuchillo fileteador</li>
+<li>Movimientos largos y firmes</li>
+</ul>
+<p><span class="step-number">4</span><strong>Preparación de marinada</strong></p>
+<ul>
+<li>Mezclar todos los ingredientes líquidos</li>
+<li>Batir hasta disolver azúcar</li>
+<li>Agregar especias secas</li>
+<li>Mezclar muy bien</li>
+</ul>
+<p><span class="step-number">5</span><strong>Marinado</strong></p>
+<ul>
+<li>Colocar tiras de carne en bolsa Ziploc</li>
+<li>Verter marinada</li>
+<li>Eliminar TODO el aire posible</li>
+<li>Sellar bolsa</li>
+<li>Masajear carne en marinada</li>
+<li>Refrigerar 12-24 horas</li>
+</ul>
+<p>💡 <strong>Truco:</strong> Dar vuelta bolsa cada 4-6 horas</p>
+<p><strong>DÍA 2: Deshidratación</strong></p>
+<p><span class="step-number">6</span><strong>Escurrido</strong></p>
+<ul>
+<li>Sacar carne de heladera</li>
+<li>Sacar tiras de la marinada</li>
+<li>Secar COMPLETAMENTE con papel absorbente</li>
+<li>AMBOS lados</li>
+</ul>
+<div class="info-box warning"><span style="font-size: 1.5rem; margin-right: 0.5rem;">⚠️</span>**Importante:** Exceso de líquido = gotas en deshidratador</div>
+<p><span class="step-number">7</span><strong>Distribución en bandejas</strong></p>
+<ul>
+<li>Colocar tiras SIN tocarse</li>
+<li>Dejar espacio entre cada una</li>
+<li>No doblar las tiras</li>
+</ul>
+<p><span class="step-number">8</span><strong>Primera etapa (70°C - 2h)</strong></p>
+<ul>
+<li>Temperatura alta para seguridad</li>
+<li>Mata posibles bacterias</li>
+<li>Carne cambiará de rojo a marrón</li>
+</ul>
+<p><span class="step-number">9</span><strong>Segunda etapa (60°C - 4-8h)</strong></p>
+<ul>
+<li>Reducir temperatura</li>
+<li>Deshidratación lenta</li>
+<li>Revisar cada 2 horas</li>
+</ul>
+<p><span class="step-number">10</span><strong>Test del jerky perfecto</strong></p>
+<p><em>Visual:</em></p>
+<ul>
+<li>Color marrón oscuro uniforme</li>
+<li>Sin zonas rojas o rosadas</li>
+<li>Superficie seca mate</li>
+</ul>
+<p><em>Táctil:</em></p>
+<ul>
+<li>Firme pero flexible</li>
+<li>NO debe quebrarse al doblar</li>
+<li>Debe volver a forma original</li>
+</ul>
+<p><em>Test de doblez:</em></p>
+<ul>
+<li>Doblar 90 grados</li>
+<li>Debe formar grietas blancas</li>
+<li>Pero NO quebrarse</li>
+</ul>
+<p><span class="step-number">11</span><strong>Proceso de "curado"</strong></p>
+<ul>
+<li>Sacar del deshidratador</li>
+<li>Colocar en bandeja</li>
+<li>Dejar a temperatura ambiente 4 horas</li>
+<li>Esto "equilibra" la humedad interna</li>
+</ul>
+<p><span class="step-number">12</span><strong>Almacenamiento</strong></p>
+<p><em>Corto plazo (1-2 semanas):</em></p>
+<ul>
+<li>Frasco hermético</li>
+<li>Temperatura ambiente</li>
+<li>Lugar oscuro</li>
+</ul>
+<p><em>Largo plazo (1-2 meses):</em></p>
+<ul>
+<li>Bolsas selladas al vacío</li>
+<li>Refrigerador</li>
+<li>O congelador (3-4 meses)</li>
+</ul>
+<h4>Variaciones regionales</h4>
+<p><strong>Jerky Patagónico:</strong></p>
+<ul>
+<li>Marinada: vino tinto + romero + ají molido</li>
+</ul>
+<p><strong>Jerky Norteño:</strong></p>
+<ul>
+<li>Marinada: miel + mostaza + comino + merkén</li>
+</ul>
+<p><strong>Jerky Oriental:</strong></p>
+<ul>
+<li>Marinada: salsa de soja + jengibre + miel + sésamo</li>
+</ul>
+<h4>Troubleshooting</h4>
+<p><em>Problema: Jerky muy duro</em></p>
+<ul>
+<li>Causa: Sobre-deshidratado o cortado muy fino</li>
+<li>Solución: Reducir tiempo o cortar más grueso</li>
+</ul>
+<p><em>Problema: Jerky pegajoso</em></p>
+<ul>
+<li>Causa: Sub-deshidratado</li>
+<li>Solución: Continuar 2-4 horas más</li>
+</ul>
+<p><em>Problema: Puntos blancos</em></p>
+<ul>
+<li>Causa: Sal cristalizada (normal) o moho (malo)</li>
+<li>Test: Sal no crece, moho sí</li>
+<li>Prevención: Secar bien antes de guardar</li>
+</ul>
+<h4>Seguridad alimentaria</h4>
+<p>⚠️ <strong>ADVERTENCIA:</strong></p>
+<ul>
+<li>Carne debe alcanzar 70°C internamente</li>
+<li>Sin grasa = menos riesgo de rancidez</li>
+<li>Almacenar en refrigerador si hay dudas</li>
+<li>Descartar si huele raro o tiene moho</li>
+</ul>
+<div class="separator"></div>
+<div class="recipe-card"><div class="recipe-header"><h3>🍄 RECETA 11: POLVO DE HONGOS GOURMET</h3>
+<div class="recipe-meta"><span class="badge badge-difficulty">⭐⭐⭐ Avanzado</span>
+<span class="badge badge-time">⏱️ 8-12 horas + procesamiento</span>
+<span class="badge badge-temp">🌡️ 50°C</span></div>
+<h4>Ingredientes</h4>
+<p><strong>Mix gourmet:</strong></p>
+<ul>
+<li>200g champiñones portobello</li>
+<li>100g shiitake frescos</li>
+<li>100g champiñones blancos</li>
+<li>50g hongos ostra (opcional)</li>
+<li>1 cucharadita sal marina fina</li>
+<li>1/2 cucharadita pimienta blanca</li>
+</ul>
+<h4>Equipamiento especial</h4>
+<ul>
+<li>Cepillo suave para hongos</li>
+<li>Molinillo de café o especias</li>
+<li>Tamiz fino</li>
+<li>Frascos de vidrio oscuro</li>
+</ul>
+<h4>Paso a paso</h4>
+<p><span class="step-number">1</span><strong>Limpieza de hongos (NUNCA LAVAR)</strong></p>
+<ul>
+<li>Usar cepillo suave o paño húmedo</li>
+<li>Remover tierra y residuos</li>
+<li>NO sumergir en agua</li>
+</ul>
+<p>⚠️ <strong>Por qué:</strong> Los hongos absorben agua como esponja</p>
+<p><span class="step-number">2</span><strong>Preparación por tipo</strong></p>
+<p><em>Portobello:</em></p>
+<ul>
+<li>Remover tallo</li>
+<li>Raspar láminas negras con cuchara</li>
+<li>Cortar en láminas de 5mm</li>
+</ul>
+<p><em>Shiitake:</em></p>
+<ul>
+<li>Remover tallo completamente</li>
+<li>Cortar sombrero en tiras</li>
+</ul>
+<p><em>Champiñones blancos:</em></p>
+<ul>
+<li>Cortar en cuartos si son grandes</li>
+<li>Mitades si son pequeños</li>
+</ul>
+<p><em>Hongos ostra:</em></p>
+<ul>
+<li>Separar "hojas"</li>
+<li>Dejar enteros si son pequeños</li>
+</ul>
+<p><span class="step-number">3</span><strong>Pre-tratamiento opcional</strong></p>
+<ul>
+<li>Espolvorear ligeramente con sal</li>
+<li>Dejar 10 minutos</li>
+<li>Seca algo de humedad</li>
+</ul>
+<p><span class="step-number">4</span><strong>Distribución</strong></p>
+<ul>
+<li>Cada tipo en bandeja separada</li>
+<li>Sin superposición</li>
+<li>Buen espacio entre piezas</li>
+</ul>
+<p>💡 <strong>Por qué separado:</strong> Tiempos distintos</p>
+<p><span class="step-number">5</span><strong>Deshidratación controlada</strong></p>
+<p><em>Fase 1 (50°C - 4 horas):</em></p>
+<ul>
+<li>Todos los hongos juntos</li>
+<li>Baja temperatura preserva sabor</li>
+</ul>
+<p><em>Fase 2 (Monitoreo individual):</em></p>
+<ul>
+<li>Champiñones blancos: listos en 6-8h</li>
+<li>Portobello: 8-10h</li>
+<li>Shiitake: 10-12h (más densos)</li>
+<li>Ostra: 6-8h</li>
+</ul>
+<p><span class="step-number">6</span><strong>Test de sequedad absoluta</strong></p>
+<ul>
+<li>Deben estar COMPLETAMENTE secos</li>
+<li>Crujientes como galleta</li>
+<li>Chasquido al quebrar</li>
+<li>Ninguna flexibilidad</li>
+</ul>
+<p>⚠️ <strong>CRÍTICO:</strong> Humedad residual = moho en polvo</p>
+<p><span class="step-number">7</span><strong>Enfriamiento completo</strong></p>
+<ul>
+<li>Sacar del deshidratador</li>
+<li>Dejar 2-3 horas a temperatura ambiente</li>
+<li>Deben estar FRÍOS antes de moler</li>
+</ul>
+<p><span class="step-number">8</span><strong>Primera molienda gruesa</strong></p>
+<ul>
+<li>Romper en trozos más pequeños a mano</li>
+<li>Más fácil para el molinillo</li>
+</ul>
+<p><span class="step-number">9</span><strong>Molienda fina</strong></p>
+<ul>
+<li>Procesar en tandas pequeñas</li>
+<li>10-15 segundos de pulsos</li>
+<li>NO sobrecalentar el molinillo</li>
+</ul>
+<div class="info-box tip"><span style="font-size: 1.5rem; margin-right: 0.5rem;">💡</span>**Tip:** Limpiar entre tipos para polvos específicos</div>
+<p><span class="step-number">10</span><strong>Tamizado</strong></p>
+<ul>
+<li>Pasar por tamiz fino</li>
+<li>Trozos grandes: remoler</li>
+<li>Buscar polvo fino y uniforme</li>
+</ul>
+<p><span class="step-number">11</span><strong>Mezcla final</strong></p>
+<ul>
+<li>Combinar todos los polvos</li>
+<li>Agregar sal y pimienta</li>
+<li>Mezclar muy bien</li>
+<li>Opcional: agregar ajo en polvo</li>
+</ul>
+<p><span class="step-number">12</span><strong>Acondicionado</strong></p>
+<ul>
+<li>Dejar en bol abierto 24h</li>
+<li>Absorbe cualquier humedad ambiente</li>
+</ul>
+<p><span class="step-number">13</span><strong>Envasado profesional</strong></p>
+<ul>
+<li>Frascos de vidrio oscuro (protege de luz)</li>
+<li>Llenar casi completo</li>
+<li>Mínimo aire dentro</li>
+<li>Etiqueta: fecha y tipo de hongos</li>
+</ul>
+<h4>Almacenamiento</h4>
+<ul>
+<li>Lugar fresco y oscuro</li>
+<li>Duración: 12-18 meses</li>
+<li>Revisar mensualmente por humedad</li>
+</ul>
+<h4>Usos culinarios avanzados</h4>
+<p><strong>En cocina:</strong></p>
+<ul>
+<li>Risotto: 2 cdtas por porción</li>
+<li>Salsas: 1 cdta por taza de líquido</li>
+<li>Caldos y sopas: potenciador natural</li>
+<li>Hamburguesas: 1 cdta por 500g carne</li>
+<li>Pasta: espolvorear al final</li>
+</ul>
+<p><strong>Umami intenso:</strong></p>
+<ul>
+<li>Mezclar con sal = sal de hongos</li>
+<li>Mezclar con manteca = manteca trufada</li>
+<li>Mezclar con aceite = aceite perfumado</li>
+</ul>
+<p><strong>Técnicas de chef:</strong></p>
+<ul>
+<li>Espumar leche con polvo = espuma de hongos</li>
+<li>Emulsión de hongos para plating</li>
+<li>Polvo de shiitake en macarons salados</li>
+</ul>
+<h4>Variaciones</h4>
+<p><strong>Mix bosque:</strong></p>
+<ul>
+<li>Solo hongos silvestres</li>
+</ul>
+<p><strong>Mix asiático:</strong></p>
+<ul>
+<li>Shiitake + maitake + enoki secos</li>
+</ul>
+<p><strong>Mix trufa:</strong></p>
+<ul>
+<li>Agregar 5g trufa negra seca</li>
+</ul>
+<div class="separator"></div>
+<div class="recipe-card"><div class="recipe-header"><h3>🌈 RECETA 12: BARRITAS ENERGÉTICAS PREMIUM</h3>
+<div class="recipe-meta"><span class="badge badge-difficulty">⭐⭐⭐ Avanzado</span>
+<span class="badge badge-time">⏱️ 3h preparación + 8-12h deshidratación</span>
+<span class="badge badge-temp">🌡️ 50°C</span></div>
+<h4>Ingredientes</h4>
+<p><strong>Base húmeda:</strong></p>
+<ul>
+<li>200g dátiles medjool sin carozo</li>
+<li>100g pasta de almendras (o mantequilla de maní)</li>
+<li>60ml miel pura</li>
+<li>30ml aceite de coco</li>
+<li>1 cucharadita extracto de vainilla</li>
+<li>1 pizca de sal marina</li>
+</ul>
+<p><strong>Componente seco:</strong></p>
+<ul>
+<li>150g avena arrollada</li>
+<li>100g mix de frutos secos picados (almendras, nueces, cashews)</li>
+<li>50g semillas (chía, sésamo, girasol)</li>
+<li>30g cacao en polvo</li>
+<li>50g coco rallado</li>
+</ul>
+<p><strong>Frutas deshidratadas (previamente hechas):</strong></p>
+<ul>
+<li>100g chips de manzana triturados</li>
+<li>50g arándanos deshidratados</li>
+<li>50g fresas deshidratadas picadas</li>
+</ul>
+<p><strong>Superfoods opcionales:</strong></p>
+<ul>
+<li>2 cucharadas proteína en polvo</li>
+<li>1 cucharada maca en polvo</li>
+<li>1 cucharada espirulina</li>
+</ul>
+<h4>Equipamiento especial</h4>
+<ul>
+<li>Procesador de alimentos potente</li>
+<li>Láminas antiadherentes</li>
+<li>Regla o espátula offset</li>
+<li>Cortador de pizza o cuchillo muy afilado</li>
+</ul>
+<h4>Paso a paso</h4>
+<p><strong>PARTE 1: Preparación de componentes</strong></p>
+<p><span class="step-number">1</span><strong>Hidratación de dátiles</strong></p>
+<ul>
+<li>Colocar dátiles en bol</li>
+<li>Cubrir con agua caliente</li>
+<li>Remojar 15 minutos</li>
+<li>Escurrir y secar</li>
+</ul>
+<p>💡 <strong>Por qué:</strong> Más fáciles de procesar</p>
+<p><span class="step-number">2</span><strong>Tostado de secos (opcional pero recomendado)</strong></p>
+<ul>
+<li>Precalentar horno 160°C</li>
+<li>Tostar frutos secos 8-10 min</li>
+<li>Tostar avena 5 min</li>
+<li>Enfriar completamente</li>
+</ul>
+<p>💡 <strong>Beneficio:</strong> Intensifica sabores</p>
+<p><span class="step-number">3</span><strong>Procesado de base pegajosa</strong></p>
+<ul>
+<li>En procesador: dátiles + pasta de almendras</li>
+<li>Procesar 1-2 minutos hasta pasta homogénea</li>
+<li>Agregar miel + aceite de coco + vainilla + sal</li>
+<li>Procesar hasta completamente integrado</li>
+<li>Textura: pegajosa y suave</li>
+</ul>
+<p><span class="step-number">4</span><strong>Preparación de mix seco</strong></p>
+<ul>
+<li>En bol grande: avena + frutos secos + semillas</li>
+<li>Agregar cacao + coco rallado</li>
+<li>Mezclar bien con manos</li>
+</ul>
+<p><span class="step-number">5</span><strong>Integración de componentes</strong></p>
+<ul>
+<li>Agregar pasta pegajosa al mix seco</li>
+<li>Mezclar con manos (usar guantes)</li>
+<li>Amasar hasta distribuir uniformemente</li>
+<li>Agregar frutas deshidratadas picadas</li>
+<li>Integrar suavemente</li>
+</ul>
+<p>⚠️ <strong>Textura objetivo:</strong> Pegajosa pero moldeable</p>
+<p><strong>PARTE 2: Moldeado y deshidratación</strong></p>
+<p><span class="step-number">6</span><strong>Preparación de bandeja</strong></p>
+<ul>
+<li>Forrar con lámina antiadherente</li>
+<li>Debe cubrir completamente</li>
+<li>Sin arrugas</li>
+</ul>
+<p><span class="step-number">7</span><strong>Volcado de mezcla</strong></p>
+<ul>
+<li>Volcar toda la mezcla en centro de bandeja</li>
+<li>Usar espátula para presionar</li>
+</ul>
+<p><span class="step-number">8</span><strong>Nivelado profesional</strong></p>
+<ul>
+<li>Presionar firmemente con espátula offset</li>
+<li>Grosor uniforme: 1-1.5cm</li>
+<li>Forma rectangular</li>
+<li>Bordes rectos</li>
+</ul>
+<div class="info-box tip"><span style="font-size: 1.5rem; margin-right: 0.5rem;">💡</span>**Tip:** Cubrir con film y presionar con tabla</div>
+<p><span class="step-number">9</span><strong>Pre-marcado</strong></p>
+<ul>
+<li>Con regla y cuchillo</li>
+<li>Marcar líneas (no cortar completamente)</li>
+<li>Tamaño barritas: 5cm x 10cm</li>
+<li>Facilita corte posterior</li>
+</ul>
+<p><span class="step-number">10</span><strong>Deshidratación lenta</strong></p>
+<ul>
+<li>50°C durante 8-12 horas</li>
+<li>Revisar a las 8 horas</li>
+<li>Textura objetivo: firme pero masticable</li>
+<li>NO completamente seca</li>
+</ul>
+<p><span class="step-number">11</span><strong>Verificación de punto</strong></p>
+<p><em>Test de firmeza:</em></p>
+<ul>
+<li>Presionar con dedo</li>
+<li>Debe mantener forma</li>
+<li>Pero no estar dura como roca</li>
+</ul>
+<p><em>Test de corte:</em></p>
+<ul>
+<li>Intentar levantar una esquina</li>
+<li>Debe despegar limpiamente</li>
+</ul>
+<p><span class="step-number">12</span><strong>Desmolde y corte</strong></p>
+<ul>
+<li>Mientras aún tibia</li>
+<li>Levantar toda la plancha</li>
+<li>Colocar sobre tabla</li>
+<li>Cortar con cuchillo afilado o cortador de pizza</li>
+<li>Seguir líneas pre-marcadas</li>
+</ul>
+<p><strong>PARTE 3: Post-procesamiento</strong></p>
+<p><span class="step-number">13</span><strong>Segunda deshidratación (opcional)</strong></p>
+<ul>
+<li>Colocar barritas separadas en bandejas</li>
+<li>50°C por 2-4 horas adicionales</li>
+<li>Para textura más firme</li>
+</ul>
+<p><span class="step-number">14</span><strong>Enfriamiento gradual</strong></p>
+<ul>
+<li>Dejar a temperatura ambiente 2-3 horas</li>
+<li>Firman más al enfriar</li>
+</ul>
+<p><span class="step-number">15</span><strong>Acabado profesional</strong></p>
+<p><em>Opción 1 - Baño de chocolate:</em></p>
+<ul>
+<li>Derretir chocolate 70% cacao</li>
+<li>Bañar un extremo de cada barrita</li>
+<li>Dejar solidificar</li>
+</ul>
+<p><em>Opción 2 - Drizzle decorativo:</em></p>
+<ul>
+<li>Chocolate derretido en manga</li>
+<li>Líneas decorativas sobre barritas</li>
+</ul>
+<p><em>Opción 3 - Natural:</em></p>
+<ul>
+<li>Espolvorear coco rallado</li>
+</ul>
+<p><span class="step-number">16</span><strong>Envoltura individual</strong></p>
+<ul>
+<li>Papel pergamino cortado a medida</li>
+<li>Envolver cada barrita</li>
+<li>Doblar extremos como caramelo</li>
+<li>Etiquetar con ingredientes y fecha</li>
+</ul>
+<h4>Almacenamiento y vida útil</h4>
+<p><strong>Corto plazo (2 semanas):</strong></p>
+<ul>
+<li>Recipiente hermético</li>
+<li>Temperatura ambiente</li>
+<li>Lugar fresco y seco</li>
+</ul>
+<p><strong>Medio plazo (1 mes):</strong></p>
+<ul>
+<li>Refrigerador</li>
+<li>En recipiente o envueltas individualmente</li>
+</ul>
+<p><strong>Largo plazo (3 meses):</strong></p>
+<ul>
+<li>Congelador</li>
+<li>En bolsa Ziploc</li>
+<li>Descongelar a temperatura ambiente 1h antes</li>
+</ul>
+<h4>Variaciones de sabor</h4>
+<p><strong>Tropical:</strong></p>
+<ul>
+<li>Mango + coco + cashews + lima</li>
+</ul>
+<p><strong>Chocolate-Menta:</strong></p>
+<ul>
+<li>Chips de chocolate + extracto de menta</li>
+</ul>
+<p><strong>Proteica:</strong></p>
+<ul>
+<li>Triple dosis proteína + mantequilla de maní</li>
+</ul>
+<p><strong>Sin gluten:</strong></p>
+<ul>
+<li>Usar avena certificada sin gluten</li>
+</ul>
+<p><strong>Paleo:</strong></p>
+<ul>
+<li>Sin avena, doble frutos secos</li>
+</ul>
+<h4>Análisis nutricional aproximado</h4>
+<p>(por barrita de 50g)</p>
+<ul>
+<li>Calorías: 180-220 kcal</li>
+<li>Proteínas: 5-8g</li>
+<li>Grasas saludables: 8-12g</li>
+<li>Carbohidratos: 20-25g</li>
+<li>Fibra: 4-6g</li>
+</ul>
+<h4>Usos y momentos</h4>
+<ul>
+<li>✅ Pre-entreno (1h antes)</li>
+<li>✅ Post-entreno (30 min después)</li>
+<li>✅ Desayuno on-the-go</li>
+<li>✅ Snack de media tarde</li>
+<li>✅ Senderismo y trekking</li>
+<li>✅ Viajes largos</li>
+</ul>
+<div class="separator"></div>
+<h2>📚 APÉNDICE: SOLUCIÓN DE PROBLEMAS</h2>
+<h4>Problemas comunes y soluciones</h4>
+<p><span class="step-number">1</span><strong>Alimentos se pegan a las bandejas</strong></p>
+<ul>
+<li>Causa: No usar láminas antiadherentes en alimentos jugosos</li>
+<li>Solución: Usar láminas o engrasar ligeramente</li>
+</ul>
+<p><span class="step-number">2</span><strong>Deshidratación despareja</strong></p>
+<ul>
+<li>Causa: Cortes de distinto grosor</li>
+<li>Solución: Usar mandolina, ser consistente</li>
+</ul>
+<p><span class="step-number">3</span><strong>Alimentos oscurecidos (frutas)</strong></p>
+<ul>
+<li>Causa: Oxidación</li>
+<li>Solución: Baño de limón pre-deshidratación</li>
+</ul>
+<p><span class="step-number">4</span><strong>Textura gomosa</strong></p>
+<ul>
+<li>Causa: Falta de tiempo</li>
+<li>Solución: Continuar 2-4h más</li>
+</ul>
+<p><span class="step-number">5</span><strong>Moho en almacenamiento</strong></p>
+<ul>
+<li>Causa: Humedad residual</li>
+<li>Solución: Deshidratar completamente, test de doblez</li>
+</ul>
+<p><span class="step-number">6</span><strong>Pérdida de sabor</strong></p>
+<ul>
+<li>Causa: Temperatura muy alta</li>
+<li>Solución: Respetar temperaturas recomendadas</li>
+</ul>
+<p><span class="step-number">7</span><strong>Consumo energético alto</strong></p>
+<ul>
+<li>Causa: Tiempos muy largos</li>
+<li>Solución: Llenar todas las bandejas, optimizar cargas</li>
+</ul>
+<div class="separator"></div>
+<h2>🔧 MANTENIMIENTO DEL DESHIDRATADOR</h2>
+<h4>Limpieza después de cada uso</h4>
+<p><strong>Desconectar y enfriar completamente</strong></p>
+<p><strong>Bandejas:</strong> Lavar con agua tibia y jabón suave</p>
+<p><strong>Láminas:</strong> Lavar y secar bien</p>
+<p><strong>Cuerpo:</strong> Paño húmedo, NO sumergir</p>
+<p><strong>Ventilador:</strong> Aspirar polvo mensualmente</p>
+<h4>Almacenamiento</h4>
+<ul>
+<li>Lugar seco y aireado</li>
+<li>Bandejas apiladas con papel entre ellas</li>
+<li>Láminas enrolladas o planas</li>
+</ul>
+<div class="separator"></div>
+<h2>📖 GLOSARIO DE TÉRMINOS</h2>
+<p><strong>Leather/Cuero de fruta:</strong> Lámina fina de fruta procesada y deshidratada</p>
+<p><strong>Jerky:</strong> Carne deshidratada y marinada, textura firme</p>
+<p><strong>Blanquear:</strong> Sumergir brevemente en agua hirviendo</p>
+<p><strong>Oxidación:</strong> Oscurecimiento de frutas al contacto con aire</p>
+<p><strong>Umami:</strong> Quinto sabor básico, presente en hongos</p>
+<p><strong>Trail mix:</strong> Mezcla de frutos secos y deshidratados</p>
+<div class="separator"></div>
+<h2>✅ CHECKLIST DE SEGURIDAD ALIMENTARIA</h2>
+<p>Antes de deshidratar:</p>
+<ul>
+<li>[ ] Lavar manos y utensilios</li>
+<li>[ ] Lavar todos los alimentos</li>
+<li>[ ] Inspeccionar por moho o partes malas</li>
+<li>[ ] Secar completamente</li>
+</ul>
+<p>Durante:</p>
+<ul>
+<li>[ ] Respetar temperaturas mínimas</li>
+<li>[ ] Verificar punto de sequedad</li>
+<li>[ ] No mezclar crudos con listos</li>
+</ul>
+<p>Almacenamiento:</p>
+<ul>
+<li>[ ] Enfriar completamente</li>
+<li>[ ] Recipientes limpios y secos</li>
+<li>[ ] Etiquetar con fecha</li>
+<li>[ ] Revisar periódicamente</li>
+</ul>
+<div class="separator"></div>
+<h2>🌟 CONCLUSIÓN</h2>
+<p>Este manual es solo el comienzo de tu viaje en deshidratación. Experimentá, ajustá tiempos y temperaturas según tu gusto, y compartí tus creaciones.</p>
+<p><strong>Bio Origen</strong> te acompaña en cada paso hacia una alimentación más saludable y sostenible.</p>
+<p><strong>¡Feliz deshidratación!</strong> 🎉</p>
+<div class="separator"></div>
+<p><em>Manual elaborado por Bio Origen</em></p>
+<p><em>Versión 1.0 - 2026</em></p>
+<p><em>Para deshidratadores modelos FA-6, FA-10T, FA-10MT</em></p>
+</div></div>
+
+</div>
+
+<div class="page-footer">
+    <p><strong>Bio Origen</strong> - Manual de Recetas para Deshidratador</p>
+    <p>Versión 1.0 - 2026 | Modelos FA-6, FA-10T, FA-10MT</p>
+    <p>Para más información: <strong>bioorigen.com.ar</strong></p>
+</div>
+
+</body>
+</html>
