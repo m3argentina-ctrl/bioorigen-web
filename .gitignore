@@ -32,6 +32,11 @@ yarn-error.log*
 # vercel
 .vercel
 
+# sensitive local files
+Contraseñas.txt
+*.xlsx
+*.pdf
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
