@@ -45,16 +45,18 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     fetch("/api/admin/stats")
-      .then((r) => {
-        if (!r.ok) throw new Error("stats fetch failed");
-        return r.json();
-      })
+      .then((r) => r.json())
       .then((data) => {
-        if (!("monthRevenue" in data)) throw new Error("unexpected response");
-        setStats(data);
-        setLoading(false);
+        setStats(
+          "monthRevenue" in data
+            ? data
+            : { monthRevenue: 0, monthCount: 0, avgTicket: 0, salesByDay: [], topProducts: [], lowStockProducts: [], recentOrders: [] },
+        );
       })
-      .catch(() => setLoading(false));
+      .catch(() =>
+        setStats({ monthRevenue: 0, monthCount: 0, avgTicket: 0, salesByDay: [], topProducts: [], lowStockProducts: [], recentOrders: [] }),
+      )
+      .finally(() => setLoading(false));
   }, []);
 
   if (loading) {
