@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import AdminShell from "./AdminShell";
+import { prisma } from "@/lib/db";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions);
@@ -14,8 +15,12 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     );
   }
 
+  const unreadContactCount = await prisma.contactMessage.count({
+    where: { status: "unread" },
+  });
+
   return (
-    <AdminShell userName={session.user?.name ?? null}>
+    <AdminShell userName={session.user?.name ?? null} unreadContactCount={unreadContactCount}>
       {children}
     </AdminShell>
   );

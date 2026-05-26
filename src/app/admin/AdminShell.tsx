@@ -8,9 +8,11 @@ import Sidebar from "@/components/admin/Sidebar";
 export default function AdminShell({
   children,
   userName,
+  unreadContactCount = 0,
 }: {
   children: React.ReactNode;
   userName: string | null;
+  unreadContactCount?: number;
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -18,7 +20,7 @@ export default function AdminShell({
     <div className="flex h-screen overflow-hidden bg-slate-100">
       {/* Sidebar desktop */}
       <div className="hidden lg:flex lg:shrink-0">
-        <Sidebar userName={userName} />
+        <Sidebar userName={userName} unreadContactCount={unreadContactCount} />
       </div>
 
       {/* Sidebar mobile overlay */}
@@ -29,7 +31,7 @@ export default function AdminShell({
             onClick={() => setSidebarOpen(false)}
           />
           <div className="fixed inset-y-0 left-0 z-50 lg:hidden">
-            <Sidebar userName={userName} onClose={() => setSidebarOpen(false)} />
+            <Sidebar userName={userName} onClose={() => setSidebarOpen(false)} unreadContactCount={unreadContactCount} />
           </div>
         </>
       )}

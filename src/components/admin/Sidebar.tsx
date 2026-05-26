@@ -16,6 +16,7 @@ import {
   Settings,
   ExternalLink,
   X,
+  MessageSquare,
 } from "lucide-react";
 
 const NAV = [
@@ -24,6 +25,7 @@ const NAV = [
   { href: "/admin/categorias", label: "Categorías", icon: Tags },
   { href: "/admin/recetas", label: "Recetas", icon: UtensilsCrossed },
   { href: "/admin/ordenes", label: "Órdenes", icon: ClipboardList },
+  { href: "/admin/contacto", label: "Contacto", icon: MessageSquare },
   { href: "/admin/banners", label: "Banners", icon: ImageIcon },
   { href: "/admin/beneficios", label: "Beneficios", icon: Sparkles },
   { href: "/admin/envio", label: "Envíos", icon: Truck },
@@ -34,9 +36,10 @@ const NAV = [
 type Props = {
   userName?: string | null;
   onClose?: () => void;
+  unreadContactCount?: number;
 };
 
-export default function Sidebar({ userName, onClose }: Props) {
+export default function Sidebar({ userName, onClose, unreadContactCount = 0 }: Props) {
   const pathname = usePathname();
 
   function isActive(href: string, exact?: boolean) {
@@ -84,6 +87,11 @@ export default function Sidebar({ userName, onClose }: Props) {
               >
                 <Icon size={18} />
                 {label}
+                {href === "/admin/contacto" && unreadContactCount > 0 && (
+                  <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-blue-500 px-1 text-xs font-bold text-white">
+                    {unreadContactCount}
+                  </span>
+                )}
               </Link>
             </li>
           ))}
