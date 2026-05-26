@@ -1,68 +1,86 @@
 import Link from "next/link";
 import ProductCard from "@/components/products/ProductCard";
 import BannerCarousel from "@/components/BannerCarousel";
-import { DynamicIcon } from "@/lib/icons";
+import TrustBar from "@/components/home/TrustBar";
+import CategoryGrid from "@/components/home/CategoryGrid";
+import PromoBanner from "@/components/home/PromoBanner";
+import Newsletter from "@/components/home/Newsletter";
+import FadeIn from "@/components/home/FadeIn";
 import { getFeaturedProducts } from "@/lib/queries";
 import { prisma } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [featured, banners, valueProps] = await Promise.all([
+  const [featured, banners, categories] = await Promise.all([
     getFeaturedProducts(),
     prisma.banner.findMany({ where: { active: true }, orderBy: { order: "asc" } }),
-    prisma.valueProp.findMany({ where: { active: true }, orderBy: { order: "asc" } }),
+    prisma.category.findMany({ where: { active: true }, orderBy: { order: "asc" } }).catch(() => []),
   ]);
 
   return (
     <div>
+      {/* Hero carousel */}
       <BannerCarousel banners={banners} />
 
-      {valueProps.length > 0 && (
-        <section className="mx-auto max-w-6xl px-4 py-12">
-          <div className="grid gap-6 sm:grid-cols-3">
-            {valueProps.map(({ id, icon, title, text }) => (
-              <div
-                key={id}
-                className="rounded-2xl bg-white p-6 text-center shadow-card"
-              >
-                <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-bio-beige text-bio-green">
-                  <DynamicIcon name={icon} size={24} />
-                </span>
-                <h3 className="mt-3 font-bold text-bio-dark">{title}</h3>
-                <p className="mt-1 text-sm text-bio-dark/70">{text}</p>
+      {/* Barra de confianza */}
+      <TrustBar />
+
+      {/* Grid de categorías */}
+      <FadeIn>
+        <CategoryGrid categories={categories} />
+      </FadeIn>
+
+      {/* Productos destacados */}
+      <FadeIn delay={80}>
+        <section className="mx-auto max-w-6xl px-4 pb-8 pt-4">
+          <div className="flex items-end justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest text-bio-green">
+                Más vendidos
+              </p>
+              <h2 className="text-2xl font-extrabold text-bio-dark">Productos destacados</h2>
+            </div>
+            <Link
+              href="/productos"
+              className="rounded-full border border-bio-green px-4 py-2 text-sm font-semibold text-bio-green transition-colors hover:bg-bio-green hover:text-white"
+            >
+              Ver todos →
+            </Link>
+          </div>
+
+          {featured.length === 0 ? (
+            <p className="mt-6 rounded-2xl bg-white p-8 text-center text-sm text-bio-dark/60 shadow-card">
+              No hay productos destacados. Marcá algunos productos como destacados en el panel de
+              administración.
+            </p>
+          ) : (
+            <>
+              <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                {featured.slice(0, 8).map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
               </div>
-            ))}
-          </div>
+              <div className="mt-10 text-center">
+                <Link
+                  href="/productos"
+                  className="inline-block rounded-full bg-bio-green px-10 py-3 text-sm font-bold text-white shadow-card transition-colors hover:bg-bio-green-dark"
+                >
+                  Ver todos los productos
+                </Link>
+              </div>
+            </>
+          )}
         </section>
-      )}
+      </FadeIn>
 
-      <section className="mx-auto max-w-6xl px-4 py-8">
-        <div className="flex items-end justify-between">
-          <h2 className="text-2xl font-extrabold text-bio-dark">
-            Productos destacados
-          </h2>
-          <Link
-            href="/productos"
-            className="text-sm font-semibold text-bio-green hover:text-bio-green-dark"
-          >
-            Ver todos →
-          </Link>
-        </div>
+      {/* Banner promocional línea industrial */}
+      <FadeIn delay={40}>
+        <PromoBanner />
+      </FadeIn>
 
-        {featured.length === 0 ? (
-          <p className="mt-6 rounded-2xl bg-white p-8 text-center text-sm text-bio-dark/60 shadow-card">
-            No hay productos para mostrar. Configurá la base de datos y ejecutá
-            el seed.
-          </p>
-        ) : (
-          <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {featured.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        )}
-      </section>
+      {/* Newsletter */}
+      <Newsletter />
     </div>
   );
 }

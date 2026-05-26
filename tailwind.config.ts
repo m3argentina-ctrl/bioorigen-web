@@ -12,6 +12,7 @@ const config: Config = {
         bio: {
           green: "#4A7C59",
           "green-dark": "#3A6147",
+          "green-deep": "#2D5016",
           orange: "#E67E22",
           "orange-dark": "#CF6F1C",
           dark: "#2C3E50",
