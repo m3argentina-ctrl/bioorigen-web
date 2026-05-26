@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import toast, { Toaster } from "react-hot-toast";
+import SingleImageUpload from "@/components/admin/SingleImageUpload";
 
 function slugify(t: string) {
   return t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -70,11 +71,11 @@ export default function NewCategoriaPage() {
             className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-bio-green" />
         </label>
 
-        <label className="block">
-          <span className="mb-1 block text-sm font-medium text-slate-700">URL de imagen</span>
-          <input type="url" name="image" value={form.image} onChange={hc} placeholder="https://..."
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-bio-green" />
-        </label>
+        <SingleImageUpload
+          label="Imagen"
+          value={form.image}
+          onChange={(url) => setForm((p) => ({ ...p, image: url }))}
+        />
 
         <label className="flex items-center gap-3 rounded-lg border border-slate-200 p-3">
           <input type="checkbox" name="active" checked={form.active}

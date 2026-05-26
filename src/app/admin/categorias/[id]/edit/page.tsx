@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import toast, { Toaster } from "react-hot-toast";
+import SingleImageUpload from "@/components/admin/SingleImageUpload";
 
 export default function EditCategoriaPage() {
   const router = useRouter();
@@ -82,11 +83,11 @@ export default function EditCategoriaPage() {
             className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-bio-green" />
         </label>
 
-        <label className="block">
-          <span className="mb-1 block text-sm font-medium text-slate-700">URL de imagen</span>
-          <input type="url" name="image" value={String(form.image ?? "")} onChange={hc} placeholder="https://..."
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-bio-green" />
-        </label>
+        <SingleImageUpload
+          label="Imagen"
+          value={String(form.image ?? "")}
+          onChange={(url) => setForm((p) => p ? { ...p, image: url } : p)}
+        />
 
         <label className="flex items-center gap-3 rounded-lg border border-slate-200 p-3">
           <input type="checkbox" name="active" checked={Boolean(form.active)}
