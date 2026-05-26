@@ -132,6 +132,14 @@ async function main() {
     });
   }
 
+  // PaymentConfig inicial
+  const existingPaymentCfg = await prisma.paymentConfig.findFirst();
+  if (!existingPaymentCfg) {
+    await prisma.paymentConfig.create({
+      data: { openpayEnabled: true, bankTransferEnabled: true },
+    });
+  }
+
   console.log(
     `Seed completo: ${SAMPLE_PRODUCTS.length} productos, ${SAMPLE_RECIPES.length} recetas, 1 orden, 1 admin, ${banners.length} banners, ${configItems.length} configs.`,
   );
