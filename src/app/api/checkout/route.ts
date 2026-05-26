@@ -217,6 +217,7 @@ export async function POST(request: Request) {
     }
 
     const baseUrl = getBaseUrl();
+    console.log(`[checkout/mp] baseUrl=${baseUrl} orderId=${order.id} total=$${total}`);
     const isPublicUrl = baseUrl.startsWith("https://");
 
     const mpItems = lineItems.map((li) => ({
@@ -288,8 +289,14 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     const detail = error instanceof Error ? error.message : JSON.stringify(error, null, 2);
-    console.error("[POST /api/checkout]", detail);
-    return NextResponse.json({ error: "Error al procesar el checkout", detail }, { status: 500 });
+    console.error("[POST /api/checkout] ERROR:", detail);
+    if (error instanceof Error && error.stack) {
+      console.error("[POST /api/checkout] STACK:", error.stack.split("\n").slice(0, 5).join(" | "));
+    }
+    return NextResponse.json(
+      { error: `Error al procesar el pago: ${detail.slice(0, 200)}`, detail },
+      { status: 500 },
+    );
   }
 }
 

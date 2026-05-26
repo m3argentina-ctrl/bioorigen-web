@@ -144,6 +144,7 @@ export default function CheckoutForm() {
       const data = await res.json();
       if (!res.ok) {
         setServerError(data.error ?? "Error al procesar el pedido");
+        if (data.detail) console.error("[checkout]", data.detail);
         return;
       }
 

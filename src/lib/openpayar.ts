@@ -1,26 +1,41 @@
-const SANDBOX = process.env.OPENPAY_AR_SANDBOX !== "false";
-const CLIENT_ID = process.env.OPENPAY_AR_CLIENT_ID ?? "";
-const CLIENT_SECRET = process.env.OPENPAY_AR_CLIENT_SECRET ?? "";
+function isSandbox(): boolean {
+  return process.env.OPENPAY_AR_SANDBOX !== "false";
+}
 
-const AUTH_URL = SANDBOX
-  ? "https://auth.stg.geopagos.io/oauth/token"
-  : "https://auth.prd.geopagos.io/oauth/token";
+function getClientId(): string {
+  return process.env.OPENPAY_AR_CLIENT_ID ?? "";
+}
 
-const API_BASE = SANDBOX
-  ? "https://api-mpos-openpay-ar.stg.geopagos.io"
-  : "https://api.openpayargentina.com.ar";
+function getClientSecret(): string {
+  return process.env.OPENPAY_AR_CLIENT_SECRET ?? "";
+}
+
+function getAuthUrl(): string {
+  return isSandbox()
+    ? "https://auth.stg.geopagos.io/oauth/token"
+    : "https://auth.prd.geopagos.io/oauth/token";
+}
+
+function getApiBase(): string {
+  return isSandbox()
+    ? "https://api-mpos-openpay-ar.stg.geopagos.io"
+    : "https://api.openpayargentina.com.ar";
+}
 
 export function isConfigured(): boolean {
-  return Boolean(CLIENT_ID && CLIENT_SECRET);
+  return Boolean(getClientId() && getClientSecret());
 }
 
 async function getAccessToken(): Promise<string> {
+  const clientId = getClientId();
+  const clientSecret = getClientSecret();
+  console.log(`[openpayar] auth → sandbox=${isSandbox()} configured=${Boolean(clientId && clientSecret)}`);
   const params = new URLSearchParams({
     grant_type: "client_credentials",
-    client_id: CLIENT_ID,
-    client_secret: CLIENT_SECRET,
+    client_id: clientId,
+    client_secret: clientSecret,
   });
-  const res = await fetch(AUTH_URL, {
+  const res = await fetch(getAuthUrl(), {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: params.toString(),
@@ -74,7 +89,7 @@ export async function createOrder(params: CreateOrderParams): Promise<string> {
     },
   };
 
-  const res = await fetch(`${API_BASE}/api/v2/orders`, {
+  const res = await fetch(`${getApiBase()}/api/v2/orders`, {
     method: "POST",
     headers: {
       "Content-Type": "application/vnd.api+json",
