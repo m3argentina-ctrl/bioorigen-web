@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ShoppingCart, Menu, X, ChevronDown } from "lucide-react";
@@ -15,11 +15,37 @@ const NAV = [
   { href: "/contacto", label: "Contacto" },
 ];
 
+const CAT_EMOJI: Record<string, string> = {
+  Deshidratadores: "🌀",
+  Industriales: "🏭",
+  Accesorios: "🔧",
+  Repuestos: "⚙️",
+  Charqui: "🥩",
+  Snacks: "🥨",
+  Frutas: "🍎",
+  Verduras: "🥕",
+  Alimentos: "🥗",
+  Recetas: "📖",
+};
+
 export default function Header({ categories = [] }: { categories?: Category[] }) {
   const { count, openCart } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
   const [catOpen, setCatOpen] = useState(false);
   const [mobileCategOpen, setMobileCategOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Cerrar dropdown al clickear fuera
+  useEffect(() => {
+    if (!catOpen) return;
+    function handler(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setCatOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [catOpen]);
 
   const closeAll = () => {
     setMenuOpen(false);
@@ -56,12 +82,14 @@ export default function Header({ categories = [] }: { categories?: Category[] })
 
           {categories.length > 0 && (
             <div
+              ref={dropdownRef}
               className="relative"
               onMouseEnter={() => setCatOpen(true)}
               onMouseLeave={() => setCatOpen(false)}
             >
               <button
                 type="button"
+                onClick={() => setCatOpen((v) => !v)}
                 className="flex items-center gap-1 text-sm font-medium text-bio-dark transition-colors hover:text-bio-green"
               >
                 Categorías
@@ -71,26 +99,49 @@ export default function Header({ categories = [] }: { categories?: Category[] })
                 />
               </button>
 
-              {catOpen && (
-                <div className="absolute left-0 top-full z-10 mt-1 min-w-[200px] rounded-xl border border-gray-100 bg-white p-2 shadow-card-hover">
+              {/* Mega menu — siempre en DOM, animado con opacity+translate */}
+              <div
+                className={`absolute left-0 top-full z-20 mt-1 w-80 rounded-xl border border-gray-100 bg-white p-3 shadow-card-hover transition-all duration-200 ${
+                  catOpen
+                    ? "visible translate-y-0 opacity-100"
+                    : "invisible -translate-y-2 opacity-0 pointer-events-none"
+                }`}
+              >
+                <p className="mb-2 px-2 text-[11px] font-semibold uppercase tracking-widest text-bio-dark/40">
+                  Categorías
+                </p>
+                <div className="grid grid-cols-2 gap-0.5">
                   {categories.map((cat) => (
                     <Link
                       key={cat.id}
                       href={`/productos?categoria=${encodeURIComponent(cat.name)}`}
-                      className="block rounded-lg px-3 py-2 text-sm text-bio-dark transition-colors hover:bg-bio-beige hover:text-bio-green"
+                      className="group flex items-center gap-2 rounded-lg px-3 py-2 transition-colors hover:bg-bio-beige"
                       onClick={closeAll}
                     >
-                      {cat.name}
+                      <span className="text-base leading-none">
+                        {CAT_EMOJI[cat.name] ?? "🌿"}
+                      </span>
+                      <span className="text-sm font-medium text-bio-dark transition-colors group-hover:text-[#F97316]">
+                        {cat.name}
+                      </span>
                     </Link>
                   ))}
                 </div>
-              )}
+                <div className="mt-2 border-t border-gray-100 pt-2">
+                  <Link
+                    href="/productos"
+                    className="block rounded-lg px-3 py-1.5 text-sm font-semibold text-bio-green hover:bg-bio-beige"
+                    onClick={closeAll}
+                  >
+                    Ver todos los productos →
+                  </Link>
+                </div>
+              </div>
             </div>
           )}
         </nav>
 
         <div className="flex items-center gap-2">
-          {/* Cart: siempre verde con badge naranja */}
           <button
             type="button"
             onClick={openCart}
@@ -147,14 +198,15 @@ export default function Header({ categories = [] }: { categories?: Category[] })
                   />
                 </button>
                 {mobileCategOpen && (
-                  <ul className="mb-2 space-y-1 pl-3">
+                  <ul className="mb-2 grid grid-cols-2 gap-0.5 pl-1">
                     {categories.map((cat) => (
                       <li key={cat.id}>
                         <Link
                           href={`/productos?categoria=${encodeURIComponent(cat.name)}`}
                           onClick={closeAll}
-                          className="block py-1.5 text-sm text-bio-dark/70 transition-colors hover:text-bio-green"
+                          className="flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-sm text-bio-dark/70 transition-colors hover:text-[#F97316]"
                         >
+                          <span>{CAT_EMOJI[cat.name] ?? "🌿"}</span>
                           {cat.name}
                         </Link>
                       </li>

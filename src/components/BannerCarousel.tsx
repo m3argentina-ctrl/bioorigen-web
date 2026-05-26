@@ -53,7 +53,7 @@ export default function BannerCarousel({ banners }: { banners: Banner[] }) {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-20 md:grid-cols-2 md:items-center">
+      <div key={current} className="mx-auto grid max-w-6xl gap-8 px-4 py-20 animate-fade-in md:grid-cols-2 md:items-center">
         <div>
           <p className="text-sm font-semibold uppercase tracking-widest text-white/70">
             Del campo a tu mesa

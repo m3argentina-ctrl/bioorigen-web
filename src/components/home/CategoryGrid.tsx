@@ -43,7 +43,6 @@ export default function CategoryGrid({ categories }: Props) {
             image: c.image ?? null,
             emoji: EMOJI[c.name] ?? "🌿",
           })),
-          // Agregar Recetas si no está ya
           ...(!categories.some((c) => c.slug === "recetas" || c.name.toLowerCase().includes("receta"))
             ? [{ id: "recetas-link", name: "Recetas", href: "/recetas", image: null, emoji: "📖" }]
             : []),
@@ -59,29 +58,48 @@ export default function CategoryGrid({ categories }: Props) {
         Encontrá el equipo o producto ideal para vos
       </p>
 
-      <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+      <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
         {items.map((cat) => (
           <Link
             key={cat.id}
             href={cat.href}
-            className="group flex flex-col items-center overflow-hidden rounded-xl border border-gray-100 bg-white p-4 text-center shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-bio-green hover:shadow-card"
+            className="group relative aspect-square overflow-hidden rounded-xl"
           >
-            <span className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full bg-bio-beige transition-colors group-hover:bg-bio-green/10">
-              {cat.image ? (
-                <Image
-                  src={cat.image}
-                  alt={cat.name}
-                  width={64}
-                  height={64}
-                  className="h-full w-full object-cover"
-                />
-              ) : (
-                <span className="text-3xl">{cat.emoji}</span>
-              )}
-            </span>
-            <p className="mt-3 text-xs font-semibold leading-snug text-bio-dark group-hover:text-bio-green">
-              {cat.name}
-            </p>
+            {/* Imagen o gradiente de fondo */}
+            {cat.image ? (
+              <Image
+                src={cat.image}
+                alt={cat.name}
+                fill
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw"
+                className="object-cover transition-transform duration-500 group-hover:scale-110"
+              />
+            ) : (
+              <div
+                className="absolute inset-0 flex items-center justify-center"
+                style={{ background: "linear-gradient(135deg, #2D5016 0%, #4A7C59 100%)" }}
+              >
+                <span className="text-5xl transition-transform duration-300 group-hover:scale-110">
+                  {cat.emoji}
+                </span>
+              </div>
+            )}
+
+            {/* Gradiente base para legibilidad del texto */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+
+            {/* Overlay verde al hover */}
+            <div
+              className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+              style={{ backgroundColor: "rgba(45, 80, 22, 0.6)" }}
+            />
+
+            {/* Nombre */}
+            <div className="absolute bottom-0 left-0 right-0 p-2.5">
+              <p className="text-xs font-bold leading-snug text-white drop-shadow">
+                {cat.name}
+              </p>
+            </div>
           </Link>
         ))}
       </div>
