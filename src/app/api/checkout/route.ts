@@ -176,8 +176,13 @@ export async function POST(request: Request) {
       });
     }
 
-    // OpenPay Argentina: crear orden y redirigir al checkout hosted
+    // OpenPay Argentina: deshabilitado temporalmente
     if (paymentMethod === "openpay") {
+      return NextResponse.json({ error: "OpenPay no está disponible en este momento. Elegí otro método de pago." }, { status: 503 });
+    }
+
+    // OpenPay (código deshabilitado — mantener para reactivar)
+    if (false && paymentMethod === "openpay") {
       if (!openpayConfigured()) {
         return NextResponse.json({ error: "OpenPay no está configurado. Definí OPENPAY_AR_CLIENT_ID y OPENPAY_AR_CLIENT_SECRET." }, { status: 503 });
       }
