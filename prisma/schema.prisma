@@ -212,3 +212,106 @@ model ContactMessage {
   @@index([status])
   @@index([createdAt])
 }
+
+// ===========================================================================
+// Telemetría de equipos FA-10T (monitoreo remoto multi-tenant) — fase 4 F1
+// Cada equipo (deshidratador) queda fijo en la fábrica del cliente y empuja su
+// estado por HTTPS a /api/telemetry/ingest. El cliente lo mira desde su casa;
+// Bio Origen monitorea toda la flota. La ausencia de muestras = equipo caído.
+// ===========================================================================
+
+// Cliente dueño de uno o más equipos (tenant).
+model Cliente {
+  id             String   @id @default(cuid())
+  nombre         String
+  email          String?  @unique          // login / notificaciones
+  telegramChatId String?                    // destino de alertas Telegram (F3)
+  notas          String?
+  equipos        Equipo[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+// Equipo físico. La identidad (deviceId + token) se pre-carga de fábrica en la
+// partición NVS "factory" del ESP32 al flashear (ver firmware tools/provision).
+model Equipo {
+  id        String  @id @default(cuid())
+  deviceId  String  @unique               // dev_id de fábrica, ej "FA10T-0001"
+  token     String                        // secreto Bearer (API key del equipo)
+  nombre    String?                        // alias para el cliente
+  modelo    String?                        // último reportado por el equipo
+  serie     String?
+  activo    Boolean @default(true)
+
+  cliente   Cliente? @relation(fields: [clienteId], references: [id])
+  clienteId String?
+
+  // Cache del último reporte (para listar la flota sin escanear Muestra).
+  lastSeenAt   DateTime?
+  online       Boolean  @default(false)
+  lastReason   String?
+  lastRunState Int?
+  lastTemp     Float?
+
+  muestras  Muestra[]
+  eventos   Evento[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([clienteId])
+}
+
+// Una muestra de telemetría (heartbeat o evento de estado). Espejo del JSON que
+// arma el firmware en cloud_telemetry.c / web_server.c (/api/status).
+model Muestra {
+  id       String @id @default(cuid())
+  equipo   Equipo @relation(fields: [equipoId], references: [id], onDelete: Cascade)
+  equipoId String
+
+  reason   String                 // boot | state | alarm | heartbeat
+
+  temp     Float
+  rawTemp  Float?
+  fault    Boolean @default(false)
+  spEff    Float?
+  spCfg    Float?
+  drv      Float?                  // % duty 0..100
+  fan      Float?
+  aux      Float?
+  hum      Float?
+  humFault Boolean @default(false)
+
+  opMode     Int?
+  runState   Int?
+  warmup     Boolean @default(false)
+  etapa      Int?
+  elapsedS   Int?
+  totalS     Int?
+  remainingS Int?
+  tMin       Float?
+  tMax       Float?
+  prog       String?
+  uptimeS    Int?
+
+  createdAt DateTime @default(now())
+
+  @@index([equipoId, createdAt])
+}
+
+// Evento accionable para alertas (alarma reportada por el equipo, u offline
+// detectado por el watchdog de heartbeats del lado servidor — F3).
+model Evento {
+  id       String @id @default(cuid())
+  equipo   Equipo @relation(fields: [equipoId], references: [id], onDelete: Cascade)
+  equipoId String
+
+  kind       String                 // alarm | offline | online | boot | fault | service
+  message    String?
+  notified   Boolean   @default(false)  // si ya se mandó el aviso (Telegram)
+  resolvedAt DateTime?                  // p.ej. offline cerrado al volver online
+  createdAt  DateTime  @default(now())
+
+  @@index([equipoId, createdAt])
+  @@index([notified])
+}
