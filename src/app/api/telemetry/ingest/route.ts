@@ -133,6 +133,8 @@ export async function POST(req: Request) {
       lastReason: d.reason,
       lastRunState: d.run_state ?? equipo.lastRunState,
       lastTemp: d.temp,
+      lastOpMode: d.op_mode ?? equipo.lastOpMode,
+      lastProg: d.prog ?? equipo.lastProg,
       modelo: d.modelo ?? equipo.modelo,
       serie: d.serie ?? equipo.serie,
     },

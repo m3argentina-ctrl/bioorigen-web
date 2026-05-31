@@ -252,6 +252,8 @@ model Equipo {
   lastReason   String?
   lastRunState Int?
   lastTemp     Float?
+  lastOpMode   Int?                          // 0 reposo · 1 manual · 2 programa
+  lastProg     String?                       // nombre del programa en curso
 
   muestras  Muestra[]
   eventos   Evento[]

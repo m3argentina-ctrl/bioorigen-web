@@ -17,6 +17,7 @@ import {
   ExternalLink,
   X,
   MessageSquare,
+  Cpu,
 } from "lucide-react";
 
 const NAV = [
@@ -25,6 +26,7 @@ const NAV = [
   { href: "/admin/categorias", label: "Categorías", icon: Tags },
   { href: "/admin/recetas", label: "Recetas", icon: UtensilsCrossed },
   { href: "/admin/ordenes", label: "Órdenes", icon: ClipboardList },
+  { href: "/admin/flota", label: "Flota", icon: Cpu },
   { href: "/admin/contacto", label: "Contacto", icon: MessageSquare },
   { href: "/admin/banners", label: "Banners", icon: ImageIcon },
   { href: "/admin/beneficios", label: "Beneficios", icon: Sparkles },
