@@ -226,6 +226,7 @@ model Cliente {
   nombre         String
   email          String?  @unique          // login / notificaciones
   telegramChatId String?                    // destino de alertas Telegram (F3)
+  accessToken    String?  @unique          // link secreto de acceso (/cliente/<token>)
   notas          String?
   equipos        Equipo[]
   createdAt      DateTime @default(now())

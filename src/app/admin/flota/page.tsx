@@ -1,59 +1,20 @@
 "use client";
 
 import { useEffect, useState, useCallback, useRef } from "react";
-import { RefreshCw, Cpu, Wifi, WifiOff, AlertTriangle, Thermometer } from "lucide-react";
+import { RefreshCw, Cpu, Wifi, WifiOff, AlertTriangle, Thermometer, Link2, Check } from "lucide-react";
+import {
+  RUN_STATE_LABELS,
+  OP_MODE_LABELS,
+  fmtAgo,
+  type FleetItem,
+  type FleetSummary,
+} from "@/lib/fleet";
 
 const POLL_MS = 20_000;
 
-type Equipo = {
-  id: string;
-  deviceId: string;
-  nombre: string | null;
-  modelo: string | null;
-  serie: string | null;
-  activo: boolean;
-  clienteId: string | null;
-  clienteNombre: string | null;
-  online: boolean;
-  alarm: boolean;
-  lastSeenAt: string | null;
-  secondsSinceSeen: number | null;
-  lastReason: string | null;
-  lastRunState: number | null;
-  lastTemp: number | null;
-  lastOpMode: number | null;
-  lastProg: string | null;
-};
-
-type Summary = { total: number; online: number; offline: number; alarm: number };
-
-// Etiquetas de run_state del firmware (índice = valor numérico).
-const RUN_STATE_LABELS: Record<number, { label: string; cls: string }> = {
-  0: { label: "Reposo",       cls: "bg-slate-100 text-slate-500" },
-  1: { label: "Configurando", cls: "bg-blue-100 text-blue-700" },
-  2: { label: "En marcha",    cls: "bg-emerald-100 text-emerald-700" },
-  3: { label: "Pausado",      cls: "bg-amber-100 text-amber-700" },
-  4: { label: "Completado",   cls: "bg-green-100 text-green-700" },
-  5: { label: "ALARMA",       cls: "bg-red-100 text-red-600" },
-};
-
-// Modo de operación del firmware (op_mode): 0 reposo · 1 manual · 2 programa.
-const OP_MODE_LABELS: Record<number, { label: string; cls: string }> = {
-  0: { label: "Reposo",   cls: "bg-slate-100 text-slate-500" },
-  1: { label: "Manual",   cls: "bg-indigo-100 text-indigo-700" },
-  2: { label: "Programa", cls: "bg-violet-100 text-violet-700" },
-};
-
-function fmtAgo(seconds: number | null): string {
-  if (seconds === null) return "nunca";
-  if (seconds < 60) return `hace ${seconds}s`;
-  const m = Math.floor(seconds / 60);
-  if (m < 60) return `hace ${m} min`;
-  const h = Math.floor(m / 60);
-  if (h < 24) return `hace ${h} h`;
-  const d = Math.floor(h / 24);
-  return `hace ${d} d`;
-}
+// El admin además recibe el link de acceso del cliente (para copiar/compartir).
+type Equipo = FleetItem & { clienteToken: string | null };
+type Summary = FleetSummary;
 
 function KpiCard({
   label,
@@ -85,7 +46,16 @@ export default function FlotaAdminPage() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
   const firstLoad = useRef(true);
+
+  function copyLink(equipoId: string, token: string) {
+    const url = `${window.location.origin}/cliente/${token}`;
+    navigator.clipboard.writeText(url).then(() => {
+      setCopiedId(equipoId);
+      setTimeout(() => setCopiedId((id) => (id === equipoId ? null : id)), 1800);
+    });
+  }
 
   const load = useCallback(() => {
     if (firstLoad.current) setLoading(true);
@@ -189,7 +159,28 @@ export default function FlotaAdminPage() {
                     </td>
                     {/* Cliente */}
                     <td className="px-4 py-3 text-slate-600">
-                      {e.clienteNombre ?? <span className="text-slate-300">—</span>}
+                      {e.clienteNombre ? (
+                        <div className="flex items-center gap-2">
+                          <span>{e.clienteNombre}</span>
+                          {e.clienteToken && (
+                            <button
+                              type="button"
+                              onClick={() => copyLink(e.id, e.clienteToken!)}
+                              title="Copiar link de acceso del cliente"
+                              className={`flex items-center gap-1 rounded-md px-1.5 py-0.5 text-xs font-medium transition-colors ${
+                                copiedId === e.id
+                                  ? "bg-emerald-100 text-emerald-700"
+                                  : "text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+                              }`}
+                            >
+                              {copiedId === e.id ? <Check size={12} /> : <Link2 size={12} />}
+                              {copiedId === e.id ? "Copiado" : "Link"}
+                            </button>
+                          )}
+                        </div>
+                      ) : (
+                        <span className="text-slate-300">—</span>
+                      )}
                     </td>
                     {/* Estado */}
                     <td className="px-4 py-3">
