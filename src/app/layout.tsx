@@ -8,7 +8,9 @@ const sans = localFont({
   weight: "100 900",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
+// Usar || (no ??) para que un valor vacío "" también caiga al default.
+const siteUrl =
+  process.env.NEXT_PUBLIC_BASE_URL?.trim() || "http://localhost:3000";
 const title = "Bio Origen — Alimentos deshidratados naturales";
 const description =
   "Charqui, snacks y frutas deshidratadas sin conservantes. Del campo a tu mesa.";
