@@ -18,6 +18,7 @@ import {
 import {
   RUN_STATE_LABELS,
   OP_MODE_LABELS,
+  RUN_COMPLETED,
   fmtAgo,
   fmtDuration,
   fmtHMS,
@@ -304,6 +305,7 @@ function ControllerScreen({ e, onClose }: { e: FleetItem; onClose: () => void })
   const resOn = (e.lastDrv ?? 0) > 5;
   const fanOn = (e.lastFan ?? 0) > 5;
   const kwh = sessionKwh(e);
+  const completado = e.lastRunState === RUN_COMPLETED;
 
   // Cerrar con Escape.
   useEffect(() => {
@@ -460,11 +462,17 @@ function ControllerScreen({ e, onClose }: { e: FleetItem; onClose: () => void })
           </div>
 
           {/* Consumo de energía de la sesión (mismo cálculo que el LCD).
-              Sólo con sesión activa: en reposo el acumulador queda en 0. */}
-          {session && kwh !== null && (
+              Visible con sesión activa o al COMPLETAR (total del proceso);
+              en reposo el acumulador queda en 0 y se oculta. */}
+          {(session || completado) && kwh !== null && (
             <div className="rounded-2xl bg-slate-800/50 px-5 py-4">
               <p className="flex items-center gap-1.5 text-[11px] uppercase tracking-wide text-slate-400">
                 <Zap size={12} className="text-green-400" /> Consumo de energía
+                {completado && (
+                  <span className="ml-1 normal-case tracking-normal text-green-300/70">
+                    · total del proceso
+                  </span>
+                )}
               </p>
               <p className="mt-1 text-3xl font-bold text-green-400">
                 {kwh.toFixed(2)}

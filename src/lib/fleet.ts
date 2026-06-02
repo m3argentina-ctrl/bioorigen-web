@@ -6,6 +6,7 @@
 // para considerar un equipo "offline".
 export const OFFLINE_THRESHOLD_MS = 180_000;
 export const RUN_ALARM = 5; // run_state == 5 → RUN_STATE_ALARM (firmware app_state.h)
+export const RUN_COMPLETED = 4; // run_state == 4 → RUN_STATE_COMPLETED (proceso terminado)
 export const PROG_STAGE_COUNT = 3; // etapas por programa (firmware PROG_STAGE_COUNT)
 
 // Potencia de UNA turbina: motor polo de sombra 220V × 0,40A ≈ 88 W.
