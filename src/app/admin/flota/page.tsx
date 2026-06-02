@@ -6,6 +6,10 @@ import {
   RUN_STATE_LABELS,
   OP_MODE_LABELS,
   fmtAgo,
+  fmtDuration,
+  hasSession,
+  sessionPct,
+  PROG_STAGE_COUNT,
   type FleetItem,
   type FleetSummary,
 } from "@/lib/fleet";
@@ -124,6 +128,7 @@ export default function FlotaAdminPage() {
                 <th className="px-4 py-3 text-left">Estado</th>
                 <th className="px-4 py-3 text-left">Modo</th>
                 <th className="px-4 py-3 text-right">Temp.</th>
+                <th className="px-4 py-3 text-left">Tiempo</th>
                 <th className="px-4 py-3 text-left">Último contacto</th>
               </tr>
             </thead>
@@ -203,6 +208,9 @@ export default function FlotaAdminPage() {
                           {e.lastOpMode === 2 && e.lastProg && (
                             <span className="text-xs text-slate-400 truncate max-w-[12rem]" title={e.lastProg}>
                               {e.lastProg}
+                              {e.lastEtapa !== null && (
+                                <> · Etapa {e.lastEtapa + 1}/{PROG_STAGE_COUNT}</>
+                              )}
                             </span>
                           )}
                         </div>
@@ -217,6 +225,35 @@ export default function FlotaAdminPage() {
                           <Thermometer size={13} className="text-slate-400" />
                           {e.lastTemp.toFixed(1)}°
                         </span>
+                      ) : (
+                        <span className="text-slate-300">—</span>
+                      )}
+                    </td>
+                    {/* Tiempo (programado / restante) */}
+                    <td className="px-4 py-3 text-xs">
+                      {hasSession(e) ? (
+                        !e.lastWarmup && e.lastRunState === 2 ? (
+                          <span className="font-medium text-amber-600">Calentando…</span>
+                        ) : (
+                          <div className="min-w-[7rem]">
+                            <div className="flex items-baseline gap-1">
+                              <span className="font-semibold text-slate-700">
+                                {fmtDuration(e.lastRemainingS)}
+                              </span>
+                              <span className="text-slate-400">
+                                / {fmtDuration(e.lastTotalS)}
+                              </span>
+                            </div>
+                            <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-slate-200">
+                              <div
+                                className={`h-full rounded-full ${
+                                  e.lastRunState === 3 ? "bg-amber-400" : "bg-bio-green"
+                                }`}
+                                style={{ width: `${sessionPct(e)}%` }}
+                              />
+                            </div>
+                          </div>
+                        )
                       ) : (
                         <span className="text-slate-300">—</span>
                       )}
