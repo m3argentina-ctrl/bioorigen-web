@@ -20,6 +20,28 @@ export async function GET(
       equipos: {
         where: { activo: true },
         orderBy: [{ lastSeenAt: "desc" }],
+        include: {
+          // Última muestra → tiempo y etapa de la sesión en curso.
+          muestras: {
+            take: 1,
+            orderBy: { createdAt: "desc" },
+            select: {
+              warmup: true,
+              etapa: true,
+              elapsedS: true,
+              totalS: true,
+              remainingS: true,
+              spEff: true,
+              drv: true,
+              fan: true,
+              tMin: true,
+              tMax: true,
+              resWh: true,
+              fanOnS: true,
+              numMod: true,
+            },
+          },
+        },
       },
     },
   });

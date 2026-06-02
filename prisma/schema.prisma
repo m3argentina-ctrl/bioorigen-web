@@ -297,6 +297,14 @@ model Muestra {
   prog       String?
   uptimeS    Int?
 
+  // Consumo de energía de la sesión (acumuladores por módulo del firmware).
+  // resWh = Wh de UNA resistencia; fanOnS = segundos con turbina encendida;
+  // numMod = cantidad de módulos (turbinas/resistencias). kWh de la sesión =
+  // numMod × (resWh + fanOnS × 88/3600) / 1000  (ver lib/fleet.ts sessionKwh).
+  resWh      Float?
+  fanOnS     Float?
+  numMod     Int?
+
   createdAt DateTime @default(now())
 
   @@index([equipoId, createdAt])

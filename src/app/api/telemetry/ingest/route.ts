@@ -42,6 +42,10 @@ const schema = z
     modelo: z.string().max(32).optional(),
     serie: z.string().max(32).optional(),
     uptime_s: z.number().optional(),
+    // Consumo de energía de la sesión (acumuladores por módulo).
+    res_wh: z.number().optional(),
+    fan_on_s: z.number().optional(),
+    num_mod: z.number().optional(),
   })
   .passthrough();
 
@@ -121,6 +125,9 @@ export async function POST(req: Request) {
       tMax: d.t_max,
       prog: d.prog,
       uptimeS: d.uptime_s,
+      resWh: d.res_wh,
+      fanOnS: d.fan_on_s,
+      numMod: d.num_mod,
     },
   });
 
