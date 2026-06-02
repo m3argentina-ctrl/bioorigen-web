@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
-import { alertRecipients, broadcast, fmtEventoMsg } from "@/lib/telegram";
+import { notifyAlert } from "@/lib/notify";
 
 // Prisma necesita el runtime Node (no edge); y nunca cachear.
 export const runtime = "nodejs";
@@ -164,17 +164,17 @@ export async function POST(req: Request) {
       const cli = equipo.clienteId
         ? await prisma.cliente.findUnique({
             where: { id: equipo.clienteId },
-            select: { telegramChatId: true },
+            select: { email: true, telegramChatId: true, notifyChannel: true },
           })
         : null;
-      const msg = fmtEventoMsg({
+      const ok = await notifyAlert({
         kind: "alarm",
         nombre: equipo.nombre || equipo.deviceId,
         deviceId: equipo.deviceId,
         detail: `Temperatura ${d.temp.toFixed(1)} °C`,
+        cliente: cli,
       });
-      const r = await broadcast(alertRecipients(cli?.telegramChatId), msg);
-      if (r.ok) {
+      if (ok) {
         await prisma.evento.update({
           where: { id: evento.id },
           data: { notified: true },

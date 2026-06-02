@@ -51,6 +51,7 @@ const UpdateSchema = z.object({
   nombre: z.string().trim().min(1).optional(),
   email: z.union([z.string().trim().email(), z.literal(""), z.null()]).optional(),
   telegramChatId: z.string().trim().optional().nullable(),
+  notifyChannel: z.enum(["ninguno", "email", "telegram", "ambos"]).optional(),
   notas: z.string().trim().optional().nullable(),
   regenerateToken: z.boolean().optional(),
 });
@@ -66,6 +67,8 @@ export async function PUT(request: Request, { params }: Params) {
     if (body.email !== undefined) data.email = body.email ? body.email : null;
     if (body.telegramChatId !== undefined)
       data.telegramChatId = body.telegramChatId || null;
+    if (body.notifyChannel !== undefined)
+      data.notifyChannel = body.notifyChannel;
     if (body.notas !== undefined) data.notas = body.notas || null;
     if (body.regenerateToken) data.accessToken = genAccessToken();
 

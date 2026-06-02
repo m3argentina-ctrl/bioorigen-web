@@ -27,6 +27,7 @@ type Cliente = {
   nombre: string;
   email: string | null;
   telegramChatId: string | null;
+  notifyChannel: string;
   accessToken: string | null;
   notas: string | null;
   equipos: EquipoMini[];
@@ -217,6 +218,7 @@ function NewClienteModal({
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
   const [telegramChatId, setTelegramChatId] = useState("");
+  const [notifyChannel, setNotifyChannel] = useState("ambos");
   const [notas, setNotas] = useState("");
   const [saving, setSaving] = useState(false);
 
@@ -230,7 +232,7 @@ function NewClienteModal({
     const res = await fetch("/api/admin/clientes", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nombre, email, telegramChatId, notas }),
+      body: JSON.stringify({ nombre, email, telegramChatId, notifyChannel, notas }),
     });
     setSaving(false);
     if (res.ok) {
@@ -289,6 +291,18 @@ function NewClienteModal({
               className="input"
               placeholder="Para alertas (F3)"
             />
+          </Field>
+          <Field label="Avisar por">
+            <select
+              value={notifyChannel}
+              onChange={(e) => setNotifyChannel(e.target.value)}
+              className="input"
+            >
+              <option value="ambos">Email + Telegram</option>
+              <option value="email">Solo email</option>
+              <option value="telegram">Solo Telegram</option>
+              <option value="ninguno">No avisar</option>
+            </select>
           </Field>
           <Field label="Notas (opcional)">
             <textarea

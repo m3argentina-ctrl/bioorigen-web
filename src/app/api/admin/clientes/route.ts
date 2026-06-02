@@ -33,6 +33,7 @@ const CreateSchema = z.object({
   nombre: z.string().trim().min(1, "El nombre es obligatorio"),
   email: z.union([z.string().trim().email(), z.literal(""), z.null()]).optional(),
   telegramChatId: z.string().trim().optional().nullable(),
+  notifyChannel: z.enum(["ninguno", "email", "telegram", "ambos"]).optional(),
   notas: z.string().trim().optional().nullable(),
 });
 
@@ -47,6 +48,7 @@ export async function POST(request: Request) {
         nombre: body.nombre,
         email: body.email ? body.email : null,
         telegramChatId: body.telegramChatId || null,
+        notifyChannel: body.notifyChannel ?? "ambos",
         notas: body.notas || null,
         accessToken: genAccessToken(),
       },

@@ -32,6 +32,7 @@ type Cliente = {
   nombre: string;
   email: string | null;
   telegramChatId: string | null;
+  notifyChannel: string;
   accessToken: string | null;
   notas: string | null;
   equipos: Equipo[];
@@ -52,6 +53,7 @@ export default function ClienteDetailPage() {
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
   const [telegramChatId, setTelegramChatId] = useState("");
+  const [notifyChannel, setNotifyChannel] = useState("ambos");
   const [notas, setNotas] = useState("");
   const [saving, setSaving] = useState(false);
 
@@ -76,6 +78,7 @@ export default function ClienteDetailPage() {
         setNombre(c.nombre);
         setEmail(c.email ?? "");
         setTelegramChatId(c.telegramChatId ?? "");
+        setNotifyChannel(c.notifyChannel ?? "ambos");
         setNotas(c.notas ?? "");
       })
       .finally(() => setLoading(false));
@@ -92,12 +95,14 @@ export default function ClienteDetailPage() {
     const res = await fetch(`/api/admin/clientes/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nombre, email, telegramChatId, notas }),
+      body: JSON.stringify({ nombre, email, telegramChatId, notifyChannel, notas }),
     });
     setSaving(false);
     if (res.ok) {
       toast.success("Cambios guardados");
-      setCliente((c) => (c ? { ...c, nombre, email, telegramChatId, notas } : c));
+      setCliente((c) =>
+        c ? { ...c, nombre, email, telegramChatId, notifyChannel, notas } : c,
+      );
     } else {
       const d = await res.json().catch(() => null);
       toast.error(typeof d?.error === "string" ? d.error : "No se pudo guardar");
@@ -224,6 +229,18 @@ export default function ClienteDetailPage() {
               className="input"
               placeholder="Para alertas (F3)"
             />
+          </Field>
+          <Field label="Avisar por">
+            <select
+              value={notifyChannel}
+              onChange={(e) => setNotifyChannel(e.target.value)}
+              className="input"
+            >
+              <option value="ambos">Email + Telegram</option>
+              <option value="email">Solo email</option>
+              <option value="telegram">Solo Telegram</option>
+              <option value="ninguno">No avisar</option>
+            </select>
           </Field>
           <Field label="Notas">
             <textarea

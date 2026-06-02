@@ -14,12 +14,8 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { OFFLINE_THRESHOLD_MS } from "@/lib/fleet";
-import {
-  alertRecipients,
-  broadcast,
-  fmtEventoMsg,
-  offlineDetail,
-} from "@/lib/telegram";
+import { offlineDetail } from "@/lib/telegram";
+import { notifyAlert } from "@/lib/notify";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -67,7 +63,9 @@ async function run() {
           nombre: true,
           deviceId: true,
           lastSeenAt: true,
-          cliente: { select: { telegramChatId: true } },
+          cliente: {
+            select: { email: true, telegramChatId: true, notifyChannel: true },
+          },
         },
       },
     },
@@ -82,14 +80,14 @@ async function run() {
       ev.kind === "offline"
         ? offlineDetail(e.lastSeenAt, now)
         : ev.message ?? null;
-    const msg = fmtEventoMsg({
+    const ok = await notifyAlert({
       kind: ev.kind,
       nombre: e.nombre || e.deviceId,
       deviceId: e.deviceId,
       detail,
+      cliente: e.cliente,
     });
-    const r = await broadcast(alertRecipients(e.cliente?.telegramChatId), msg);
-    if (r.ok) {
+    if (ok) {
       await prisma.evento.update({
         where: { id: ev.id },
         data: { notified: true },
