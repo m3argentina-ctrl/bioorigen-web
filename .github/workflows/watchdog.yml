@@ -25,7 +25,7 @@ jobs:
           # Opcional: sobreescribe la URL si cambia el dominio del backend.
           WATCHDOG_URL: ${{ vars.WATCHDOG_URL }}
         run: |
-          URL="${WATCHDOG_URL:-https://app.bioorigen.com/api/cron/watchdog}"
+          URL="${WATCHDOG_URL:-https://bioorigen-web.vercel.app/api/cron/watchdog}"
           echo "POST $URL"
           code=$(curl -sS -o /tmp/out.json -w "%{http_code}" \
             -X POST "$URL" \
