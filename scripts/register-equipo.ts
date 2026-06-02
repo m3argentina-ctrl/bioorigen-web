@@ -12,7 +12,7 @@
 //
 // Opcionales:
 //   --token <valor>      usar un token explícito (si no, se genera uno random)
-//   --cloud-url <url>    base del backend (default https://app.bioorigen.com)
+//   --cloud-url <url>    base del backend (default https://bioorigen-web.vercel.app)
 //   --regenerate         re-generar el token de un equipo ya existente
 
 import { PrismaClient } from "@prisma/client";
@@ -38,7 +38,7 @@ async function main() {
   const clienteNombre = arg("cliente");
   const clienteEmail = arg("email");
   const nombre = arg("nombre");
-  const cloudUrl = arg("cloud-url") ?? "https://app.bioorigen.com";
+  const cloudUrl = arg("cloud-url") ?? "https://bioorigen-web.vercel.app";
   const explicitToken = arg("token");
   const regenerate = flag("regenerate");
 
