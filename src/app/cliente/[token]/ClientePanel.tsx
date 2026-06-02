@@ -459,8 +459,9 @@ function ControllerScreen({ e, onClose }: { e: FleetItem; onClose: () => void })
             <MinMaxBox label="T MÁX" value={e.lastTMax} cls="text-orange-300" />
           </div>
 
-          {/* Consumo de energía de la sesión (mismo cálculo que el LCD) */}
-          {kwh !== null && (
+          {/* Consumo de energía de la sesión (mismo cálculo que el LCD).
+              Sólo con sesión activa: en reposo el acumulador queda en 0. */}
+          {session && kwh !== null && (
             <div className="rounded-2xl bg-slate-800/50 px-5 py-4">
               <p className="flex items-center gap-1.5 text-[11px] uppercase tracking-wide text-slate-400">
                 <Zap size={12} className="text-green-400" /> Consumo de energía
