@@ -63,7 +63,7 @@ export default function ClientesAdminPage() {
     if (
       !confirm(
         `¿Eliminar al cliente "${c.nombre}"?` +
-          (c.equipos.length
+          (c.equipos?.length
             ? `\nSus ${c.equipos.length} equipo(s) quedarán sin asignar (no se borran).`
             : ""),
       )
@@ -138,7 +138,7 @@ export default function ClientesAdminPage() {
                   <td className="px-4 py-3 text-center">
                     <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-semibold text-slate-600">
                       <Cpu size={12} />
-                      {c.equipos.length}
+                      {c.equipos?.length ?? 0}
                     </span>
                   </td>
                   <td className="px-4 py-3">

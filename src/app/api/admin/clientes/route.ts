@@ -52,6 +52,15 @@ export async function POST(request: Request) {
         notas: body.notas || null,
         accessToken: genAccessToken(),
       },
+      // Incluir `equipos` para que la respuesta tenga la MISMA forma que el GET.
+      // Sin esto, el cliente recién creado llega sin `equipos` y la tabla del
+      // panel crashea al hacer `c.equipos.length` (client-side exception).
+      include: {
+        equipos: {
+          select: { id: true, deviceId: true, nombre: true, activo: true },
+          orderBy: { deviceId: "asc" },
+        },
+      },
     });
     return NextResponse.json(cliente, { status: 201 });
   } catch (e) {
