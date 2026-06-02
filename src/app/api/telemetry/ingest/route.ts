@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
+import { alertRecipients, broadcast, fmtEventoMsg } from "@/lib/telegram";
 
 // Prisma necesita el runtime Node (no edge); y nunca cachear.
 export const runtime = "nodejs";
@@ -150,13 +151,38 @@ export async function POST(req: Request) {
   // 3) Eventos accionables.
   //    - Alarma: sólo en el flanco (estado previo no era alarma) → no duplica.
   if (isAlarm && !wasAlarm) {
-    await prisma.evento.create({
+    const evento = await prisma.evento.create({
       data: {
         equipoId: equipo.id,
         kind: "alarm",
         message: `ALARMA — T=${d.temp.toFixed(1)}°C`,
       },
     });
+    // Aviso inmediato por Telegram. No bloquea ni rompe el ingest: si falla,
+    // queda notified=false y el watchdog lo reintenta en su próximo barrido.
+    try {
+      const cli = equipo.clienteId
+        ? await prisma.cliente.findUnique({
+            where: { id: equipo.clienteId },
+            select: { telegramChatId: true },
+          })
+        : null;
+      const msg = fmtEventoMsg({
+        kind: "alarm",
+        nombre: equipo.nombre || equipo.deviceId,
+        deviceId: equipo.deviceId,
+        detail: `Temperatura ${d.temp.toFixed(1)} °C`,
+      });
+      const r = await broadcast(alertRecipients(cli?.telegramChatId), msg);
+      if (r.ok) {
+        await prisma.evento.update({
+          where: { id: evento.id },
+          data: { notified: true },
+        });
+      }
+    } catch {
+      /* el watchdog reintentará (notified sigue en false) */
+    }
   }
   //    - Recuperación: si estaba offline, cerrar el evento offline abierto.
   if (wasOffline) {

@@ -1,0 +1,39 @@
+name: Watchdog flota
+
+# Dispara el watchdog de la nube cada ~5 min: detecta equipos que dejaron de
+# reportar y envía/reintenta avisos por Telegram. El horario de GitHub Actions
+# es aproximado (puede demorarse algunos minutos bajo carga), suficiente para un
+# deshidratador. También se puede correr a mano desde la pestaña Actions.
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch: {}
+
+# No encadenar ejecuciones si una se solapa con la siguiente.
+concurrency:
+  group: watchdog
+  cancel-in-progress: false
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Llamar al endpoint del watchdog
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          # Opcional: sobreescribe la URL si cambia el dominio del backend.
+          WATCHDOG_URL: ${{ vars.WATCHDOG_URL }}
+        run: |
+          URL="${WATCHDOG_URL:-https://app.bioorigen.com/api/cron/watchdog}"
+          echo "POST $URL"
+          code=$(curl -sS -o /tmp/out.json -w "%{http_code}" \
+            -X POST "$URL" \
+            -H "Authorization: Bearer ${CRON_SECRET}")
+          echo "HTTP $code"
+          cat /tmp/out.json || true
+          echo
+          # Falla el job si la nube no respondió 2xx (para que se vea en Actions).
+          if [ "$code" -lt 200 ] || [ "$code" -ge 300 ]; then
+            exit 1
+          fi
