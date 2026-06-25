@@ -52,7 +52,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: `Archivo demasiado grande (máx ${maxMb} MB)` }, { status: 400 });
     }
 
-    let buffer = Buffer.from(await file.arrayBuffer());
+    let buffer: Buffer = Buffer.from(await file.arrayBuffer()) as Buffer;
     let mimeType = file.type;
     const folder = isImage ? "images" : isVideo ? "videos" : "datasheets";
 
