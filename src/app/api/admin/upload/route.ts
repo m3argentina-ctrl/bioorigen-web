@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import sharp from "sharp";
 import { requireAdmin } from "@/lib/admin-auth";
 import { uploadFile } from "@/lib/storage";
 
@@ -10,6 +11,23 @@ const MAX_VIDEO_MB = 200;
 const ALLOWED_IMAGES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 const ALLOWED_DOCS = ["application/pdf"];
 const ALLOWED_VIDEOS = ["video/mp4", "video/webm", "video/ogg", "video/quicktime"];
+
+const IMAGE_MAX_PX = 1200;
+
+async function resizeImage(buffer: Buffer, mimeType: string): Promise<{ buffer: Buffer; mime: string }> {
+  // GIF animado: no redimensionar para no perder animación
+  if (mimeType === "image/gif") return { buffer, mime: mimeType };
+
+  const resized = await sharp(buffer)
+    .resize(IMAGE_MAX_PX, IMAGE_MAX_PX, {
+      fit: "inside",        // mantiene proporciones, nunca agranda
+      withoutEnlargement: true,
+    })
+    .webp({ quality: 85 }) // convierte todo a WebP
+    .toBuffer();
+
+  return { buffer: resized, mime: "image/webp" };
+}
 
 export async function POST(request: Request) {
   const authError = await requireAdmin();
@@ -34,9 +52,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: `Archivo demasiado grande (máx ${maxMb} MB)` }, { status: 400 });
     }
 
-    const buffer = Buffer.from(await file.arrayBuffer());
+    let buffer = Buffer.from(await file.arrayBuffer());
+    let mimeType = file.type;
     const folder = isImage ? "images" : isVideo ? "videos" : "datasheets";
-    const url = await uploadFile(buffer, file.name, file.type, folder);
+
+    if (isImage) {
+      const processed = await resizeImage(buffer, mimeType);
+      buffer = processed.buffer;
+      mimeType = processed.mime;
+    }
+
+    const url = await uploadFile(buffer, file.name, mimeType, folder);
 
     return NextResponse.json({ url });
   } catch (e) {
