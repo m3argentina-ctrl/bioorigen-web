@@ -60,7 +60,7 @@ export default function ProductCard({ product }: { product: Product }) {
             alt={product.name}
             fill
             sizes="(max-width: 768px) 100vw, 320px"
-            className="object-cover"
+            className="object-contain p-2"
           />
         ) : (
           <div className="flex h-full items-center justify-center text-6xl">

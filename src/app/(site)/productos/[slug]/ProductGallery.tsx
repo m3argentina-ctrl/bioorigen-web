@@ -74,7 +74,7 @@ export default function ProductGallery({ images, name, badge, fallbackEmoji, vid
                 alt={`${name} ${current + 1}`}
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover transition-transform duration-300 group-hover:scale-105"
+                className="object-contain p-3 transition-transform duration-300 group-hover:scale-105"
                 priority
               />
             ) : (
@@ -131,7 +131,7 @@ export default function ProductGallery({ images, name, badge, fallbackEmoji, vid
                     : "border-transparent opacity-60 hover:opacity-100 hover:border-slate-300"
                 }`}
               >
-                <Image src={src} alt={`${name} ${i + 1}`} fill className="object-cover" />
+                <Image src={src} alt={`${name} ${i + 1}`} fill className="object-contain p-1" />
               </button>
             ))}
 
