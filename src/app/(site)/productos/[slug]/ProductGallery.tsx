@@ -157,7 +157,7 @@ export default function ProductGallery({ images, name, badge, fallbackEmoji, vid
       {/* Lightbox */}
       {lightbox && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-white"
+          className="fixed inset-0 z-[200] flex items-center justify-center bg-black/90 backdrop-blur-sm"
           onClick={() => setLightbox(false)}
           onKeyDown={handleKey}
           tabIndex={0}
@@ -169,7 +169,7 @@ export default function ProductGallery({ images, name, badge, fallbackEmoji, vid
             type="button"
             onClick={() => setLightbox(false)}
             aria-label="Cerrar"
-            className="absolute right-4 top-4 rounded-full bg-slate-100 p-2 text-slate-600 hover:bg-slate-200"
+            className="absolute right-4 top-4 rounded-full bg-white/20 p-2 text-white hover:bg-white/30"
           >
             <X size={22} />
           </button>
@@ -181,7 +181,7 @@ export default function ProductGallery({ images, name, badge, fallbackEmoji, vid
                 onClick={(e) => { e.stopPropagation(); prev(); }}
                 disabled={!hasPrev}
                 aria-label="Imagen anterior"
-                className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-slate-100 p-3 text-slate-600 hover:bg-slate-200 disabled:opacity-20"
+                className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/20 p-3 text-white hover:bg-white/30 disabled:opacity-20"
               >
                 <ChevronLeft size={28} />
               </button>
@@ -190,7 +190,7 @@ export default function ProductGallery({ images, name, badge, fallbackEmoji, vid
                 onClick={(e) => { e.stopPropagation(); next(); }}
                 disabled={!hasNext}
                 aria-label="Imagen siguiente"
-                className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-slate-100 p-3 text-slate-600 hover:bg-slate-200 disabled:opacity-20"
+                className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/20 p-3 text-white hover:bg-white/30 disabled:opacity-20"
               >
                 <ChevronRight size={28} />
               </button>
