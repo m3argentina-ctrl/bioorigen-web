@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { requireAdmin } from "@/lib/admin-auth";
+import { createSupplierOrdersInTx, notifySuppliers } from "@/lib/dropshipping";
 
 export const dynamic = "force-dynamic";
 
@@ -26,7 +27,29 @@ export async function PUT(request: Request, { params }: Params) {
 
   try {
     const { status } = UpdateSchema.parse(await request.json());
-    const order = await prisma.order.update({ where: { id: params.id }, data: { status } });
+
+    let shouldNotify = false;
+
+    const order = await prisma.$transaction(async (tx) => {
+      const prev = await tx.order.findUnique({ where: { id: params.id } });
+      if (!prev) throw new Error("Orden no encontrada");
+
+      const updated = await tx.order.update({ where: { id: params.id }, data: { status } });
+
+      // Si la orden acaba de pasar a "paid" por primera vez, crear órdenes de proveedor.
+      if (status === "paid" && prev.status !== "paid") {
+        const created = await createSupplierOrdersInTx(tx, prev);
+        if (created) shouldNotify = true;
+      }
+
+      return updated;
+    });
+
+    // Email a proveedores fuera de la transacción.
+    if (shouldNotify) {
+      await notifySuppliers(params.id);
+    }
+
     return NextResponse.json(order);
   } catch (e) {
     if (e instanceof z.ZodError) return NextResponse.json({ error: e.issues }, { status: 400 });

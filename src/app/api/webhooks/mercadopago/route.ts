@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { Payment } from "mercadopago";
 import { prisma } from "@/lib/db";
 import { getMercadoPagoClient } from "@/lib/mercadopago";
-import { sendSupplierOrderEmail } from "@/lib/email";
+import { createSupplierOrdersInTx, notifySuppliers } from "@/lib/dropshipping";
 import type { OrderItem } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -124,41 +124,8 @@ export async function POST(request: Request) {
           });
         }
 
-        // Agrupa ítems por proveedor para crear una SupplierOrder por proveedor.
-        const productIds = orderItems.map((i) => i.productId);
-        const products = await tx.product.findMany({
-          where: { id: { in: productIds }, supplierId: { not: null } },
-          select: { id: true, supplierId: true, supplierCost: true },
-        });
-
-        // Map: supplierId → lista de items
-        const bySupplier = new Map<string, { productId: string; name: string; quantity: number; supplierCost: number }[]>();
-        for (const item of orderItems) {
-          const prod = products.find((p) => p.id === item.productId);
-          if (!prod?.supplierId) continue;
-          const list = bySupplier.get(prod.supplierId) ?? [];
-          list.push({ productId: item.productId, name: item.name, quantity: item.quantity, supplierCost: prod.supplierCost ?? 0 });
-          bySupplier.set(prod.supplierId, list);
-        }
-
-        for (const [supplierId, items] of Array.from(bySupplier.entries())) {
-          const totalCost = items.reduce((acc: number, i) => acc + i.supplierCost * i.quantity, 0);
-          await tx.supplierOrder.create({
-            data: {
-              orderId: order.id,
-              supplierId,
-              status: "pending",
-              items,
-              customerName: order.customerName,
-              customerEmail: order.customerEmail,
-              customerPhone: order.customerPhone,
-              shippingAddress: order.customerAddress,
-              supplierCost: totalCost,
-            },
-          });
-        }
-
-        if (bySupplier.size > 0) {
+        const created = await createSupplierOrdersInTx(tx, order);
+        if (created) {
           shouldNotifySuppliers = true;
           notifyOrderId = order.id;
         }
@@ -167,33 +134,7 @@ export async function POST(request: Request) {
 
     // Envía emails a proveedores fuera de la transacción.
     if (shouldNotifySuppliers && notifyOrderId) {
-      const baseUrl = process.env.NEXTAUTH_URL ?? process.env.VERCEL_URL ?? "";
-      const supplierOrders = await prisma.supplierOrder.findMany({
-        where: { orderId: notifyOrderId, status: "pending" },
-        include: { supplier: true },
-      });
-
-      for (const so of supplierOrders) {
-        const items = so.items as Array<{ name: string; quantity: number }>;
-        const confirmUrl = `${baseUrl}/proveedor/confirmar/${so.confirmToken}`;
-        const { ok } = await sendSupplierOrderEmail({
-          supplierName: so.supplier.name,
-          supplierEmail: so.supplier.email,
-          supplierOrderId: so.id,
-          customerName: so.customerName,
-          customerPhone: so.customerPhone,
-          customerEmail: so.customerEmail,
-          shippingAddress: so.shippingAddress,
-          items,
-          confirmUrl,
-        });
-        if (ok) {
-          await prisma.supplierOrder.update({
-            where: { id: so.id },
-            data: { status: "notified", notifiedAt: new Date() },
-          });
-        }
-      }
+      await notifySuppliers(notifyOrderId);
     }
 
     return NextResponse.json({ received: true });
