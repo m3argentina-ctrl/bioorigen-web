@@ -9,28 +9,31 @@ datasource db {
 }
 
 model Product {
-  id          String   @id @default(cuid())
-  name        String
-  slug        String   @unique
-  description String   @db.Text
-  price       Float
-  salePrice   Float?
-  stock       Int
-  category    String
-  linea       String?
-  featured    Boolean  @default(false)
-  images      String[]
-  specs       Json?
-  dataSheet   String?
-  videoUrl    String?
-  weightGrams Int?
-  heightCm    Float?
-  widthCm     Float?
-  lengthCm    Float?
-  rating      Float?
-  reviewCount Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id           String    @id @default(cuid())
+  name         String
+  slug         String    @unique
+  description  String    @db.Text
+  price        Float
+  salePrice    Float?
+  stock        Int
+  category     String
+  linea        String?
+  featured     Boolean   @default(false)
+  images       String[]
+  specs        Json?
+  dataSheet    String?
+  videoUrl     String?
+  weightGrams  Int?
+  heightCm     Float?
+  widthCm      Float?
+  lengthCm     Float?
+  rating       Float?
+  reviewCount  Int       @default(0)
+  supplierId   String?
+  supplierCost Float?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  supplier     Supplier? @relation(fields: [supplierId], references: [id])
 }
 
 model Recipe {
@@ -122,29 +125,80 @@ model SiteConfig {
 }
 
 model Order {
-  id                 String   @id @default(cuid())
+  id                 String          @id @default(cuid())
   customerEmail      String
   customerName       String
   customerPhone      String
-  customerAddress    String   @db.Text
+  customerAddress    String          @db.Text
   items              Json
   subtotal           Float
   shipping           Float
-  discount           Float    @default(0)
+  discount           Float           @default(0)
   total              Float
-  status             String   @default("pending")
-  paymentMethod      String   @default("mercadopago")
+  status             String          @default("pending")
+  paymentMethod      String          @default("mercadopago")
   mercadoPagoId      String?
   paymentStatus      String?
   shippingCarrier    String?
   shippingMethod     String?
-  shippingIsFree     Boolean  @default(false)
+  shippingIsFree     Boolean         @default(false)
   shippingFreeReason String?
   openpayId          String?
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+  supplierOrders     SupplierOrder[]
 
   @@index([customerEmail])
+  @@index([status])
+}
+
+// ---------------------------------------------------------------------------
+// Dropshipping
+// ---------------------------------------------------------------------------
+
+model Supplier {
+  id             String          @id @default(cuid())
+  name           String
+  email          String
+  phone          String?
+  address        String?
+  notes          String?
+  paymentTerms   String?
+  active         Boolean         @default(true)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  products       Product[]
+  supplierOrders SupplierOrder[]
+}
+
+// status: pending | notified | shipped | delivered | paid | cancelled
+model SupplierOrder {
+  id              String    @id @default(cuid())
+  orderId         String
+  supplierId      String
+  status          String    @default("pending")
+  items           Json
+  customerName    String
+  customerEmail   String
+  customerPhone   String
+  shippingAddress String    @db.Text
+  confirmToken    String    @unique @default(cuid())
+  trackingNumber  String?
+  carrier         String?
+  supplierCost    Float
+  adminNotes      String?
+  notifiedAt      DateTime?
+  shippedAt       DateTime?
+  deliveredAt     DateTime?
+  paidAt          DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  order    Order    @relation(fields: [orderId], references: [id])
+  supplier Supplier @relation(fields: [supplierId], references: [id])
+
+  @@index([orderId])
+  @@index([supplierId])
   @@index([status])
 }
 

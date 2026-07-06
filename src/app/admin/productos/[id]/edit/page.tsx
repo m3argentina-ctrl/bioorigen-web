@@ -10,6 +10,7 @@ import FileUpload from "@/components/admin/FileUpload";
 const LINEAS = ["", "Familiar", "Comercial"];
 
 type SpecEntry = { key: string; value: string };
+type SupplierOption = { id: string; name: string; active: boolean };
 
 function slugify(text: string): string {
   return text.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -20,6 +21,7 @@ export default function EditProductPage() {
   const { id } = useParams<{ id: string }>();
   const [saving, setSaving] = useState(false);
   const [categories, setCategories] = useState<string[]>([]);
+  const [suppliers, setSuppliers] = useState<SupplierOption[]>([]);
   const [images, setImages] = useState<string[]>([]);
   const [dataSheet, setDataSheet] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
@@ -31,6 +33,9 @@ export default function EditProductPage() {
     fetch("/api/admin/categories")
       .then((r) => r.json())
       .then((data: { name: string }[]) => setCategories(data.map((c) => c.name)));
+    fetch("/api/admin/suppliers")
+      .then((r) => r.json())
+      .then((data: SupplierOption[]) => setSuppliers(data));
   }, []);
 
   useEffect(() => {
@@ -47,6 +52,8 @@ export default function EditProductPage() {
           heightCm: data.heightCm != null ? String(data.heightCm) : "",
           widthCm: data.widthCm != null ? String(data.widthCm) : "",
           lengthCm: data.lengthCm != null ? String(data.lengthCm) : "",
+          supplierId: data.supplierId ?? "",
+          supplierCost: data.supplierCost != null ? String(data.supplierCost) : "",
         });
         setImages(Array.isArray(data.images) ? data.images : []);
         setDataSheet(data.dataSheet ?? "");
@@ -90,6 +97,8 @@ export default function EditProductPage() {
         heightCm: form.heightCm ? Number(form.heightCm) : null,
         widthCm: form.widthCm ? Number(form.widthCm) : null,
         lengthCm: form.lengthCm ? Number(form.lengthCm) : null,
+        supplierId: form.supplierId || null,
+        supplierCost: form.supplierCost ? Number(form.supplierCost) : null,
       }),
     });
     setSaving(false);
@@ -280,6 +289,41 @@ export default function EditProductPage() {
             <input type="number" name="reviewCount" value={String(form.reviewCount ?? 0)} onChange={hc}
               className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-bio-green" />
           </label>
+        </div>
+
+        {/* Dropshipping */}
+        <div className="rounded-xl border border-dashed border-bio-green/40 bg-green-50/30 p-4">
+          <p className="mb-3 text-sm font-semibold text-bio-green">Dropshipping (opcional)</p>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="mb-1 block text-sm font-medium text-slate-700">Proveedor</label>
+              <select
+                name="supplierId"
+                value={String(form.supplierId ?? "")}
+                onChange={hc}
+                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-bio-green"
+              >
+                <option value="">— Sin proveedor —</option>
+                {suppliers.filter((s) => s.active).map((s) => (
+                  <option key={s.id} value={s.id}>{s.name}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="mb-1 block text-sm font-medium text-slate-700">Costo proveedor (ARS)</label>
+              <input
+                type="number"
+                name="supplierCost"
+                value={String(form.supplierCost ?? "")}
+                onChange={hc}
+                placeholder="0.00"
+                min="0"
+                step="0.01"
+                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-bio-green"
+              />
+              <p className="mt-1 text-xs text-slate-400">Lo que se le paga al proveedor por unidad</p>
+            </div>
+          </div>
         </div>
 
         <label className="flex items-center gap-2 text-sm font-medium text-slate-700">

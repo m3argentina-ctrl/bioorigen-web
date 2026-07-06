@@ -34,6 +34,8 @@ const UpdateSchema = z.object({
   heightCm: z.number().positive().optional().nullable(),
   widthCm: z.number().positive().optional().nullable(),
   lengthCm: z.number().positive().optional().nullable(),
+  supplierId: z.string().optional().nullable(),
+  supplierCost: z.number().positive().optional().nullable(),
 });
 
 export async function PUT(request: Request, { params }: Params) {

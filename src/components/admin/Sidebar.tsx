@@ -19,6 +19,8 @@ import {
   MessageSquare,
   Cpu,
   Users,
+  Store,
+  PackageCheck,
 } from "lucide-react";
 
 const NAV = [
@@ -27,6 +29,8 @@ const NAV = [
   { href: "/admin/categorias", label: "Categorías", icon: Tags },
   { href: "/admin/recetas", label: "Recetas", icon: UtensilsCrossed },
   { href: "/admin/ordenes", label: "Órdenes", icon: ClipboardList },
+  { href: "/admin/ordenes-proveedores", label: "Órd. Proveedores", icon: PackageCheck },
+  { href: "/admin/proveedores", label: "Proveedores", icon: Store },
   { href: "/admin/flota", label: "Flota", icon: Cpu },
   { href: "/admin/clientes", label: "Clientes", icon: Users },
   { href: "/admin/contacto", label: "Contacto", icon: MessageSquare },

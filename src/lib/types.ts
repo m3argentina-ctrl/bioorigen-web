@@ -17,6 +17,53 @@ export type Product = {
   videoUrl: string | null;
   rating: number | null;
   reviewCount: number;
+  supplierId: string | null;
+  supplierCost: number | null;
+};
+
+export type Supplier = {
+  id: string;
+  name: string;
+  email: string;
+  phone: string | null;
+  address: string | null;
+  notes: string | null;
+  paymentTerms: string | null;
+  active: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type SupplierOrderItem = {
+  productId: string;
+  name: string;
+  quantity: number;
+  supplierCost: number;
+};
+
+export type SupplierOrder = {
+  id: string;
+  orderId: string;
+  supplierId: string;
+  status: string;
+  items: SupplierOrderItem[];
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  shippingAddress: string;
+  confirmToken: string;
+  trackingNumber: string | null;
+  carrier: string | null;
+  supplierCost: number;
+  adminNotes: string | null;
+  notifiedAt: string | null;
+  shippedAt: string | null;
+  deliveredAt: string | null;
+  paidAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  supplier?: Supplier;
+  order?: { id: string; customerName: string; total: number };
 };
 
 export type Recipe = {
