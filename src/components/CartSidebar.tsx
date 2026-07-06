@@ -64,7 +64,7 @@ export default function CartSidebar() {
                       {product.name}
                     </span>
                     <span className="text-sm text-bio-dark/70">
-                      {formatPrice(product.price)}
+                      {formatPrice(product.salePrice ?? product.price)}
                     </span>
                     <div className="mt-1 flex items-center gap-2">
                       <button

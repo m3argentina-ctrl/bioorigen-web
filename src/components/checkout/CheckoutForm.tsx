@@ -417,7 +417,7 @@ export default function CheckoutForm() {
                   <span className="ml-1 text-bio-dark/50">×{item.quantity}</span>
                 </span>
                 <span className="shrink-0 text-sm font-semibold text-bio-dark">
-                  {formatPrice(item.product.price * item.quantity)}
+                  {formatPrice((item.product.salePrice ?? item.product.price) * item.quantity)}
                 </span>
               </li>
             ))}

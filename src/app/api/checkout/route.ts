@@ -81,7 +81,7 @@ export async function POST(request: Request) {
       return {
         productId: product.id,
         name: product.name,
-        price: product.price,
+        price: product.salePrice ?? product.price,
         quantity,
         // dimensiones para ME2
         weightGrams: product.weightGrams ?? DEFAULT_WEIGHT_G,
