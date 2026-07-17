@@ -8,6 +8,7 @@ const nextConfig = {
       { protocol: "https", hostname: "bioorigen.com.ar" },
       { protocol: "https", hostname: "**.supabase.co" },
       { protocol: "https", hostname: "**.supabase.in" },
+      { protocol: "https", hostname: "acdn-us.mitiendanube.com" },
     ],
   },
 };
