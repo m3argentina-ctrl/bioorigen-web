@@ -18,6 +18,7 @@ const UpdateSchema = z.object({
   slug: z.string().min(1).optional(),
   description: z.string().optional().nullable(),
   image: z.string().optional().nullable(),
+  link: z.string().optional().nullable(),
   order: z.number().int().optional(),
   active: z.boolean().optional(),
 });

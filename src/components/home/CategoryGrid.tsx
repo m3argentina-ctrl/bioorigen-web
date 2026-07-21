@@ -6,6 +6,7 @@ type Category = {
   name: string;
   slug: string;
   image?: string | null;
+  link?: string | null;
 };
 
 type Props = { categories: Category[] };
@@ -35,18 +36,17 @@ const FALLBACK: Array<{ id: string; name: string; href: string; image: null; emo
 export default function CategoryGrid({ categories }: Props) {
   const items =
     categories.length > 0
-      ? [
-          ...categories.map((c) => ({
-            id: c.id,
-            name: c.name,
-            href: `/productos?categoria=${encodeURIComponent(c.name)}`,
-            image: c.image ?? null,
-            emoji: EMOJI[c.name] ?? "🌿",
-          })),
-          ...(!categories.some((c) => c.slug === "recetas" || c.name.toLowerCase().includes("receta"))
-            ? [{ id: "recetas-link", name: "Recetas", href: "/recetas", image: null, emoji: "📖" }]
-            : []),
-        ]
+      ? categories.map((c) => ({
+          id: c.id,
+          name: c.name,
+          // Link personalizado si la categoría lo define (ej "/recetas"),
+          // si no, filtrado por categoría en el catálogo.
+          href: c.link?.trim()
+            ? c.link.trim()
+            : `/productos?categoria=${encodeURIComponent(c.name)}`,
+          image: c.image ?? null,
+          emoji: EMOJI[c.name] ?? "🌿",
+        }))
       : FALLBACK;
 
   return (

@@ -13,7 +13,7 @@ function slugify(t: string) {
 export default function NewCategoriaPage() {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
-  const [form, setForm] = useState({ name: "", slug: "", description: "", image: "", active: true });
+  const [form, setForm] = useState({ name: "", slug: "", description: "", image: "", link: "", active: true });
 
   function hc(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const { name, value, type } = e.target;
@@ -36,6 +36,7 @@ export default function NewCategoriaPage() {
         slug: form.slug,
         description: form.description || null,
         image: form.image || null,
+        link: form.link.trim() || null,
         active: form.active,
       }),
     });
@@ -76,6 +77,15 @@ export default function NewCategoriaPage() {
           value={form.image}
           onChange={(url) => setForm((p) => ({ ...p, image: url }))}
         />
+
+        <label className="block">
+          <span className="mb-1 block text-sm font-medium text-slate-700">Link personalizado</span>
+          <input type="text" name="link" value={form.link} onChange={hc} placeholder="/recetas"
+            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono outline-none focus:border-bio-green" />
+          <span className="mt-1 block text-xs text-slate-400">
+            Opcional. Si lo completás, la tarjeta apunta acá (ej <code>/recetas</code>). Si lo dejás vacío, se filtra el catálogo por esta categoría.
+          </span>
+        </label>
 
         <label className="flex items-center gap-3 rounded-lg border border-slate-200 p-3">
           <input type="checkbox" name="active" checked={form.active}

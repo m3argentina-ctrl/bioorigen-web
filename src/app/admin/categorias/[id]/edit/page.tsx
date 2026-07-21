@@ -20,6 +20,7 @@ export default function EditCategoriaPage() {
         slug: data.slug ?? "",
         description: data.description ?? "",
         image: data.image ?? "",
+        link: data.link ?? "",
         active: data.active ?? true,
       }));
   }, [id]);
@@ -42,6 +43,7 @@ export default function EditCategoriaPage() {
         slug: form.slug,
         description: String(form.description || "") || null,
         image: String(form.image || "") || null,
+        link: String(form.link || "").trim() || null,
         active: form.active,
       }),
     });
@@ -88,6 +90,15 @@ export default function EditCategoriaPage() {
           value={String(form.image ?? "")}
           onChange={(url) => setForm((p) => p ? { ...p, image: url } : p)}
         />
+
+        <label className="block">
+          <span className="mb-1 block text-sm font-medium text-slate-700">Link personalizado</span>
+          <input type="text" name="link" value={String(form.link ?? "")} onChange={hc} placeholder="/recetas"
+            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono outline-none focus:border-bio-green" />
+          <span className="mt-1 block text-xs text-slate-400">
+            Opcional. Si lo completás, la tarjeta apunta acá (ej <code>/recetas</code>). Si lo dejás vacío, se filtra el catálogo por esta categoría.
+          </span>
+        </label>
 
         <label className="flex items-center gap-3 rounded-lg border border-slate-200 p-3">
           <input type="checkbox" name="active" checked={Boolean(form.active)}
