@@ -112,7 +112,7 @@ export default function CategoriasAdminPage() {
           <table className="w-full text-sm">
             <thead className="border-b bg-slate-50 text-xs text-slate-500">
               <tr>
-                <th className="px-4 py-3 text-left">Orden</th>
+                <th className="px-4 py-3 text-left">Orden (↑↓ para mover)</th>
                 <th className="px-4 py-3 text-left">Nombre</th>
                 <th className="px-4 py-3 text-left">Slug</th>
                 <th className="px-4 py-3 text-left">Estado</th>
@@ -123,16 +123,18 @@ export default function CategoriasAdminPage() {
               {sorted.map((cat, idx) => (
                 <tr key={cat.id} className="hover:bg-slate-50">
                   <td className="px-4 py-3">
-                    <div className="flex items-center gap-1">
-                      <span className="w-6 text-center text-slate-400">{cat.order}</span>
-                      <div className="flex flex-col">
+                    <div className="flex items-center gap-2">
+                      <span className="w-5 text-center font-medium text-slate-500">{cat.order}</span>
+                      <div className="flex flex-col gap-1">
                         <button type="button" onClick={() => moveOrder(cat, "up")} disabled={idx === 0}
-                          className="rounded p-0.5 text-slate-300 hover:text-slate-600 disabled:opacity-20">
-                          <ChevronUp size={14} />
+                          title="Subir"
+                          className="flex h-6 w-6 items-center justify-center rounded-md border border-slate-300 bg-white text-slate-600 transition-colors hover:border-bio-green hover:bg-bio-green hover:text-white disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-slate-300 disabled:hover:bg-white disabled:hover:text-slate-600">
+                          <ChevronUp size={15} />
                         </button>
                         <button type="button" onClick={() => moveOrder(cat, "down")} disabled={idx === sorted.length - 1}
-                          className="rounded p-0.5 text-slate-300 hover:text-slate-600 disabled:opacity-20">
-                          <ChevronDown size={14} />
+                          title="Bajar"
+                          className="flex h-6 w-6 items-center justify-center rounded-md border border-slate-300 bg-white text-slate-600 transition-colors hover:border-bio-green hover:bg-bio-green hover:text-white disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-slate-300 disabled:hover:bg-white disabled:hover:text-slate-600">
+                          <ChevronDown size={15} />
                         </button>
                       </div>
                     </div>
