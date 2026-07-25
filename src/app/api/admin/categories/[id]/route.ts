@@ -21,6 +21,7 @@ const UpdateSchema = z.object({
   link: z.string().optional().nullable(),
   order: z.number().int().optional(),
   active: z.boolean().optional(),
+  paused: z.boolean().optional(),
 });
 
 export async function PUT(request: Request, { params }: Params) {
@@ -30,16 +31,32 @@ export async function PUT(request: Request, { params }: Params) {
   try {
     const body = UpdateSchema.parse(await request.json());
 
-    // Si se renombra la categoría, propagamos el nuevo nombre a todos los productos
     const [category] = await prisma.$transaction(async (tx) => {
       const current = await tx.category.findUnique({ where: { id: params.id } });
       const updated = await tx.category.update({ where: { id: params.id }, data: body });
 
+      // Propagate name change to all products
       if (body.name && current && body.name !== current.name) {
         await tx.product.updateMany({
           where: { category: current.name },
           data: { category: body.name },
         });
+      }
+
+      // Propagate pause/unpause directly to products so the change is immediate in DB.
+      // Use updated.name (may differ from current.name if also renaming in same request).
+      if (body.paused !== undefined) {
+        if (body.paused) {
+          await tx.product.updateMany({
+            where: { category: updated.name, active: true },
+            data: { active: false },
+          });
+        } else {
+          await tx.product.updateMany({
+            where: { category: updated.name, active: false },
+            data: { active: true },
+          });
+        }
       }
 
       return [updated];
