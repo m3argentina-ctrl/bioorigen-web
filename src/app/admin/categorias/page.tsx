@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Plus, Pencil, Trash2, ChevronUp, ChevronDown, RefreshCw } from "lucide-react";
+import { Plus, Pencil, Trash2, ChevronUp, ChevronDown, RefreshCw, PauseCircle, PlayCircle } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
 
 type Category = {
@@ -13,6 +13,7 @@ type Category = {
   image: string | null;
   order: number;
   active: boolean;
+  paused: boolean;
 };
 
 export default function CategoriasAdminPage() {
@@ -34,6 +35,18 @@ export default function CategoriasAdminPage() {
     });
     if (res.ok) {
       setCategories((prev) => prev.map((c) => c.id === cat.id ? { ...c, active: !c.active } : c));
+    }
+  }
+
+  async function togglePaused(cat: Category) {
+    const res = await fetch(`/api/admin/categories/${cat.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ paused: !cat.paused }),
+    });
+    if (res.ok) {
+      setCategories((prev) => prev.map((c) => c.id === cat.id ? { ...c, paused: !c.paused } : c));
+      toast.success(cat.paused ? "Categoría reactivada" : "Categoría pausada — productos en SIN STOCK");
     }
   }
 
@@ -142,15 +155,38 @@ export default function CategoriasAdminPage() {
                   <td className="px-4 py-3 font-medium text-slate-700">{cat.name}</td>
                   <td className="px-4 py-3 font-mono text-xs text-slate-400">{cat.slug}</td>
                   <td className="px-4 py-3">
-                    <button type="button" onClick={() => toggleActive(cat)}
-                      className={`rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors ${
-                        cat.active ? "bg-green-100 text-green-700 hover:bg-green-200" : "bg-slate-100 text-slate-500 hover:bg-slate-200"
-                      }`}>
-                      {cat.active ? "Activa" : "Inactiva"}
-                    </button>
+                    <div className="flex flex-col gap-1">
+                      <button type="button" onClick={() => toggleActive(cat)}
+                        title={cat.active ? "Click para ocultar" : "Click para mostrar"}
+                        className={`rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors w-fit ${
+                          cat.active ? "bg-green-100 text-green-700 hover:bg-green-200" : "bg-slate-100 text-slate-500 hover:bg-slate-200"
+                        }`}>
+                        {cat.active ? "Visible" : "Oculta"}
+                      </button>
+                      {cat.active && (
+                        <button type="button" onClick={() => togglePaused(cat)}
+                          title={cat.paused ? "Click para reactivar stock" : "Click para pausar stock"}
+                          className={`rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors w-fit ${
+                            cat.paused ? "bg-amber-100 text-amber-700 hover:bg-amber-200" : "bg-slate-50 text-slate-400 hover:bg-slate-100"
+                          }`}>
+                          {cat.paused ? "Sin Stock" : "Con Stock"}
+                        </button>
+                      )}
+                    </div>
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center justify-end gap-2">
+                      {cat.active && (
+                        <button type="button" onClick={() => togglePaused(cat)}
+                          title={cat.paused ? "Reactivar productos" : "Pausar productos (Sin Stock)"}
+                          className={`rounded p-1.5 transition-colors ${
+                            cat.paused
+                              ? "text-amber-500 hover:bg-amber-50 hover:text-amber-700"
+                              : "text-slate-400 hover:bg-amber-50 hover:text-amber-600"
+                          }`}>
+                          {cat.paused ? <PlayCircle size={15} /> : <PauseCircle size={15} />}
+                        </button>
+                      )}
                       <Link href={`/admin/categorias/${cat.id}/edit`}
                         className="rounded p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700">
                         <Pencil size={15} />
