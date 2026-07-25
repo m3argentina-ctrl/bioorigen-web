@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Plus, Pencil, Trash2, Star } from "lucide-react";
+import { Plus, Pencil, Trash2, Star, EyeOff, Eye } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
 import { formatPrice } from "@/lib/format";
 
@@ -14,6 +14,7 @@ type Product = {
   category: string;
   linea: string | null;
   featured: boolean;
+  active: boolean;
   images: string[];
 };
 
@@ -23,6 +24,7 @@ export default function ProductosAdminPage() {
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState("all");
   const [search, setSearch] = useState("");
+  const [showPaused, setShowPaused] = useState(true);
 
   useEffect(() => {
     fetch("/api/admin/categories")
@@ -41,12 +43,28 @@ export default function ProductosAdminPage() {
 
   useEffect(() => { load(); }, [category, search]); // eslint-disable-line
 
+  async function toggleActive(id: string, current: boolean) {
+    const res = await fetch(`/api/admin/products/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ active: !current }),
+    });
+    if (res.ok) {
+      setProducts((prev) => prev.map((p) => p.id === id ? { ...p, active: !current } : p));
+      toast.success(current ? "Producto pausado" : "Producto activado");
+    } else {
+      toast.error("Error al cambiar estado");
+    }
+  }
+
   async function deleteProduct(id: string) {
-    if (!confirm("¿Eliminar este producto?")) return;
+    if (!confirm("¿Eliminar este producto? Esta acción no se puede deshacer.")) return;
     await fetch(`/api/admin/products/${id}`, { method: "DELETE" });
     setProducts((prev) => prev.filter((p) => p.id !== id));
     toast.success("Producto eliminado");
   }
+
+  const visible = showPaused ? products : products.filter((p) => p.active);
 
   return (
     <div className="space-y-5">
@@ -80,6 +98,18 @@ export default function ProductosAdminPage() {
             <option key={c} value={c}>{c}</option>
           ))}
         </select>
+        <button
+          type="button"
+          onClick={() => setShowPaused((v) => !v)}
+          className={`flex items-center gap-1.5 rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${
+            showPaused
+              ? "border-slate-300 text-slate-500 hover:bg-slate-50"
+              : "border-bio-green bg-bio-green/10 text-bio-green"
+          }`}
+        >
+          {showPaused ? <EyeOff size={14} /> : <Eye size={14} />}
+          {showPaused ? "Ocultar pausados" : "Mostrar pausados"}
+        </button>
       </div>
 
       {loading ? (
@@ -95,12 +125,13 @@ export default function ProductosAdminPage() {
                 <th className="px-4 py-3 text-right">Precio</th>
                 <th className="px-4 py-3 text-right">Stock</th>
                 <th className="px-4 py-3 text-left">Categoría</th>
+                <th className="px-4 py-3 text-center">Estado</th>
                 <th className="px-4 py-3 text-right">Acciones</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
-              {products.map((p) => (
-                <tr key={p.id} className="hover:bg-slate-50">
+              {visible.map((p) => (
+                <tr key={p.id} className={`hover:bg-slate-50 ${!p.active ? "opacity-60" : ""}`}>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
                       <div className="h-10 w-10 shrink-0 rounded-lg bg-slate-100 flex items-center justify-center text-xs text-slate-400 overflow-hidden">
@@ -134,8 +165,31 @@ export default function ProductosAdminPage() {
                   <td className="px-4 py-3 text-slate-500">
                     {p.category}{p.linea ? ` — ${p.linea}` : ""}
                   </td>
+                  <td className="px-4 py-3 text-center">
+                    {p.active ? (
+                      <span className="inline-block rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-700">
+                        Activo
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-500">
+                        <EyeOff size={10} /> Pausado
+                      </span>
+                    )}
+                  </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center justify-end gap-2">
+                      <button
+                        type="button"
+                        onClick={() => toggleActive(p.id, p.active)}
+                        title={p.active ? "Pausar producto" : "Activar producto"}
+                        className={`rounded p-1.5 transition-colors ${
+                          p.active
+                            ? "text-slate-400 hover:bg-orange-50 hover:text-orange-500"
+                            : "text-bio-green hover:bg-green-50"
+                        }`}
+                      >
+                        {p.active ? <EyeOff size={15} /> : <Eye size={15} />}
+                      </button>
                       <Link
                         href={`/admin/productos/${p.id}/edit`}
                         className="rounded p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
@@ -155,7 +209,7 @@ export default function ProductosAdminPage() {
               ))}
             </tbody>
           </table>
-          {products.length === 0 && (
+          {visible.length === 0 && (
             <p className="py-10 text-center text-sm text-slate-400">Sin productos.</p>
           )}
         </div>

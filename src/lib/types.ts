@@ -17,6 +17,7 @@ export type Product = {
   videoUrl: string | null;
   rating: number | null;
   reviewCount: number;
+  active: boolean;
   supplierId: string | null;
   supplierCost: number | null;
 };

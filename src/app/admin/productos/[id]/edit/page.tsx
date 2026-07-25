@@ -46,6 +46,7 @@ export default function EditProductPage() {
           name: data.name ?? "", slug: data.slug ?? "", description: data.description ?? "",
           price: String(data.price ?? ""), salePrice: data.salePrice != null ? String(data.salePrice) : "", stock: String(data.stock ?? ""),
           category: data.category ?? "", linea: data.linea ?? "", featured: data.featured ?? false,
+          active: data.active !== false,
           rating: data.rating != null ? String(data.rating) : "",
           reviewCount: String(data.reviewCount ?? 0),
           weightGrams: data.weightGrams != null ? String(data.weightGrams) : "",
@@ -99,6 +100,7 @@ export default function EditProductPage() {
         lengthCm: form.lengthCm ? Number(form.lengthCm) : null,
         supplierId: form.supplierId || null,
         supplierCost: form.supplierCost ? Number(form.supplierCost) : null,
+        active: Boolean(form.active),
       }),
     });
     setSaving(false);
@@ -326,10 +328,16 @@ export default function EditProductPage() {
           </div>
         </div>
 
-        <label className="flex items-center gap-2 text-sm font-medium text-slate-700">
-          <input type="checkbox" name="featured" checked={Boolean(form.featured)} onChange={hc} className="h-4 w-4 accent-bio-green" />
-          Destacado en home
-        </label>
+        <div className="flex flex-col gap-2">
+          <label className="flex items-center gap-2 text-sm font-medium text-slate-700">
+            <input type="checkbox" name="active" checked={Boolean(form.active)} onChange={hc} className="h-4 w-4 accent-bio-green" />
+            Producto activo (visible en la tienda)
+          </label>
+          <label className="flex items-center gap-2 text-sm font-medium text-slate-700">
+            <input type="checkbox" name="featured" checked={Boolean(form.featured)} onChange={hc} className="h-4 w-4 accent-bio-green" />
+            Destacado en home
+          </label>
+        </div>
 
         <div className="flex gap-3 pt-2">
           <button type="submit" disabled={saving}

@@ -29,6 +29,7 @@ model Product {
   lengthCm     Float?
   rating       Float?
   reviewCount  Int       @default(0)
+  active       Boolean   @default(true)
   supplierId   String?
   supplierCost Float?
   createdAt    DateTime  @default(now())

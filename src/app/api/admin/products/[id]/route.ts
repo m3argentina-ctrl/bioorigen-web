@@ -36,6 +36,7 @@ const UpdateSchema = z.object({
   lengthCm: z.number().positive().optional().nullable(),
   supplierId: z.string().optional().nullable(),
   supplierCost: z.number().positive().optional().nullable(),
+  active: z.boolean().optional(),
 });
 
 export async function PUT(request: Request, { params }: Params) {
@@ -57,6 +58,22 @@ export async function PUT(request: Request, { params }: Params) {
     if (e instanceof z.ZodError) return NextResponse.json({ error: e.issues }, { status: 400 });
     return NextResponse.json({ error: "Error al actualizar" }, { status: 500 });
   }
+}
+
+export async function PATCH(request: Request, { params }: Params) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
+
+  const body = await request.json();
+  if (typeof body.active !== "boolean") {
+    return NextResponse.json({ error: "Campo 'active' requerido (boolean)" }, { status: 400 });
+  }
+  const product = await prisma.product.update({
+    where: { id: params.id },
+    data: { active: body.active },
+    select: { id: true, active: true },
+  });
+  return NextResponse.json(product);
 }
 
 export async function DELETE(_req: Request, { params }: Params) {

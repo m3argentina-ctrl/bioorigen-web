@@ -10,7 +10,7 @@ import ProductGallery from "./ProductGallery";
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const product = await prisma.product.findUnique({ where: { slug: params.slug } });
+  const product = await prisma.product.findUnique({ where: { slug: params.slug, active: true } });
   if (!product) return {};
   return {
     title: `${product.name} — Bio Origen`,
@@ -23,7 +23,7 @@ const CATEGORY_EMOJI: Record<string, string> = {
 };
 
 export default async function ProductoPage({ params }: { params: { slug: string } }) {
-  const raw = await prisma.product.findUnique({ where: { slug: params.slug } });
+  const raw = await prisma.product.findUnique({ where: { slug: params.slug, active: true } });
   if (!raw) notFound();
 
   const product = raw as unknown as Product;
