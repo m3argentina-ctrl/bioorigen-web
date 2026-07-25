@@ -44,7 +44,7 @@ function StarRating({
 
 export default function ProductCard({ product }: { product: Product }) {
   const { addItem } = useCart();
-  const outOfStock = product.stock <= 0;
+  const outOfStock = product.stock <= 0 || !product.active;
   const image = product.images[0];
   const onSale = product.salePrice != null && product.salePrice < product.price;
   const discount = onSale ? Math.round((1 - product.salePrice! / product.price) * 100) : 0;
@@ -132,9 +132,13 @@ export default function ProductCard({ product }: { product: Product }) {
         {outOfStock && (
           <Link
             href={href}
-            className="mt-3 block w-full rounded-full border border-bio-orange py-2 text-center text-sm font-semibold text-bio-orange transition-colors hover:bg-bio-orange hover:text-white"
+            className={`mt-3 block w-full rounded-full border py-2 text-center text-sm font-semibold transition-colors ${
+              !product.active
+                ? "border-red-300 text-red-400 hover:bg-red-400 hover:text-white"
+                : "border-bio-orange text-bio-orange hover:bg-bio-orange hover:text-white"
+            }`}
           >
-            A PEDIDO
+            {!product.active ? "SIN STOCK" : "A PEDIDO"}
           </Link>
         )}
       </div>

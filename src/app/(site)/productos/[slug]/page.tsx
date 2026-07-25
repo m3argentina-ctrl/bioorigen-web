@@ -10,7 +10,7 @@ import ProductGallery from "./ProductGallery";
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const product = await prisma.product.findUnique({ where: { slug: params.slug, active: true } });
+  const product = await prisma.product.findUnique({ where: { slug: params.slug } });
   if (!product) return {};
   return {
     title: `${product.name} — Bio Origen`,
@@ -23,10 +23,15 @@ const CATEGORY_EMOJI: Record<string, string> = {
 };
 
 export default async function ProductoPage({ params }: { params: { slug: string } }) {
-  const raw = await prisma.product.findUnique({ where: { slug: params.slug, active: true } });
+  const raw = await prisma.product.findUnique({ where: { slug: params.slug } });
   if (!raw) notFound();
 
-  const product = raw as unknown as Product;
+  // Si la categoría está pausada, el producto también se considera inactivo.
+  const categoryPaused = raw.active
+    ? (await prisma.category.findFirst({ where: { name: raw.category, active: false } })) !== null
+    : false;
+
+  const product = { ...raw, active: raw.active && !categoryPaused } as unknown as Product;
   const specs = product.specs ? Object.entries(product.specs) : [];
   const rounded = product.rating != null ? Math.round(product.rating) : 0;
   const onSale = product.salePrice != null && product.salePrice < product.price;
@@ -117,13 +122,28 @@ export default async function ProductoPage({ params }: { params: { slug: string 
           )}
 
           <div className="flex items-center gap-2 text-sm">
-            <span className={`h-2.5 w-2.5 rounded-full ${product.stock > 0 ? "bg-green-500" : "bg-amber-400"}`} />
-            <span className={`font-semibold uppercase tracking-wide ${product.stock > 0 ? "text-green-700" : "text-amber-600"}`}>
-              {product.stock > 0 ? `${product.stock} en stock` : "Se fabrica a pedido"}
+            <span className={`h-2.5 w-2.5 rounded-full ${!product.active ? "bg-red-400" : product.stock > 0 ? "bg-green-500" : "bg-amber-400"}`} />
+            <span className={`font-semibold uppercase tracking-wide ${!product.active ? "text-red-500" : product.stock > 0 ? "text-green-700" : "text-amber-600"}`}>
+              {!product.active ? "Sin stock" : product.stock > 0 ? `${product.stock} en stock` : "Se fabrica a pedido"}
             </span>
           </div>
 
-          <AddToCart product={product} />
+          {product.active ? (
+            <AddToCart product={product} />
+          ) : (
+            <div className="space-y-3">
+              <div className="rounded-xl border border-red-100 bg-red-50 px-5 py-4 text-center">
+                <p className="text-sm font-semibold text-red-600">Producto sin stock en este momento</p>
+                <p className="mt-1 text-xs text-red-400">Podés consultarnos y te avisamos cuando esté disponible</p>
+              </div>
+              <a
+                href="/contacto"
+                className="flex w-full items-center justify-center gap-2 rounded-full border-2 border-bio-green px-6 py-3 text-sm font-semibold text-bio-green transition-colors hover:bg-bio-green hover:text-white"
+              >
+                Consultar disponibilidad
+              </a>
+            </div>
+          )}
 
           {product.dataSheet && (
             <a

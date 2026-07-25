@@ -12,21 +12,37 @@ async function safe<T>(run: () => Promise<T[]>): Promise<T[]> {
   }
 }
 
+async function getPausedCategoryNames(): Promise<Set<string>> {
+  const cats = await prisma.category.findMany({
+    where: { active: false },
+    select: { name: true },
+  });
+  return new Set(cats.map((c) => c.name));
+}
+
 export function getProducts(): Promise<Product[]> {
   return safe(async () => {
-    const rows = await prisma.product.findMany({ orderBy: { name: "asc" } });
-    // El campo `specs` (Json) llega sin tipar desde la DB; lo afirmamos acá.
-    return rows as unknown as Product[];
+    const [rows, pausedCats] = await Promise.all([
+      prisma.product.findMany({ orderBy: { name: "asc" } }),
+      getPausedCategoryNames(),
+    ]);
+    // Un producto está disponible si está activo individualmente Y su categoría está activa.
+    return rows.map((r) => ({
+      ...r,
+      active: r.active && !pausedCats.has(r.category),
+    })) as unknown as Product[];
   });
 }
 
 export function getFeaturedProducts(): Promise<Product[]> {
   return safe(async () => {
-    const rows = await prisma.product.findMany({
-      where: { featured: true },
-      orderBy: { name: "asc" },
-    });
-    return rows as unknown as Product[];
+    const [rows, pausedCats] = await Promise.all([
+      prisma.product.findMany({ where: { active: true, featured: true }, orderBy: { name: "asc" } }),
+      getPausedCategoryNames(),
+    ]);
+    return rows
+      .filter((r) => !pausedCats.has(r.category))
+      .map((r) => r) as unknown as Product[];
   });
 }
 
