@@ -47,6 +47,9 @@ export default function CategoriasAdminPage() {
     if (res.ok) {
       setCategories((prev) => prev.map((c) => c.id === cat.id ? { ...c, paused: !c.paused } : c));
       toast.success(cat.paused ? "Categoría reactivada" : "Categoría pausada — productos en SIN STOCK");
+    } else {
+      const err = await res.json().catch(() => ({}));
+      toast.error(`Error al pausar (${res.status}): ${JSON.stringify(err)}`);
     }
   }
 

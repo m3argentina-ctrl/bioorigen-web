@@ -65,7 +65,9 @@ export async function PUT(request: Request, { params }: Params) {
     return NextResponse.json(category);
   } catch (e) {
     if (e instanceof z.ZodError) return NextResponse.json({ error: e.issues }, { status: 400 });
-    return NextResponse.json({ error: "Error al actualizar" }, { status: 500 });
+    console.error("[categories PUT]", e);
+    const msg = e instanceof Error ? e.message : String(e);
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
 
