@@ -155,22 +155,20 @@ export default function CategoriasAdminPage() {
                   <td className="px-4 py-3 font-medium text-slate-700">{cat.name}</td>
                   <td className="px-4 py-3 font-mono text-xs text-slate-400">{cat.slug}</td>
                   <td className="px-4 py-3">
-                    <div className="flex flex-col gap-1">
+                    <div className="flex flex-col gap-1.5">
                       <button type="button" onClick={() => toggleActive(cat)}
-                        title={cat.active ? "Click para ocultar" : "Click para mostrar"}
+                        title={cat.active ? "Click para ocultar del frontend" : "Click para mostrar en el frontend"}
                         className={`rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors w-fit ${
                           cat.active ? "bg-green-100 text-green-700 hover:bg-green-200" : "bg-slate-100 text-slate-500 hover:bg-slate-200"
                         }`}>
                         {cat.active ? "Visible" : "Oculta"}
                       </button>
                       {cat.active && (
-                        <button type="button" onClick={() => togglePaused(cat)}
-                          title={cat.paused ? "Click para reactivar stock" : "Click para pausar stock"}
-                          className={`rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors w-fit ${
-                            cat.paused ? "bg-amber-100 text-amber-700 hover:bg-amber-200" : "bg-slate-50 text-slate-400 hover:bg-slate-100"
-                          }`}>
-                          {cat.paused ? "Sin Stock" : "Con Stock"}
-                        </button>
+                        <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold w-fit ${
+                          cat.paused ? "bg-amber-100 text-amber-700" : "bg-blue-50 text-blue-600"
+                        }`}>
+                          {cat.paused ? "⏸ Sin Stock" : "✓ Con Stock"}
+                        </span>
                       )}
                     </div>
                   </td>
@@ -178,13 +176,12 @@ export default function CategoriasAdminPage() {
                     <div className="flex items-center justify-end gap-2">
                       {cat.active && (
                         <button type="button" onClick={() => togglePaused(cat)}
-                          title={cat.paused ? "Reactivar productos" : "Pausar productos (Sin Stock)"}
-                          className={`rounded p-1.5 transition-colors ${
+                          className={`flex items-center gap-1 rounded-lg border px-2.5 py-1 text-xs font-medium transition-colors ${
                             cat.paused
-                              ? "text-amber-500 hover:bg-amber-50 hover:text-amber-700"
-                              : "text-slate-400 hover:bg-amber-50 hover:text-amber-600"
+                              ? "border-green-300 bg-green-50 text-green-700 hover:bg-green-100"
+                              : "border-amber-300 bg-amber-50 text-amber-700 hover:bg-amber-100"
                           }`}>
-                          {cat.paused ? <PlayCircle size={15} /> : <PauseCircle size={15} />}
+                          {cat.paused ? <><PlayCircle size={13} /> Reactivar</> : <><PauseCircle size={13} /> Pausar</>}
                         </button>
                       )}
                       <Link href={`/admin/categorias/${cat.id}/edit`}
