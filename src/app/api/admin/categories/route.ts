@@ -5,9 +5,18 @@ import { requireAdmin } from "@/lib/admin-auth";
 
 export const dynamic = "force-dynamic";
 
+async function getPausedSet(): Promise<Set<string>> {
+  const cfg = await prisma.siteConfig.findUnique({ where: { key: "paused_categories" } });
+  const names: string[] = cfg ? JSON.parse(cfg.value) : [];
+  return new Set(names);
+}
+
 export async function GET() {
-  const categories = await prisma.category.findMany({ orderBy: { order: "asc" } });
-  return NextResponse.json(categories);
+  const [categories, pausedSet] = await Promise.all([
+    prisma.category.findMany({ orderBy: { order: "asc" } }),
+    getPausedSet(),
+  ]);
+  return NextResponse.json(categories.map((c) => ({ ...c, paused: pausedSet.has(c.name) })));
 }
 
 const CategorySchema = z.object({

@@ -26,9 +26,14 @@ export default async function ProductoPage({ params }: { params: { slug: string 
   const raw = await prisma.product.findUnique({ where: { slug: params.slug } });
   if (!raw) notFound();
 
-  // Si la categoría está pausada, el producto también se considera inactivo.
+  // Si la categoría está pausada (SiteConfig), el producto también se considera inactivo.
   const categoryPaused = raw.active
-    ? (await prisma.category.findFirst({ where: { name: raw.category, active: false } })) !== null
+    ? await prisma.siteConfig
+        .findUnique({ where: { key: "paused_categories" } })
+        .then((cfg) => {
+          const names: string[] = cfg ? JSON.parse(cfg.value) : [];
+          return names.includes(raw.category);
+        })
     : false;
 
   const product = { ...raw, active: raw.active && !categoryPaused } as unknown as Product;

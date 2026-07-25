@@ -31,32 +31,47 @@ export async function PUT(request: Request, { params }: Params) {
   try {
     const body = UpdateSchema.parse(await request.json());
 
+    // Strip `paused` before passing to Prisma — stored in SiteConfig instead
+    const { paused: isPaused, ...categoryFields } = body;
+
     const [category] = await prisma.$transaction(async (tx) => {
       const current = await tx.category.findUnique({ where: { id: params.id } });
-      const updated = await tx.category.update({ where: { id: params.id }, data: body });
+      const updated = await tx.category.update({ where: { id: params.id }, data: categoryFields });
 
       // Propagate name change to all products
-      if (body.name && current && body.name !== current.name) {
+      if (categoryFields.name && current && categoryFields.name !== current.name) {
         await tx.product.updateMany({
           where: { category: current.name },
-          data: { category: body.name },
+          data: { category: categoryFields.name },
         });
       }
 
-      // Propagate pause/unpause directly to products so the change is immediate in DB.
-      // Use updated.name (may differ from current.name if also renaming in same request).
-      if (body.paused !== undefined) {
-        if (body.paused) {
+      // Propagate pause/unpause directly to products
+      if (isPaused !== undefined && current) {
+        const catName = updated.name; // use new name in case of rename+pause in same request
+        if (isPaused) {
           await tx.product.updateMany({
-            where: { category: updated.name, active: true },
+            where: { category: catName, active: true },
             data: { active: false },
           });
         } else {
           await tx.product.updateMany({
-            where: { category: updated.name, active: false },
+            where: { category: catName, active: false },
             data: { active: true },
           });
         }
+
+        // Persist paused state in SiteConfig
+        const cfg = await tx.siteConfig.findUnique({ where: { key: "paused_categories" } });
+        const names: string[] = cfg ? JSON.parse(cfg.value) : [];
+        const newNames = isPaused
+          ? Array.from(new Set([...names, current.name]))
+          : names.filter((n) => n !== current.name);
+        await tx.siteConfig.upsert({
+          where: { key: "paused_categories" },
+          update: { value: JSON.stringify(newNames) },
+          create: { key: "paused_categories", value: JSON.stringify(newNames) },
+        });
       }
 
       return [updated];

@@ -13,11 +13,9 @@ async function safe<T>(run: () => Promise<T[]>): Promise<T[]> {
 }
 
 async function getPausedCategoryNames(): Promise<Set<string>> {
-  const cats = await prisma.category.findMany({
-    where: { active: false },
-    select: { name: true },
-  });
-  return new Set(cats.map((c) => c.name));
+  const cfg = await prisma.siteConfig.findUnique({ where: { key: "paused_categories" } });
+  const names: string[] = cfg ? JSON.parse(cfg.value) : [];
+  return new Set(names);
 }
 
 export function getProducts(): Promise<Product[]> {
