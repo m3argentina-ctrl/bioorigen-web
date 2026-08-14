@@ -44,3 +44,8 @@ env.csv
 next-env.d.ts
 
 .vercel
+
+# Material de trabajo (fotos originales, disenos): NO va al repo.
+# Son archivos fuente pesados que la app no usa; viven en el pen/Drive.
+/IMAGENES PRODUCTOS/
+*.cdr
