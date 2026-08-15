@@ -18,7 +18,8 @@ const UpdateSchema = z.object({
   name: z.string().min(1).optional(),
   slug: z.string().min(1).optional(),
   description: z.string().optional(),
-  price: z.number().positive().optional(),
+  // 0 = "a convenir" (ver isQuotePrice en src/lib/format.ts)
+  price: z.number().min(0).optional(),
   salePrice: z.number().positive().optional().nullable(),
   stock: z.number().int().min(0).optional(),
   category: z.string().optional(),

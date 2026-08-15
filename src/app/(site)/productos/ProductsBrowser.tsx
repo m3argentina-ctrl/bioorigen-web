@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import ProductCard from "@/components/products/ProductCard";
-import { formatPrice } from "@/lib/format";
+import { formatPrice, isQuotePrice } from "@/lib/format";
 import type { Product } from "@/lib/types";
 
 // Sub-líneas de la categoría Deshidratadores.
@@ -32,8 +32,10 @@ export default function ProductsBrowser({
   }, [products, dbCategories]);
 
   const [minLimit, maxLimit] = useMemo(() => {
-    if (products.length === 0) return [0, 0];
-    const prices = products.map((p) => p.price);
+    // Los productos a convenir no tienen importe: si entraran acá arrastrarían
+    // el mínimo del filtro a 0.
+    const prices = products.filter((p) => !isQuotePrice(p)).map((p) => p.price);
+    if (prices.length === 0) return [0, 0];
     return [Math.min(...prices), Math.max(...prices)];
   }, [products]);
 
@@ -66,7 +68,8 @@ export default function ProductsBrowser({
           return false;
         const q = search.trim().toLowerCase();
         if (q && !p.name.toLowerCase().includes(q)) return false;
-        if (p.price < priceMin || p.price > priceMax) return false;
+        // Sin precio no se puede filtrar por precio: siempre se muestran.
+        if (!isQuotePrice(p) && (p.price < priceMin || p.price > priceMax)) return false;
         return true;
       }),
     [products, category, linea, search, priceMin, priceMax],

@@ -25,7 +25,8 @@ const ProductSchema = z.object({
   name: z.string().min(1),
   slug: z.string().min(1),
   description: z.string().min(1),
-  price: z.number().positive(),
+  // 0 = "a convenir": la ficha muestra "Consultar precio" en vez del importe.
+  price: z.number().min(0),
   salePrice: z.number().positive().optional().nullable(),
   stock: z.number().int().min(0),
   category: z.string().min(1),

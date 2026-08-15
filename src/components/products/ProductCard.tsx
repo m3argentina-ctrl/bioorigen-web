@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Star } from "lucide-react";
 import { useCart } from "@/components/CartProvider";
-import { formatPrice } from "@/lib/format";
+import { formatPrice, isQuotePrice, QUOTE_PRICE_LABEL } from "@/lib/format";
 import type { Product } from "@/lib/types";
 
 const CATEGORY_EMOJI: Record<string, string> = {
@@ -44,9 +44,11 @@ function StarRating({
 
 export default function ProductCard({ product }: { product: Product }) {
   const { addItem } = useCart();
+  const quote = isQuotePrice(product);
+  // Los productos a convenir nunca ofrecen compra directa: se consultan.
   const outOfStock = product.stock <= 0 || !product.active;
   const image = product.images[0];
-  const onSale = product.salePrice != null && product.salePrice < product.price;
+  const onSale = !quote && product.salePrice != null && product.salePrice < product.price;
   const discount = onSale ? Math.round((1 - product.salePrice! / product.price) * 100) : 0;
 
   const href = `/productos/${product.slug}`;
@@ -104,7 +106,11 @@ export default function ProductCard({ product }: { product: Product }) {
 
         <div className="mt-4 flex items-center justify-between">
           <div>
-            {onSale ? (
+            {quote ? (
+              <span className="text-lg font-bold text-bio-green">
+                {QUOTE_PRICE_LABEL}
+              </span>
+            ) : onSale ? (
               <>
                 <span className="text-lg font-bold text-red-500">
                   {formatPrice(product.salePrice!)}
@@ -119,7 +125,7 @@ export default function ProductCard({ product }: { product: Product }) {
               </span>
             )}
           </div>
-          {!outOfStock && (
+          {!outOfStock && !quote && (
             <button
               type="button"
               onClick={() => addItem(product)}
@@ -129,7 +135,7 @@ export default function ProductCard({ product }: { product: Product }) {
             </button>
           )}
         </div>
-        {outOfStock && (
+        {(outOfStock || quote) && (
           <Link
             href={href}
             className={`mt-3 block w-full rounded-full border py-2 text-center text-sm font-semibold transition-colors ${
@@ -138,7 +144,7 @@ export default function ProductCard({ product }: { product: Product }) {
                 : "border-bio-orange text-bio-orange hover:bg-bio-orange hover:text-white"
             }`}
           >
-            {!product.active ? "SIN STOCK" : "A PEDIDO"}
+            {!product.active ? "SIN STOCK" : quote ? "CONSULTAR" : "A PEDIDO"}
           </Link>
         )}
       </div>

@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Star, ChevronRight, FileDown } from "lucide-react";
 import { prisma } from "@/lib/db";
-import { formatPrice } from "@/lib/format";
+import { formatPrice, isQuotePrice, QUOTE_PRICE_LABEL } from "@/lib/format";
 import type { Product } from "@/lib/types";
 import AddToCart from "./AddToCart";
 import ProductGallery from "./ProductGallery";
@@ -39,7 +39,8 @@ export default async function ProductoPage({ params }: { params: { slug: string 
   const product = { ...raw, active: raw.active && !categoryPaused } as unknown as Product;
   const specs = product.specs ? Object.entries(product.specs) : [];
   const rounded = product.rating != null ? Math.round(product.rating) : 0;
-  const onSale = product.salePrice != null && product.salePrice < product.price;
+  const quote = isQuotePrice(product);
+  const onSale = !quote && product.salePrice != null && product.salePrice < product.price;
   const discount = onSale ? Math.round((1 - product.salePrice! / product.price) * 100) : 0;
 
   return (
@@ -99,7 +100,9 @@ export default async function ProductoPage({ params }: { params: { slug: string 
           )}
 
           <div className="flex items-baseline gap-3">
-            {onSale ? (
+            {quote ? (
+              <span className="text-3xl font-extrabold text-bio-green">{QUOTE_PRICE_LABEL}</span>
+            ) : onSale ? (
               <>
                 <span className="text-3xl font-extrabold text-red-500">{formatPrice(product.salePrice!)}</span>
                 <span className="text-lg text-bio-dark/40 line-through">{formatPrice(product.price)}</span>
@@ -133,7 +136,32 @@ export default async function ProductoPage({ params }: { params: { slug: string 
             </span>
           </div>
 
-          {product.active ? (
+          {quote ? (
+            <div className="space-y-3">
+              <div className="rounded-xl border border-bio-green/20 bg-bio-beige/60 px-5 py-4">
+                <p className="text-sm font-semibold text-bio-dark">Precio a convenir</p>
+                <p className="mt-1 text-xs text-bio-dark/60">
+                  El costo depende de cada equipo. Escribinos y te pasamos el presupuesto.
+                </p>
+              </div>
+              <a
+                href={`https://wa.me/5491169819981?text=${encodeURIComponent(
+                  `Hola! Quiero consultar por: ${product.name}`,
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex w-full items-center justify-center gap-2 rounded-full bg-bio-orange px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-bio-orange-dark"
+              >
+                Consultar por WhatsApp
+              </a>
+              <a
+                href="/contacto"
+                className="flex w-full items-center justify-center gap-2 rounded-full border-2 border-bio-green px-6 py-3 text-sm font-semibold text-bio-green transition-colors hover:bg-bio-green hover:text-white"
+              >
+                Enviar consulta por mail
+              </a>
+            </div>
+          ) : product.active ? (
             <AddToCart product={product} />
           ) : (
             <div className="space-y-3">

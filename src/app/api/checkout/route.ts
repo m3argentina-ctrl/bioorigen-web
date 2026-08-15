@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db";
 import { getMercadoPagoClient, getBaseUrl } from "@/lib/mercadopago";
 import { calculateShipping } from "@/lib/shipping/calculator";
 import { createOrder as createOpenpayOrder, isConfigured as openpayConfigured } from "@/lib/openpayar";
+import { isQuotePrice } from "@/lib/format";
 
 async function getPaymentConfig() {
   const cfg = await prisma.paymentConfig.findFirst();
@@ -74,6 +75,21 @@ export async function POST(request: Request) {
 
     if (products.length !== requested.size) {
       return NextResponse.json({ error: "Algunos productos ya no existen" }, { status: 400 });
+    }
+
+    // Los productos a convenir (price = 0) no se venden online: se cotizan.
+    // La UI ya no ofrece "agregar al carrito", pero acá se corta de raíz para que
+    // no puedan pedirse a $0 llamando a la API directamente.
+    const quoteOnly = products.filter(isQuotePrice);
+    if (quoteOnly.length > 0) {
+      return NextResponse.json(
+        {
+          error: `Estos productos se cotizan a pedido y no pueden comprarse online: ${quoteOnly
+            .map((p) => p.name)
+            .join(", ")}. Escribinos para pasarte el presupuesto.`,
+        },
+        { status: 400 },
+      );
     }
 
     const lineItems = products.map((product) => {
