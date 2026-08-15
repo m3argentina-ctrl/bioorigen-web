@@ -20,7 +20,10 @@ model Product {
   linea        String?
   featured     Boolean   @default(false)
   images       String[]
-  specs        Json?
+  /// `json` y NO `jsonb` a propósito: jsonb reordena las claves por longitud y
+  /// las especificaciones se mostraban en la ficha en un orden arbitrario.
+  /// `json` guarda el texto tal cual y respeta el orden de carga.
+  specs        Json?    @db.Json
   /// Variantes de medida con precio propio. Hoy se usa solo en la categoría
   /// "Laminas antiadherentes" (ver CATEGORY_WITH_VARIANTS en src/lib/variants.ts).
   /// Forma: [{ id, label, price, salePrice?, stock? }]
