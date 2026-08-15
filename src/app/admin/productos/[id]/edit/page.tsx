@@ -114,7 +114,6 @@ export default function EditProductPage() {
 
   if (!form) return <div className="flex h-32 items-center justify-center"><div className="h-6 w-6 animate-spin rounded-full border-2 border-bio-green border-t-transparent" /></div>;
 
-  const isDeshidratador = String(form.category) === "Deshidratadores";
 
   return (
     <div className="mx-auto max-w-2xl space-y-5">
@@ -199,10 +198,9 @@ export default function EditProductPage() {
           <ImageUpload value={images} onChange={setImages} />
         </div>
 
-        {/* Ficha técnica — solo Deshidratadores */}
-        {isDeshidratador && (
-          <FileUpload value={dataSheet} onChange={setDataSheet} />
-        )}
+        {/* Ficha técnica (PDF) — disponible en cualquier categoría: la ficha del
+            producto solo muestra el botón de descarga si hay archivo cargado. */}
+        <FileUpload value={dataSheet} onChange={setDataSheet} />
 
         {/* Video del producto */}
         <div>

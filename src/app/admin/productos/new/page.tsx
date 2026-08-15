@@ -89,7 +89,6 @@ export default function NewProductPage() {
     }
   }
 
-  const isDeshidratador = form.category === "Deshidratadores";
 
   return (
     <div className="mx-auto max-w-2xl space-y-5">
@@ -141,10 +140,9 @@ export default function NewProductPage() {
           <ImageUpload value={images} onChange={setImages} />
         </div>
 
-        {/* Ficha técnica — solo Deshidratadores */}
-        {isDeshidratador && (
-          <FileUpload value={dataSheet} onChange={setDataSheet} />
-        )}
+        {/* Ficha técnica (PDF) — disponible en cualquier categoría: la ficha del
+            producto solo muestra el botón de descarga si hay archivo cargado. */}
+        <FileUpload value={dataSheet} onChange={setDataSheet} />
 
         {/* Video del producto */}
         <div>
