@@ -6,6 +6,7 @@ import { getMercadoPagoClient, getBaseUrl } from "@/lib/mercadopago";
 import { calculateShipping } from "@/lib/shipping/calculator";
 import { createOrder as createOpenpayOrder, isConfigured as openpayConfigured } from "@/lib/openpayar";
 import { isQuotePrice } from "@/lib/format";
+import { findVariant, lineKey, parseVariants, unitPriceOf } from "@/lib/variants";
 
 async function getPaymentConfig() {
   const cfg = await prisma.paymentConfig.findFirst();
@@ -24,7 +25,7 @@ const DEFAULT_WIDTH_CM = 15;
 const DEFAULT_LENGTH_CM = 20;
 
 type CheckoutBody = {
-  items?: { productId?: unknown; quantity?: unknown }[];
+  items?: { productId?: unknown; quantity?: unknown; variantId?: unknown }[];
   customer?: {
     name?: unknown;
     email?: unknown;
@@ -55,25 +56,32 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "El carrito está vacío" }, { status: 400 });
   }
 
-  const requested = new Map<string, number>();
+  // Una línea por (producto, medida): el mismo producto en dos medidas son dos
+  // ítems distintos con precios distintos.
+  const requested = new Map<string, { productId: string; variantId: string | null; qty: number }>();
   for (const item of items) {
     if (typeof item.productId !== "string" || typeof item.quantity !== "number") {
       return NextResponse.json({ error: "Items inválidos" }, { status: 400 });
     }
     const qty = Math.round(item.quantity);
     if (qty <= 0) continue;
-    requested.set(item.productId, (requested.get(item.productId) ?? 0) + qty);
+    const variantId = typeof item.variantId === "string" && item.variantId ? item.variantId : null;
+    const key = lineKey(item.productId, variantId);
+    const prev = requested.get(key);
+    if (prev) prev.qty += qty;
+    else requested.set(key, { productId: item.productId, variantId, qty });
   }
   if (requested.size === 0) {
     return NextResponse.json({ error: "El carrito está vacío" }, { status: 400 });
   }
 
   try {
-    const products = await prisma.product.findMany({
-      where: { id: { in: Array.from(requested.keys()) } },
-    });
+    const lines = Array.from(requested.values());
+    const productIds = Array.from(new Set(lines.map((l) => l.productId)));
+    const products = await prisma.product.findMany({ where: { id: { in: productIds } } });
+    const byId = new Map(products.map((p) => [p.id, p]));
 
-    if (products.length !== requested.size) {
+    if (products.length !== productIds.length) {
       return NextResponse.json({ error: "Algunos productos ya no existen" }, { status: 400 });
     }
 
@@ -92,20 +100,53 @@ export async function POST(request: Request) {
       );
     }
 
-    const lineItems = products.map((product) => {
-      const quantity = requested.get(product.id)!;
-      return {
+    // El precio SIEMPRE se resuelve acá contra la base: el cliente solo elige
+    // qué medida quiere, nunca cuánto sale.
+    const lineItems: Array<{
+      productId: string;
+      name: string;
+      price: number;
+      quantity: number;
+      variantId: string | null;
+      variantLabel: string | null;
+      weightGrams: number;
+      heightCm: number;
+      widthCm: number;
+      lengthCm: number;
+    }> = [];
+
+    for (const line of lines) {
+      const product = byId.get(line.productId)!;
+      const sizes = parseVariants(product);
+      const variant = findVariant(product, line.variantId);
+
+      if (sizes.length > 0 && !variant) {
+        return NextResponse.json(
+          { error: `Elegí una medida para "${product.name}" antes de continuar.` },
+          { status: 400 },
+        );
+      }
+      if (sizes.length === 0 && line.variantId) {
+        return NextResponse.json(
+          { error: `"${product.name}" no se vende por medida.` },
+          { status: 400 },
+        );
+      }
+
+      lineItems.push({
         productId: product.id,
         name: product.name,
-        price: product.salePrice ?? product.price,
-        quantity,
+        price: unitPriceOf(product, variant),
+        quantity: line.qty,
+        variantId: variant?.id ?? null,
+        variantLabel: variant?.label ?? null,
         // dimensiones para ME2
         weightGrams: product.weightGrams ?? DEFAULT_WEIGHT_G,
         heightCm: product.heightCm ?? DEFAULT_HEIGHT_CM,
         widthCm: product.widthCm ?? DEFAULT_WIDTH_CM,
         lengthCm: product.lengthCm ?? DEFAULT_LENGTH_CM,
-      };
-    });
+      });
+    }
 
     const subtotal = lineItems.reduce((sum, li) => sum + li.price * li.quantity, 0);
     const address    = str(body.customer?.address);

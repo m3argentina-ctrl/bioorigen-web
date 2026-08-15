@@ -21,6 +21,11 @@ model Product {
   featured     Boolean   @default(false)
   images       String[]
   specs        Json?
+  /// Variantes de medida con precio propio. Hoy se usa solo en la categoría
+  /// "Laminas antiadherentes" (ver CATEGORY_WITH_VARIANTS en src/lib/variants.ts).
+  /// Forma: [{ id, label, price, salePrice?, stock? }]
+  /// Si es null o [], el producto se comporta como siempre (precio único).
+  variants     Json?
   dataSheet    String?
   videoUrl     String?
   weightGrams  Int?

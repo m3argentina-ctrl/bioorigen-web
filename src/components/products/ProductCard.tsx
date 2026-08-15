@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Star } from "lucide-react";
 import { useCart } from "@/components/CartProvider";
 import { formatPrice, isQuotePrice, QUOTE_PRICE_LABEL } from "@/lib/format";
+import { listPriceOf, minPriceOf, parseVariants, unitPriceOf } from "@/lib/variants";
 import type { Product } from "@/lib/types";
 
 const CATEGORY_EMOJI: Record<string, string> = {
@@ -45,11 +46,19 @@ function StarRating({
 export default function ProductCard({ product }: { product: Product }) {
   const { addItem } = useCart();
   const quote = isQuotePrice(product);
+  const variants = parseVariants(product);
+  // Con 2+ medidas hay que elegir en la ficha: la tarjeta muestra "Desde $…".
+  // Con una sola medida no hay nada que elegir, así que se agrega directo.
+  const multiSize = variants.length > 1;
+  const soleVariant = variants.length === 1 ? variants[0] : null;
   // Los productos a convenir nunca ofrecen compra directa: se consultan.
   const outOfStock = product.stock <= 0 || !product.active;
   const image = product.images[0];
-  const onSale = !quote && product.salePrice != null && product.salePrice < product.price;
-  const discount = onSale ? Math.round((1 - product.salePrice! / product.price) * 100) : 0;
+
+  const listPrice = listPriceOf(product, soleVariant);
+  const unitPrice = unitPriceOf(product, soleVariant);
+  const onSale = !quote && !multiSize && unitPrice < listPrice;
+  const discount = onSale ? Math.round((1 - unitPrice / listPrice) * 100) : 0;
 
   const href = `/productos/${product.slug}`;
 
@@ -110,32 +119,37 @@ export default function ProductCard({ product }: { product: Product }) {
               <span className="text-lg font-bold text-bio-green">
                 {QUOTE_PRICE_LABEL}
               </span>
+            ) : multiSize ? (
+              <span className="text-lg font-bold text-bio-green">
+                <span className="text-xs font-medium text-bio-dark/50">Desde </span>
+                {formatPrice(minPriceOf(product))}
+              </span>
             ) : onSale ? (
               <>
                 <span className="text-lg font-bold text-red-500">
-                  {formatPrice(product.salePrice!)}
+                  {formatPrice(unitPrice)}
                 </span>
                 <span className="ml-2 text-sm text-bio-dark/40 line-through">
-                  {formatPrice(product.price)}
+                  {formatPrice(listPrice)}
                 </span>
               </>
             ) : (
               <span className="text-lg font-bold text-bio-green">
-                {formatPrice(product.price)}
+                {formatPrice(unitPrice)}
               </span>
             )}
           </div>
-          {!outOfStock && !quote && (
+          {!outOfStock && !quote && !multiSize && (
             <button
               type="button"
-              onClick={() => addItem(product)}
+              onClick={() => addItem(product, 1, soleVariant?.id ?? null)}
               className="rounded-full bg-bio-orange px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-bio-orange-dark"
             >
               Agregar al carrito
             </button>
           )}
         </div>
-        {(outOfStock || quote) && (
+        {(outOfStock || quote || multiSize) && (
           <Link
             href={href}
             className={`mt-3 block w-full rounded-full border py-2 text-center text-sm font-semibold transition-colors ${
@@ -144,7 +158,7 @@ export default function ProductCard({ product }: { product: Product }) {
                 : "border-bio-orange text-bio-orange hover:bg-bio-orange hover:text-white"
             }`}
           >
-            {!product.active ? "SIN STOCK" : quote ? "CONSULTAR" : "A PEDIDO"}
+            {!product.active ? "SIN STOCK" : quote ? "CONSULTAR" : multiSize ? "ELEGIR MEDIDA" : "A PEDIDO"}
           </Link>
         )}
       </div>

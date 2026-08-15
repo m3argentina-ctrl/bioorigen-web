@@ -2,15 +2,20 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import type { CartItem, Product } from "@/lib/types";
+import { findVariant, lineKey, unitPriceOf } from "@/lib/variants";
 
 type CartContextValue = {
   items: CartItem[];
   isOpen: boolean;
   count: number;
   subtotal: number;
-  addItem: (product: Product, quantity?: number) => void;
-  removeItem: (productId: string) => void;
-  setQuantity: (productId: string, quantity: number) => void;
+  /** `key` es el resultado de lineKey(productId, variantId). */
+  addItem: (product: Product, quantity?: number, variantId?: string | null) => void;
+  removeItem: (key: string) => void;
+  setQuantity: (key: string, quantity: number) => void;
+  keyOf: (item: CartItem) => string;
+  unitPrice: (item: CartItem) => number;
+  variantLabel: (item: CartItem) => string | null;
   clear: () => void;
   openCart: () => void;
   closeCart: () => void;
@@ -19,6 +24,19 @@ type CartContextValue = {
 const CartContext = createContext<CartContextValue | null>(null);
 
 const STORAGE_KEY = "bioorigen.cart";
+
+function keyOf(item: CartItem): string {
+  return lineKey(item.product.id, item.variantId);
+}
+
+/** Precio unitario real de la línea: respeta la medida elegida. */
+function unitPrice(item: CartItem): number {
+  return unitPriceOf(item.product, findVariant(item.product, item.variantId));
+}
+
+function variantLabel(item: CartItem): string | null {
+  return findVariant(item.product, item.variantId)?.label ?? null;
+}
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
@@ -40,42 +58,34 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   }, [items, hydrated]);
 
-  function addItem(product: Product, quantity = 1) {
+  function addItem(product: Product, quantity = 1, variantId: string | null = null) {
+    const key = lineKey(product.id, variantId);
     setItems((prev) => {
-      const existing = prev.find((i) => i.product.id === product.id);
+      const existing = prev.find((i) => keyOf(i) === key);
       if (existing) {
         return prev.map((i) =>
-          i.product.id === product.id
-            ? { ...i, quantity: i.quantity + quantity }
-            : i,
+          keyOf(i) === key ? { ...i, quantity: i.quantity + quantity } : i,
         );
       }
-      return [...prev, { product, quantity }];
+      return [...prev, { product, quantity, variantId }];
     });
     setIsOpen(true);
   }
 
-  function removeItem(productId: string) {
-    setItems((prev) => prev.filter((i) => i.product.id !== productId));
+  function removeItem(key: string) {
+    setItems((prev) => prev.filter((i) => keyOf(i) !== key));
   }
 
-  function setQuantity(productId: string, quantity: number) {
+  function setQuantity(key: string, quantity: number) {
     if (quantity <= 0) {
-      removeItem(productId);
+      removeItem(key);
       return;
     }
-    setItems((prev) =>
-      prev.map((i) =>
-        i.product.id === productId ? { ...i, quantity } : i,
-      ),
-    );
+    setItems((prev) => prev.map((i) => (keyOf(i) === key ? { ...i, quantity } : i)));
   }
 
   const count = items.reduce((sum, i) => sum + i.quantity, 0);
-  const subtotal = items.reduce(
-    (sum, i) => sum + (i.product.salePrice ?? i.product.price) * i.quantity,
-    0,
-  );
+  const subtotal = items.reduce((sum, i) => sum + unitPrice(i) * i.quantity, 0);
 
   const value: CartContextValue = {
     items,
@@ -85,6 +95,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     addItem,
     removeItem,
     setQuantity,
+    keyOf,
+    unitPrice,
+    variantLabel,
     clear: () => setItems([]),
     openCart: () => setIsOpen(true),
     closeCart: () => setIsOpen(false),

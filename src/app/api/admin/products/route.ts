@@ -1,5 +1,19 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+
+// Medidas con precio propio (ver src/lib/variants.ts). null = precio unico.
+const VariantSchema = z
+  .array(
+    z.object({
+      id: z.string().min(1),
+      label: z.string().min(1),
+      price: z.number().positive(),
+      salePrice: z.number().positive().nullable().optional(),
+      stock: z.number().int().min(0).nullable().optional(),
+    }),
+  )
+  .nullable()
+  .optional();
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { requireAdmin } from "@/lib/admin-auth";
@@ -34,6 +48,7 @@ const ProductSchema = z.object({
   featured: z.boolean().default(false),
   images: z.array(z.string()).default([]),
   specs: z.record(z.string(), z.string()).optional().nullable(),
+  variants: VariantSchema,
   dataSheet: z.string().optional().nullable(),
   videoUrl: z.string().optional().nullable(),
   rating: z.number().min(0).max(5).optional().nullable(),
@@ -50,11 +65,12 @@ export async function POST(request: Request) {
 
   try {
     const body = ProductSchema.parse(await request.json());
-    const { specs, ...rest } = body;
+    const { specs, variants, ...rest } = body;
     const product = await prisma.product.create({
       data: {
         ...rest,
         ...(specs != null ? { specs: specs as Prisma.InputJsonValue } : {}),
+        ...(variants != null ? { variants: variants as Prisma.InputJsonValue } : {}),
       },
     });
     return NextResponse.json(product, { status: 201 });

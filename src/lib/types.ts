@@ -1,5 +1,18 @@
 export type ProductSpecs = Record<string, string>;
 
+/** Una medida vendible con su propio precio (ver src/lib/variants.ts). */
+export type ProductVariant = {
+  /** Identificador estable dentro del producto, ej "35x35". Viaja al carrito. */
+  id: string;
+  /** Texto que ve el cliente, ej "35 x 35 cm". */
+  label: string;
+  price: number;
+  /** Oferta propia de esta medida; null = sin oferta. */
+  salePrice: number | null;
+  /** Stock propio; null = usa el stock del producto. */
+  stock: number | null;
+};
+
 export type Product = {
   id: string;
   name: string;
@@ -13,6 +26,7 @@ export type Product = {
   featured: boolean;
   images: string[];
   specs: ProductSpecs | null;
+  variants: ProductVariant[] | null;
   dataSheet: string | null;
   videoUrl: string | null;
   rating: number | null;
@@ -94,6 +108,9 @@ export type OrderItem = {
   name: string;
   price: number;
   quantity: number;
+  /** Medida elegida, si el producto se vende por medida. */
+  variantId?: string | null;
+  variantLabel?: string | null;
 };
 
 export type Order = {
@@ -114,9 +131,12 @@ export type Order = {
 export type CartItem = {
   product: Product;
   quantity: number;
+  /** Medida elegida. Dos medidas del mismo producto son dos líneas distintas. */
+  variantId?: string | null;
 };
 
 export type CheckoutItem = {
   productId: string;
   quantity: number;
+  variantId?: string | null;
 };

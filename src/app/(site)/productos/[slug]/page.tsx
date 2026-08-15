@@ -2,10 +2,12 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Star, ChevronRight, FileDown } from "lucide-react";
 import { prisma } from "@/lib/db";
-import { formatPrice, isQuotePrice, QUOTE_PRICE_LABEL } from "@/lib/format";
+import { isQuotePrice } from "@/lib/format";
+import { parseVariants } from "@/lib/variants";
 import type { Product } from "@/lib/types";
 import AddToCart from "./AddToCart";
 import ProductGallery from "./ProductGallery";
+import { ProductPrice, VariantProvider } from "@/components/products/VariantContext";
 
 export const dynamic = "force-dynamic";
 
@@ -40,8 +42,20 @@ export default async function ProductoPage({ params }: { params: { slug: string 
   const specs = product.specs ? Object.entries(product.specs) : [];
   const rounded = product.rating != null ? Math.round(product.rating) : 0;
   const quote = isQuotePrice(product);
-  const onSale = !quote && product.salePrice != null && product.salePrice < product.price;
-  const discount = onSale ? Math.round((1 - product.salePrice! / product.price) * 100) : 0;
+  const variants = parseVariants(product);
+  // El cartel de oferta de la galería es fijo, así que con variantes muestra el
+  // mayor descuento disponible entre las medidas.
+  const discounts = quote
+    ? []
+    : variants.length > 0
+      ? variants
+          .filter((v) => v.salePrice != null)
+          .map((v) => Math.round((1 - v.salePrice! / v.price) * 100))
+      : product.salePrice != null && product.salePrice < product.price
+        ? [Math.round((1 - product.salePrice / product.price) * 100)]
+        : [];
+  const onSale = discounts.length > 0;
+  const discount = onSale ? Math.max(...discounts) : 0;
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
@@ -74,7 +88,8 @@ export default async function ProductoPage({ params }: { params: { slug: string 
           }
         />
 
-        {/* Info */}
+        {/* Info — dentro del provider para que el precio siga a la medida elegida */}
+        <VariantProvider product={product}>
         <div className="flex flex-col gap-4">
           <div>
             <span className="text-xs font-semibold uppercase tracking-widest text-bio-green">
@@ -99,18 +114,9 @@ export default async function ProductoPage({ params }: { params: { slug: string 
             </div>
           )}
 
+          {/* El precio lo pinta un componente cliente porque cambia con la medida. */}
           <div className="flex items-baseline gap-3">
-            {quote ? (
-              <span className="text-3xl font-extrabold text-bio-green">{QUOTE_PRICE_LABEL}</span>
-            ) : onSale ? (
-              <>
-                <span className="text-3xl font-extrabold text-red-500">{formatPrice(product.salePrice!)}</span>
-                <span className="text-lg text-bio-dark/40 line-through">{formatPrice(product.price)}</span>
-                <span className="rounded-full bg-red-100 px-2 py-0.5 text-sm font-bold text-red-600">-{discount}% OFF</span>
-              </>
-            ) : (
-              <span className="text-3xl font-extrabold text-bio-green">{formatPrice(product.price)}</span>
-            )}
+            <ProductPrice product={product} />
           </div>
 
           <p className="text-bio-dark/80 leading-relaxed">{product.description}</p>
@@ -197,6 +203,7 @@ export default async function ProductoPage({ params }: { params: { slug: string 
             ← Volver a productos
           </Link>
         </div>
+        </VariantProvider>
       </div>
     </div>
   );

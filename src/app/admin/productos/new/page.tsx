@@ -6,6 +6,7 @@ import Link from "next/link";
 import toast, { Toaster } from "react-hot-toast";
 import ImageUpload from "@/components/admin/ImageUpload";
 import FileUpload from "@/components/admin/FileUpload";
+import VariantsEditor, { draftsToVariants, type VariantDraft } from "@/components/admin/VariantsEditor";
 
 const LINEAS = ["", "Familiar", "Comercial"];
 
@@ -23,6 +24,7 @@ export default function NewProductPage() {
   const [dataSheet, setDataSheet] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
   const [videoUploading, setVideoUploading] = useState(false);
+  const [variants, setVariants] = useState<VariantDraft[]>([]);
   const [form, setForm] = useState({
     name: "", slug: "", description: "", price: "", salePrice: "", stock: "",
     category: "", linea: "", featured: false, rating: "", reviewCount: "0",
@@ -70,6 +72,7 @@ export default function NewProductPage() {
         dataSheet: dataSheet || null,
         videoUrl: videoUrl || null,
         specs: Object.keys(specsObj).length > 0 ? specsObj : null,
+        variants: draftsToVariants(variants),
         rating: form.rating ? Number(form.rating) : null,
         reviewCount: Number(form.reviewCount),
         weightGrams: form.weightGrams ? Number(form.weightGrams) : null,
@@ -188,6 +191,8 @@ export default function NewProductPage() {
             <p className="mt-1 text-xs text-bio-green truncate">✓ {videoUrl}</p>
           )}
         </div>
+
+        <VariantsEditor category={String(form.category ?? "")} variants={variants} setVariants={setVariants} />
 
         {/* Especificaciones */}
         <div>

@@ -7,7 +7,7 @@ import { useCart } from "@/components/CartProvider";
 import { formatPrice } from "@/lib/format";
 
 export default function CartSidebar() {
-  const { items, isOpen, subtotal, closeCart, setQuantity, removeItem } =
+  const { items, isOpen, subtotal, closeCart, setQuantity, removeItem, keyOf, unitPrice, variantLabel } =
     useCart();
 
   return (
@@ -46,8 +46,12 @@ export default function CartSidebar() {
             </p>
           ) : (
             <ul className="space-y-4">
-              {items.map(({ product, quantity }) => (
-                <li key={product.id} className="flex gap-3">
+              {items.map((item) => {
+                const { product, quantity } = item;
+                const key = keyOf(item);
+                const medida = variantLabel(item);
+                return (
+                <li key={key} className="flex gap-3">
                   <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-white">
                     {product.images[0] && (
                       <Image
@@ -63,14 +67,17 @@ export default function CartSidebar() {
                     <span className="text-sm font-semibold text-bio-dark">
                       {product.name}
                     </span>
+                    {medida && (
+                      <span className="text-xs text-bio-dark/50">Medida: {medida}</span>
+                    )}
                     <span className="text-sm text-bio-dark/70">
-                      {formatPrice(product.salePrice ?? product.price)}
+                      {formatPrice(unitPrice(item))}
                     </span>
                     <div className="mt-1 flex items-center gap-2">
                       <button
                         type="button"
                         aria-label="Restar"
-                        onClick={() => setQuantity(product.id, quantity - 1)}
+                        onClick={() => setQuantity(key, quantity - 1)}
                         className="flex h-6 w-6 items-center justify-center rounded border border-bio-green/30 text-bio-dark hover:bg-white"
                       >
                         <Minus size={13} />
@@ -81,14 +88,14 @@ export default function CartSidebar() {
                       <button
                         type="button"
                         aria-label="Sumar"
-                        onClick={() => setQuantity(product.id, quantity + 1)}
+                        onClick={() => setQuantity(key, quantity + 1)}
                         className="flex h-6 w-6 items-center justify-center rounded border border-bio-green/30 text-bio-dark hover:bg-white"
                       >
                         <Plus size={13} />
                       </button>
                       <button
                         type="button"
-                        onClick={() => removeItem(product.id)}
+                        onClick={() => removeItem(key)}
                         className="ml-auto text-xs text-bio-dark/50 hover:text-bio-orange"
                       >
                         Quitar
@@ -96,7 +103,8 @@ export default function CartSidebar() {
                     </div>
                   </div>
                 </li>
-              ))}
+                );
+              })}
             </ul>
           )}
         </div>

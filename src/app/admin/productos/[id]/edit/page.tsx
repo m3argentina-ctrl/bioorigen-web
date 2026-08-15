@@ -6,6 +6,7 @@ import Link from "next/link";
 import toast, { Toaster } from "react-hot-toast";
 import ImageUpload from "@/components/admin/ImageUpload";
 import FileUpload from "@/components/admin/FileUpload";
+import VariantsEditor, { draftsToVariants, variantsToDrafts, type VariantDraft } from "@/components/admin/VariantsEditor";
 
 const LINEAS = ["", "Familiar", "Comercial"];
 
@@ -28,6 +29,7 @@ export default function EditProductPage() {
   const [videoUploading, setVideoUploading] = useState(false);
   const [form, setForm] = useState<Record<string, unknown> | null>(null);
   const [specs, setSpecs] = useState<SpecEntry[]>([]);
+  const [variants, setVariants] = useState<VariantDraft[]>([]);
 
   useEffect(() => {
     fetch("/api/admin/categories")
@@ -59,6 +61,7 @@ export default function EditProductPage() {
         setImages(Array.isArray(data.images) ? data.images : []);
         setDataSheet(data.dataSheet ?? "");
         setVideoUrl(data.videoUrl ?? "");
+        setVariants(variantsToDrafts(data.variants));
         const sp = data.specs ?? {};
         const entries = Object.entries(sp).map(([k, v]) => ({ key: k, value: String(v) }));
         setSpecs(entries.length > 0 ? entries : [{ key: "", value: "" }]);
@@ -92,6 +95,7 @@ export default function EditProductPage() {
         dataSheet: dataSheet || null,
         videoUrl: videoUrl || null,
         specs: Object.keys(specsObj).length > 0 ? specsObj : null,
+        variants: draftsToVariants(variants),
         rating: form.rating ? Number(form.rating) : null,
         reviewCount: Number(form.reviewCount),
         weightGrams: form.weightGrams ? Number(form.weightGrams) : null,
@@ -245,6 +249,8 @@ export default function EditProductPage() {
             <p className="mt-1 text-xs text-bio-green truncate">✓ {videoUrl}</p>
           )}
         </div>
+
+        <VariantsEditor category={String(form.category ?? "")} variants={variants} setVariants={setVariants} />
 
         {/* Especificaciones */}
         <div>

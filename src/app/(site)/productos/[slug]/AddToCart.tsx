@@ -3,25 +3,30 @@
 import { useState } from "react";
 import { ShoppingCart, Check, Minus, Plus } from "lucide-react";
 import { useCart } from "@/components/CartProvider";
+import { useVariant, VariantSelector } from "@/components/products/VariantContext";
 import type { Product } from "@/lib/types";
 
 export default function AddToCart({ product }: { product: Product }) {
   const { addItem } = useCart();
+  // El stock y el precio salen de la medida elegida (o del producto si no tiene).
+  const { selected, variants, stock } = useVariant();
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
-  const outOfStock = product.stock <= 0;
+  const outOfStock = stock <= 0;
 
   function dec() { setQty((q) => Math.max(1, q - 1)); }
-  function inc() { setQty((q) => (product.stock > 0 ? Math.min(product.stock, q + 1) : q + 1)); }
+  function inc() { setQty((q) => (stock > 0 ? Math.min(stock, q + 1) : q + 1)); }
 
   function handleAdd() {
-    addItem(product, qty);
+    addItem(product, qty, selected?.id ?? null);
     setAdded(true);
     setTimeout(() => { setAdded(false); setQty(1); }, 1500);
   }
 
   return (
     <div className="space-y-3">
+      <VariantSelector product={product} />
+
       {/* Selector de cantidad — solo con stock */}
       {!outOfStock && (
         <div className="flex items-center gap-3">
@@ -41,13 +46,13 @@ export default function AddToCart({ product }: { product: Product }) {
             <button
               type="button"
               onClick={inc}
-              disabled={qty >= product.stock}
+              disabled={qty >= stock}
               className="flex h-9 w-9 items-center justify-center rounded-r-full text-bio-dark transition-colors hover:bg-slate-100 disabled:opacity-30"
             >
               <Plus size={14} />
             </button>
           </div>
-          <span className="text-xs text-bio-dark/40">{product.stock} disponibles</span>
+          <span className="text-xs text-bio-dark/40">{stock} disponibles</span>
         </div>
       )}
 
@@ -68,7 +73,9 @@ export default function AddToCart({ product }: { product: Product }) {
 
       {outOfStock && (
         <p className="text-center text-xs font-semibold uppercase tracking-wide text-amber-600">
-          Este producto se fabrica a pedido. Te contactamos para coordinar la entrega.
+          {variants.length > 0
+            ? "Esta medida se fabrica a pedido. Te contactamos para coordinar la entrega."
+            : "Este producto se fabrica a pedido. Te contactamos para coordinar la entrega."}
         </p>
       )}
     </div>

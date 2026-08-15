@@ -1,5 +1,19 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+
+// Medidas con precio propio (ver src/lib/variants.ts). null = precio unico.
+const VariantSchema = z
+  .array(
+    z.object({
+      id: z.string().min(1),
+      label: z.string().min(1),
+      price: z.number().positive(),
+      salePrice: z.number().positive().nullable().optional(),
+      stock: z.number().int().min(0).nullable().optional(),
+    }),
+  )
+  .nullable()
+  .optional();
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { requireAdmin } from "@/lib/admin-auth";
@@ -27,6 +41,7 @@ const UpdateSchema = z.object({
   featured: z.boolean().optional(),
   images: z.array(z.string()).optional(),
   specs: z.record(z.string(), z.string()).optional().nullable(),
+  variants: VariantSchema,
   dataSheet: z.string().optional().nullable(),
   videoUrl: z.string().optional().nullable(),
   rating: z.number().min(0).max(5).optional().nullable(),
@@ -46,12 +61,16 @@ export async function PUT(request: Request, { params }: Params) {
 
   try {
     const body = UpdateSchema.parse(await request.json());
-    const { specs, ...rest } = body;
+    const { specs, variants, ...rest } = body;
     const product = await prisma.product.update({
       where: { id: params.id },
       data: {
         ...rest,
         ...(specs !== undefined ? { specs: specs != null ? (specs as Prisma.InputJsonValue) : Prisma.DbNull } : {}),
+        // Quitar todas las medidas vuelve el producto a precio único.
+        ...(variants !== undefined
+          ? { variants: variants != null ? (variants as Prisma.InputJsonValue) : Prisma.DbNull }
+          : {}),
       },
     });
     return NextResponse.json(product);

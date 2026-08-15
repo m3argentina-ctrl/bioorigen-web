@@ -41,7 +41,7 @@ const EMPTY_FORM: FormData = { name: "", email: "", phone: "", address: "", city
 
 export default function CheckoutForm() {
   const router = useRouter();
-  const { items, subtotal, clear } = useCart();
+  const { items, subtotal, clear, keyOf, unitPrice, variantLabel } = useCart();
   const [form, setForm] = useState<FormData>(EMPTY_FORM);
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
   const [loading, setLoading] = useState(false);
@@ -120,6 +120,8 @@ export default function CheckoutForm() {
       const checkoutItems = items.map((i) => ({
         productId: i.product.id,
         quantity: i.quantity,
+        // El precio NO viaja: el servidor lo resuelve desde la medida.
+        variantId: i.variantId ?? null,
       }));
 
       const res = await fetch("/api/checkout", {
@@ -411,13 +413,16 @@ export default function CheckoutForm() {
 
           <ul className="space-y-3">
             {items.map((item) => (
-              <li key={item.product.id} className="flex items-start justify-between gap-2">
+              <li key={keyOf(item)} className="flex items-start justify-between gap-2">
                 <span className="text-sm text-bio-dark">
                   {item.product.name}
+                  {variantLabel(item) && (
+                    <span className="ml-1 text-bio-dark/50">({variantLabel(item)})</span>
+                  )}
                   <span className="ml-1 text-bio-dark/50">×{item.quantity}</span>
                 </span>
                 <span className="shrink-0 text-sm font-semibold text-bio-dark">
-                  {formatPrice((item.product.salePrice ?? item.product.price) * item.quantity)}
+                  {formatPrice(unitPrice(item) * item.quantity)}
                 </span>
               </li>
             ))}
