@@ -1,0 +1,47 @@
+name: Keepalive Supabase
+
+# Evita que el proyecto Supabase (free tier) se pause por inactividad a los ~7 días.
+# Este es el disparador CONFIABLE: los crons del plan Hobby de Vercel son best-effort
+# y ya fallaron una vez (el proyecto se pausó y se perdieron las imágenes del sitio).
+# El cron de vercel.json queda como respaldo.
+#
+# ⚠️ GitHub deshabilita los workflows programados si el repo pasa 60 días sin
+# actividad. Avisa por mail; alcanza con reactivarlo desde la pestaña Actions.
+
+on:
+  schedule:
+    # Todos los días 10:00 UTC (07:00 ART). Diario y no cada 5 días: da 7 intentos
+    # de margen antes de que Supabase llegue al umbral de pausa.
+    - cron: "0 10 * * *"
+  workflow_dispatch: {}
+
+concurrency:
+  group: supabase-keepalive
+  cancel-in-progress: false
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Llamar al endpoint de keepalive
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          KEEPALIVE_URL: ${{ vars.KEEPALIVE_URL }}
+        run: |
+          if [ -z "${CRON_SECRET}" ]; then
+            echo "::error::Falta el secret CRON_SECRET en el repositorio"
+            exit 1
+          fi
+          URL="${KEEPALIVE_URL:-https://bioorigen-web.vercel.app/api/cron/supabase-keepalive}"
+          echo "POST $URL"
+          code=$(curl -sS -o /tmp/out.json -w "%{http_code}" \
+            -X POST "$URL" \
+            -H "Authorization: Bearer ${CRON_SECRET}")
+          echo "HTTP $code"
+          cat /tmp/out.json || true
+          echo
+          # Falla el job si no respondió 2xx, así se ve en rojo en la pestaña Actions
+          # (y GitHub manda mail) en vez de pasar desapercibido como la vez anterior.
+          if [ "$code" -lt 200 ] || [ "$code" -ge 300 ]; then
+            exit 1
+          fi
