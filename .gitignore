@@ -49,3 +49,7 @@ next-env.d.ts
 # Son archivos fuente pesados que la app no usa; viven en el pen/Drive.
 /IMAGENES PRODUCTOS/
 *.cdr
+
+# Candidatas que baja scripts/recetas-imagenes.mjs. Solo se commitea la foto
+# elegida (public/recetas/<slug>.jpg), no las descartadas.
+/public/recetas/_candidatos/

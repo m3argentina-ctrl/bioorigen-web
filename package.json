@@ -11,6 +11,8 @@
     "db:push": "prisma db push",
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
+    "recetas:imagenes": "node scripts/recetas-imagenes.mjs",
+    "recetas:sync": "tsx scripts/sync-recetas.ts",
     "postinstall": "prisma generate"
   },
   "prisma": {
