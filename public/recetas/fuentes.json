@@ -1,0 +1,842 @@
+{
+  "chips-de-manzana": {
+    "candidatas": [
+      {
+        "url": "https://images.pexels.com/photos/36252866/pexels-photo-36252866.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Muhammad  Khawar Nazir",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/elegant-fruit-platter-with-apples-and-prunes-36252866/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/36326594/pexels-photo-36326594.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Valentin Ivantsov",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/colorful-dehydrated-fruit-slices-on-tray-36326594/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/36267913/pexels-photo-36267913.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Muhammad  Khawar Nazir",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/fresh-apple-slices-with-dates-on-plate-36267913/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/8963963/pexels-photo-8963963.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "RDNE Stock project",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/apples-nuts-and-dried-fruit-8963963/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/9508584/pexels-photo-9508584.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Hanna Auramenka",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/fruit-slices-on-blue-background-9508584/"
+      }
+    ],
+    "elegida": 1
+  },
+  "platanos-deshidratados": {
+    "candidatas": [
+      {
+        "url": "https://images.pexels.com/photos/37646934/pexels-photo-37646934.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "AuiSmith P.",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/dried-bananas-in-woven-tray-thailand-37646934/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/6004808/pexels-photo-6004808.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "RDNE Stock project",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/assorted-food-on-wooden-tray-6004808/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/9508584/pexels-photo-9508584.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Hanna Auramenka",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/fruit-slices-on-blue-background-9508584/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/27508849/pexels-photo-27508849.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Long Bà Mùi",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/a-basket-filled-with-bananas-on-a-wooden-table-27508849/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/9508583/pexels-photo-9508583.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Hanna Auramenka",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/dry-fruits-on-a-blue-background-9508583/"
+      }
+    ],
+    "elegida": 1
+  },
+  "fresas-deshidratadas": {
+    "candidatas": [
+      {
+        "url": "https://images.pexels.com/photos/17498806/pexels-photo-17498806.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Efnan Yılmaz",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/bars-of-chocolate-with-strawberries-17498806/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/32123673/pexels-photo-32123673.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Markus Winkler",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/fresh-sliced-strawberries-on-a-wooden-board-32123673/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/7674661/pexels-photo-7674661.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Mikhail Nilov",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/close-up-shot-of-slices-of-strawberries-7674661/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/8179047/pexels-photo-8179047.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Danik Prihodko",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/a-person-slicing-red-strawberries-8179047/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/37992630/pexels-photo-37992630.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Lena Ti",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/fresh-sliced-strawberries-on-slate-board-37992630/"
+      }
+    ],
+    "elegida": 2
+  },
+  "chips-de-zanahoria": {
+    "candidatas": [
+      {
+        "url": "https://images.pexels.com/photos/8764277/pexels-photo-8764277.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Darina Belonogova",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/a-hand-holding-a-book-beside-the-snacks-on-a-surface-8764277/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/8964243/pexels-photo-8964243.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "RDNE Stock project",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/a-close-up-shot-of-a-bowl-of-chips-8964243/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/1475/food-vegetables-italian-restaurant.jpg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "SplitShire",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/food-vegetables-italian-restaurant-1475/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/8764283/pexels-photo-8764283.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Darina Belonogova",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/top-view-of-food-and-drinks-lying-on-a-picnic-blanket-8764283/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/29240177/pexels-photo-29240177.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Yair  Gomez  fotografía",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/colorful-vegetable-chips-on-striped-tablecloth-29240177/"
+      }
+    ],
+    "elegida": 2
+  },
+  "hierbas-aromaticas": {
+    "candidatas": [
+      {
+        "url": "https://images.pexels.com/photos/33966639/pexels-photo-33966639.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Julia Fuchs",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/close-up-of-assorted-dried-herbs-and-spices-33966639/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/4871140/pexels-photo-4871140.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "https://kaboompics.com/",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/spices-and-herbs-on-brown-wooden-surface-4871140/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/4750373/pexels-photo-4750373.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "https://kaboompics.com/",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/hand-holding-a-green-leaf-4750373/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/4750311/pexels-photo-4750311.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "https://kaboompics.com/",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/herbs-growing-in-crate-4750311/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/6626976/pexels-photo-6626976.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "KoolShooters",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/hanging-dried-green-plants-6626976/"
+      }
+    ],
+    "elegida": 1
+  },
+  "rodajas-de-naranja-deshidratadas": {
+    "candidatas": [
+      {
+        "url": "https://images.pexels.com/photos/14381810/pexels-photo-14381810.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Qwirki & Co.",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/close-up-photo-of-a-slice-of-dried-orange-14381810/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/10785252/pexels-photo-10785252.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Kahvemsi  Hanım",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/sliced-orange-fruit-on-white-surface-10785252/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/3471790/pexels-photo-3471790.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Rodion Kutsaiev",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/sliced-oranges-grapefruit-and-kiwi-fruit-3471790/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/36203731/pexels-photo-36203731.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Jakub Pabis",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/close-up-of-dried-orange-slices-36203731/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/12003037/pexels-photo-12003037.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Irina  P",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/slices-of-dried-lemon-on-white-background-12003037/"
+      }
+    ],
+    "elegida": 1
+  },
+  "anana-deshidratado": {
+    "candidatas": [
+      {
+        "url": "https://images.pexels.com/photos/10323356/pexels-photo-10323356.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Valeria Boltneva",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/retail-display-of-dried-fruits-10323356/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/4499242/pexels-photo-4499242.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Antoni Shkraba / AI25.studio",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/towel-and-dry-fruit-on-tray-4499242/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/9508583/pexels-photo-9508583.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Hanna Auramenka",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/dry-fruits-on-a-blue-background-9508583/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/30649014/pexels-photo-30649014.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Electra Studio",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/caramelized-pineapple-slices-on-elegant-plate-30649014/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/9508584/pexels-photo-9508584.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Hanna Auramenka",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/fruit-slices-on-blue-background-9508584/"
+      }
+    ],
+    "elegida": 4
+  },
+  "chips-de-kale": {
+    "candidatas": [
+      {
+        "url": "https://images.pexels.com/photos/12363203/pexels-photo-12363203.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "SC Studio",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/healthy-kale-salad-12363203/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/12363214/pexels-photo-12363214.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "SC Studio",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/preparing-cabbage-leaves-12363214/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/12363205/pexels-photo-12363205.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "SC Studio",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/kale-cabbage-leaves-on-plate-12363205/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/8964243/pexels-photo-8964243.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "RDNE Stock project",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/a-close-up-shot-of-a-bowl-of-chips-8964243/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/5758127/pexels-photo-5758127.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Eva Bronzini",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/bowl-of-green-and-black-vegetables-on-green-grass-5758127/"
+      }
+    ],
+    "elegida": 3
+  },
+  "tomates-secos": {
+    "candidatas": [
+      {
+        "url": "https://images.pexels.com/photos/533236/pexels-photo-533236.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Pixabay",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/red-tomatoes-near-glass-jar-533236/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/6271877/pexels-photo-6271877.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Shameel mukkath",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/overhead-shot-of-sun-dried-tomato-dip-in-a-bowl-6271877/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/33942072/pexels-photo-33942072.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Bahri Gün",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/sliced-sun-dried-tomatoes-in-outdoor-arrangement-33942072/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/28992220/pexels-photo-28992220.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "pedro furtado",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/assorted-antipasto-platter-with-cheese-and-meats-28992220/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/15476838/pexels-photo-15476838.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Victor Miyata",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/spinach-salad-with-olives-and-roasted-tomatoes-15476838/"
+      }
+    ],
+    "elegida": 3
+  },
+  "chips-vegetales-mixtos": {
+    "candidatas": [
+      {
+        "url": "https://images.pexels.com/photos/20699591/pexels-photo-20699591.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Daniel Duarte",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/dry-autumn-flowers-petals-in-basket-20699591/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/36921419/pexels-photo-36921419.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Carlos Hernandez",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/gourmet-pasta-dish-with-beet-chips-on-colorful-tablecloth-36921419/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/29240178/pexels-photo-29240178.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Yair  Gomez  fotografía",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/colorful-vegetable-chips-on-traditional-textile-29240178/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/3649535/pexels-photo-3649535.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Sebastian Coman Photography",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/sliced-beetroot-on-a-plate-topped-with-green-leaf-3649535/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/13422445/pexels-photo-13422445.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Mateusz Feliksik",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/vegetables-on-a-wooden-surface-13422445/"
+      }
+    ],
+    "elegida": 1
+  },
+  "leather-de-frutas": {
+    "candidatas": [
+      {
+        "url": "https://images.pexels.com/photos/9922672/pexels-photo-9922672.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "stella pag",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/red-apple-fruit-on-white-textile-9922672/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/10232454/pexels-photo-10232454.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "I Own My Food Art",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/pancakes-and-fruits-on-plate-10232454/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/6061697/pexels-photo-6061697.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Nicole Michalou",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/person-holding-two-colored-dough-6061697/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/8902067/pexels-photo-8902067.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "AI25.Studio  AI GENERATIVE",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/person-kneading-a-dough-with-a-wooden-rolling-pin-8902067/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/13427799/pexels-photo-13427799.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Mateusz Feliksik",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/a-dessert-on-a-plate-13427799/"
+      }
+    ],
+    "elegida": 3
+  },
+  "condimento-casero-en-polvo": {
+    "candidatas": [
+      {
+        "url": "https://images.pexels.com/photos/5498008/pexels-photo-5498008.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Ruby Sengar",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/close-up-of-cinnamon-sticks-and-powder-5498008/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/5213944/pexels-photo-5213944.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Dario Méndez",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/curry-powder-on-a-glass-container-5213944/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/27730567/pexels-photo-27730567.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Gilmer Diaz Estela",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/a-person-is-holding-a-spoon-over-a-jar-of-orange-powder-27730567/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/12627239/pexels-photo-12627239.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Norma Gabriela Galván",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/chili-powders-in-glass-jar-12627239/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/12627158/pexels-photo-12627158.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Norma Gabriela Galván",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/close-up-of-food-in-a-jar-12627158/"
+      }
+    ],
+    "elegida": 1
+  },
+  "sopa-instantanea-para-camping": {
+    "candidatas": [
+      {
+        "url": "https://images.pexels.com/photos/12627158/pexels-photo-12627158.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Norma Gabriela Galván",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/close-up-of-food-in-a-jar-12627158/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/33966639/pexels-photo-33966639.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Julia Fuchs",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/close-up-of-assorted-dried-herbs-and-spices-33966639/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/38857376/pexels-photo-38857376.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Hanna M",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/colorful-jars-of-homemade-pickled-vegetables-38857376/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/36511370/pexels-photo-36511370.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Jade  Sandra",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/delicious-vegetable-soup-with-fresh-ingredients-36511370/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/8601384/pexels-photo-8601384.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Polina Tankilevitch",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/solyanka-and-borscht-soup-beside-a-glass-jar-full-of-pickled-cucumber-8601384/"
+      }
+    ],
+    "elegida": 4
+  },
+  "jengibre-y-curcuma-deshidratados": {
+    "candidatas": [
+      {
+        "url": "https://images.pexels.com/photos/16460762/pexels-photo-16460762.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Chahd Tirawiyeh",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/composition-from-spices-lemons-and-coconut-on-the-pavement-16460762/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/6220708/pexels-photo-6220708.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Karl Solano",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/close-up-shot-of-turmeric-powder-6220708/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/11703280/pexels-photo-11703280.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Nishant Aneja",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/assorted-herbs-and-spices-in-the-market-11703280/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/7208238/pexels-photo-7208238.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Pranjall Kumar",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/close-up-shot-of-bowls-of-powder-condiments-7208238/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/161556/ginger-plant-asia-rhizome-161556.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Pixabay",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/fresh-ginger-roots-and-powder-161556/"
+      }
+    ],
+    "elegida": 1
+  },
+  "melts-de-yogur-y-fruta": {
+    "candidatas": [
+      {
+        "url": "https://images.pexels.com/photos/9617546/pexels-photo-9617546.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Diana ✨",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/wooden-spoon-on-a-creamy-dessert-with-fresh-raspberries-9617546/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/566564/pexels-photo-566564.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Foodie Factor",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/acai-bowl-with-mixed-berries-566564/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/15048304/pexels-photo-15048304.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Jessica Lewis 🦋 thepaintedsquare",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/frozen-yogurt-with-berries-15048304/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/15048300/pexels-photo-15048300.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Jessica Lewis 🦋 thepaintedsquare",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/closeup-of-black-and-red-berries-15048300/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/13133431/pexels-photo-13133431.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Towfiqu barbhuiya",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/photo-of-strawberries-near-cream-13133431/"
+      }
+    ],
+    "elegida": 3
+  },
+  "beef-jerky": {
+    "candidatas": [
+      {
+        "url": "https://images.pexels.com/photos/8250275/pexels-photo-8250275.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Julia Filirovska",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/clsoe-up-view-of-dry-charcoal-8250275/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/8144520/pexels-photo-8144520.png?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Almendra López Varela",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/slices-of-meat-o-a-wooden-chopping-board-with-lime-and-salt-8144520/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/35470468/pexels-photo-35470468.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Gwladys Nicimbikije",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/delicious-biltong-snack-with-peanuts-35470468/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/5237010/pexels-photo-5237010.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Jeff Siepman",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/slices-of-cured-meat-5237010/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/8250186/pexels-photo-8250186.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Julia Filirovska",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/meat-hanging-on-chains-8250186/"
+      }
+    ],
+    "elegida": 2
+  },
+  "hongos-gourmet-deshidratados": {
+    "candidatas": [
+      {
+        "url": "https://images.pexels.com/photos/5569552/pexels-photo-5569552.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Leeloo The First",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/brown-mushrooms-on-black-surface-5569552/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/5569545/pexels-photo-5569545.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Leeloo The First",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/assorted-mushrooms-on-fabric-5569545/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/7717477/pexels-photo-7717477.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Marina Leonova",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/dried-mushrooms-in-close-up-photography-7717477/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/14775374/pexels-photo-14775374.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Regimantas Danys",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/mushrooms-in-basket-14775374/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/8250277/pexels-photo-8250277.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Julia Filirovska",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/mushroom-slices-in-black-wok-pan-8250277/"
+      }
+    ],
+    "elegida": 1
+  },
+  "barritas-energeticas": {
+    "candidatas": [
+      {
+        "url": "https://images.pexels.com/photos/36361406/pexels-photo-36361406.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Çiğdem Bilgin",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/stack-of-homemade-granola-bars-on-dark-plate-36361406/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/31024452/pexels-photo-31024452.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Kate L",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/crunchy-granola-with-oats-and-pecans-31024452/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/14387798/pexels-photo-14387798.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Towfiqu barbhuiya",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/oat-bars-on-a-cutting-board-14387798/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/31024449/pexels-photo-31024449.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Kate L",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/homemade-granola-on-baking-tray-with-honey-jar-31024449/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/31024448/pexels-photo-31024448.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Kate L",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/rustic-homemade-granola-with-pecans-31024448/"
+      }
+    ],
+    "elegida": 1
+  },
+  "frutos-secos-activados": {
+    "candidatas": [
+      {
+        "url": "https://images.pexels.com/photos/5472169/pexels-photo-5472169.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Engin Akyurt",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/flatlay-of-assorted-nuts-on-black-bowl-5472169/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/8817793/pexels-photo-8817793.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Towfiqu barbhuiya",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/close-up-shot-of-bowls-of-nuts-8817793/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/32281733/pexels-photo-32281733.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Joel Camelot",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/assorted-nuts-and-dried-fruit-in-black-bowls-32281733/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/1295572/pexels-photo-1295572.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Marta Branco",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/variety-of-brown-nuts-on-brown-wooden-panel-high-angle-photo-1295572/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/15613809/pexels-photo-15613809.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "İdil Ceren Çelikler",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/close-up-of-nuts-15613809/"
+      }
+    ],
+    "elegida": 1
+  },
+  "masa-madre-deshidratada": {
+    "candidatas": [
+      {
+        "url": "https://images.pexels.com/photos/30632198/pexels-photo-30632198.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Natalia Olivera",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/fresh-artisan-sourdough-bread-on-rustic-board-30632198/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/1581715/pexels-photo-1581715.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Cats Coming",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/basket-of-breads-1581715/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/30767682/pexels-photo-30767682.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Anh Nguyen",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/assorted-artisan-bread-rolls-on-wooden-board-30767682/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/30767545/pexels-photo-30767545.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Anh Nguyen",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/whole-wheat-bread-roll-on-rustic-wooden-board-30767545/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/30666732/pexels-photo-30666732.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Natalia Olivera",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/artisan-bread-with-rustic-design-and-herbs-30666732/"
+      }
+    ],
+    "elegida": 1
+  },
+  "charqui-de-pollo": {
+    "candidatas": [
+      {
+        "url": "https://images.pexels.com/photos/7172849/pexels-photo-7172849.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Gabriela Sakita",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/breaded-fried-food-in-a-bowl-with-a-citrus-fruit-7172849/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/11118938/pexels-photo-11118938.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Karyna Panchenko",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/fried-food-with-sliced-tomatoes-on-brown-wooden-chopping-board-11118938/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/18281697/pexels-photo-18281697.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Alejandra Montenegro",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/salad-in-bowl-18281697/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/8696760/pexels-photo-8696760.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "Farhad Ibrahimzade",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/hand-holding-round-wooden-chopping-board-with-food-8696760/"
+      },
+      {
+        "url": "https://images.pexels.com/photos/31097759/pexels-photo-31097759.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "creator": "mohammad mohebbi",
+        "source": "Pexels",
+        "license": "Licencia Pexels (uso libre, comercial, sin atribución obligatoria)",
+        "pageUrl": "https://www.pexels.com/photo/gourmet-fried-chicken-with-fries-and-sauce-31097759/"
+      }
+    ],
+    "elegida": 3
+  }
+}
