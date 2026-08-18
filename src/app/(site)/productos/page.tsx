@@ -11,7 +11,7 @@ export const metadata = {
 export default async function ProductosPage({
   searchParams,
 }: {
-  searchParams: { categoria?: string };
+  searchParams: { categoria?: string; linea?: string };
 }) {
   const [products, dbCategories] = await Promise.all([
     getProducts(),
@@ -22,6 +22,7 @@ export default async function ProductosPage({
     }),
   ]);
   const initialCategory = searchParams.categoria ?? "todos";
+  const initialLinea = searchParams.linea ?? "todas";
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-12">
@@ -40,6 +41,7 @@ export default async function ProductosPage({
         <ProductsBrowser
           products={products}
           initialCategory={initialCategory}
+          initialLinea={initialLinea}
           dbCategories={dbCategories}
         />
       )}

@@ -14,10 +14,12 @@ type DbCategory = { id: string; name: string; slug: string };
 export default function ProductsBrowser({
   products,
   initialCategory = "todos",
+  initialLinea = "todas",
   dbCategories,
 }: {
   products: Product[];
   initialCategory?: string;
+  initialLinea?: string;
   dbCategories?: DbCategory[];
 }) {
   const categories = useMemo(() => {
@@ -45,7 +47,9 @@ export default function ProductsBrowser({
   const [category, setCategory] = useState(() =>
     categories.includes(initialCategory) ? initialCategory : "todos",
   );
-  const [linea, setLinea] = useState("todas");
+  const [linea, setLinea] = useState(() =>
+    LINEAS.includes(initialLinea) ? initialLinea : "todas",
+  );
   const [priceMin, setPriceMin] = useState(minLimit);
   const [priceMax, setPriceMax] = useState(maxLimit);
   const [drawerOpen, setDrawerOpen] = useState(false);
