@@ -158,7 +158,7 @@ export default function ProductCard({ product }: { product: Product }) {
                 : "border-bio-orange text-bio-orange hover:bg-bio-orange hover:text-white"
             }`}
           >
-            {!product.active ? "SIN STOCK" : quote ? "CONSULTAR" : multiSize ? "ELEGIR MEDIDA" : "A PEDIDO"}
+            {!product.active ? "SIN STOCK" : quote ? "CONSULTAR" : multiSize ? "ELEGIR MEDIDA" : product.supplierId ? "BAJO PEDIDO" : "A PEDIDO"}
           </Link>
         )}
       </div>

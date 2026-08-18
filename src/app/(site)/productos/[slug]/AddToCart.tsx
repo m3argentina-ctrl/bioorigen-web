@@ -73,9 +73,11 @@ export default function AddToCart({ product }: { product: Product }) {
 
       {outOfStock && (
         <p className="text-center text-xs font-semibold uppercase tracking-wide text-amber-600">
-          {variants.length > 0
-            ? "Esta medida se fabrica a pedido. Te contactamos para coordinar la entrega."
-            : "Este producto se fabrica a pedido. Te contactamos para coordinar la entrega."}
+          {product.supplierId
+            ? "Disponible bajo pedido — La entrega de este producto es de 7/10 días."
+            : variants.length > 0
+              ? "Esta medida se fabrica a pedido. Te contactamos para coordinar la entrega."
+              : "Este producto se fabrica a pedido. Te contactamos para coordinar la entrega."}
         </p>
       )}
     </div>

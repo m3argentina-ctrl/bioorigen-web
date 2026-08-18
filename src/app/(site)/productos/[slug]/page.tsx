@@ -138,7 +138,7 @@ export default async function ProductoPage({ params }: { params: { slug: string 
           <div className="flex items-center gap-2 text-sm">
             <span className={`h-2.5 w-2.5 rounded-full ${!product.active ? "bg-red-400" : product.stock > 0 ? "bg-green-500" : "bg-amber-400"}`} />
             <span className={`font-semibold uppercase tracking-wide ${!product.active ? "text-red-500" : product.stock > 0 ? "text-green-700" : "text-amber-600"}`}>
-              {!product.active ? "Sin stock" : product.stock > 0 ? `${product.stock} en stock` : "Se fabrica a pedido"}
+              {!product.active ? "Sin stock" : product.stock > 0 ? `${product.stock} en stock` : product.supplierId ? "Disponible bajo pedido" : "Se fabrica a pedido"}
             </span>
           </div>
 
