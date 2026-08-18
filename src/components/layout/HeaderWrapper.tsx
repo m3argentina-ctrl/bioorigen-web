@@ -6,7 +6,7 @@ async function getCategories() {
     return await prisma.category.findMany({
       where: { active: true },
       orderBy: { order: "asc" },
-      select: { id: true, name: true, slug: true },
+      select: { id: true, name: true, slug: true, image: true, link: true },
     });
   } catch {
     return [];

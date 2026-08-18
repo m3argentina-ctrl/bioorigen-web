@@ -6,7 +6,7 @@ import Image from "next/image";
 import { ShoppingCart, Menu, X, ChevronDown } from "lucide-react";
 import { useCart } from "@/components/CartProvider";
 
-type Category = { id: string; name: string; slug: string };
+type Category = { id: string; name: string; slug: string; image: string | null; link: string | null };
 
 const NAV = [
   { href: "/", label: "Inicio" },
@@ -114,13 +114,15 @@ export default function Header({ categories = [] }: { categories?: Category[] })
                   {categories.map((cat) => (
                     <Link
                       key={cat.id}
-                      href={`/productos?categoria=${encodeURIComponent(cat.name)}`}
+                      href={cat.link ?? `/productos?categoria=${encodeURIComponent(cat.name)}`}
                       className="group flex items-center gap-2 rounded-lg px-3 py-2 transition-colors hover:bg-bio-beige"
                       onClick={closeAll}
                     >
-                      <span className="text-base leading-none">
-                        {CAT_EMOJI[cat.name] ?? "🌿"}
-                      </span>
+                      {cat.image ? (
+                        <Image src={cat.image} alt={cat.name} width={20} height={20} className="h-5 w-5 rounded object-cover" />
+                      ) : (
+                        <span className="text-base leading-none">{CAT_EMOJI[cat.name] ?? "🌿"}</span>
+                      )}
                       <span className="text-sm font-medium text-bio-dark transition-colors group-hover:text-[#F97316]">
                         {cat.name}
                       </span>
@@ -202,11 +204,15 @@ export default function Header({ categories = [] }: { categories?: Category[] })
                     {categories.map((cat) => (
                       <li key={cat.id}>
                         <Link
-                          href={`/productos?categoria=${encodeURIComponent(cat.name)}`}
+                          href={cat.link ?? `/productos?categoria=${encodeURIComponent(cat.name)}`}
                           onClick={closeAll}
                           className="flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-sm text-bio-dark/70 transition-colors hover:text-[#F97316]"
                         >
-                          <span>{CAT_EMOJI[cat.name] ?? "🌿"}</span>
+                          {cat.image ? (
+                            <Image src={cat.image} alt={cat.name} width={16} height={16} className="h-4 w-4 rounded object-cover" />
+                          ) : (
+                            <span>{CAT_EMOJI[cat.name] ?? "🌿"}</span>
+                          )}
                           {cat.name}
                         </Link>
                       </li>

@@ -82,7 +82,8 @@ export default function CheckoutForm() {
       .catch(() => null);
   }, []);
 
-  const shippingCost = ME2_ENABLED ? 0 : (selectedShipping?.cost ?? 0);
+  const hasSupplierItems = items.some((i) => i.product.supplierId != null);
+  const shippingCost = ME2_ENABLED || hasSupplierItems ? 0 : (selectedShipping?.cost ?? 0);
   const discount = paymentMethod === "bank_transfer" && paymentConfig.bankTransferDiscount > 0
     ? Math.round(subtotal * (paymentConfig.bankTransferDiscount / 100))
     : 0;
@@ -267,8 +268,22 @@ export default function CheckoutForm() {
           />
         </div>
 
-        {/* Selector de método de envío (solo cuando ME2 está desactivado) */}
-        {!ME2_ENABLED && shippingOptions.length > 0 && (
+        {/* Envío directo por proveedor */}
+        {!ME2_ENABLED && hasSupplierItems && (
+          <div>
+            <h2 className="mb-3 text-lg font-bold text-bio-dark">Método de envío</h2>
+            <div className="flex items-start gap-3 rounded-xl border-2 border-bio-green bg-bio-green/5 px-4 py-3">
+              <span className="mt-0.5 text-xl">🚚</span>
+              <div>
+                <p className="text-sm font-medium text-bio-dark">Envío directo desde el proveedor</p>
+                <p className="text-xs text-bio-dark/50">La entrega es de 7 a 10 días hábiles a partir de la confirmación del pedido. Te contactamos para coordinar los detalles.</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Selector de método de envío (solo cuando ME2 está desactivado y no hay items de proveedor) */}
+        {!ME2_ENABLED && !hasSupplierItems && shippingOptions.length > 0 && (
           <div>
             <h2 className="mb-3 text-lg font-bold text-bio-dark">Método de envío</h2>
             <div className="space-y-2">
