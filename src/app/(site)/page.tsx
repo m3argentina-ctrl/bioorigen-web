@@ -15,14 +15,16 @@ import type { Recipe } from "@/lib/types";
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [featured, banners, categories, recipeRows] = await Promise.all([
+  const [featured, banners, categories, recipeRows, trustbarCfg] = await Promise.all([
     getFeaturedProducts(),
     prisma.banner.findMany({ where: { active: true }, orderBy: { order: "asc" } }),
     prisma.category.findMany({ where: { active: true }, orderBy: { order: "asc" } }).catch(() => []),
     prisma.recipe
       .findMany({ take: 3, orderBy: [{ featured: "desc" }, { name: "asc" }] })
       .catch(() => []),
+    prisma.siteConfig.findUnique({ where: { key: "trustbar_items" } }).catch(() => null),
   ]);
+  const trustbarItems = trustbarCfg ? JSON.parse(trustbarCfg.value) : [];
 
   const recipes = recipeRows as unknown as Recipe[];
 
@@ -32,7 +34,7 @@ export default async function HomePage() {
       <BannerCarousel banners={banners} />
 
       {/* Barra de confianza */}
-      <TrustBar />
+      <TrustBar items={trustbarItems} />
 
       {/* Grid de categorías con imagen */}
       <FadeIn>

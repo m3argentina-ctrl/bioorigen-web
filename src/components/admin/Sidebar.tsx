@@ -21,6 +21,8 @@ import {
   Users,
   Store,
   PackageCheck,
+  PanelTop,
+  PanelBottom,
 } from "lucide-react";
 
 const NAV = [
@@ -35,6 +37,8 @@ const NAV = [
   { href: "/admin/clientes", label: "Clientes", icon: Users },
   { href: "/admin/contacto", label: "Contacto", icon: MessageSquare },
   { href: "/admin/banners", label: "Banners", icon: ImageIcon },
+  { href: "/admin/topbar", label: "Barra superior", icon: PanelTop },
+  { href: "/admin/trustbar", label: "Barra confianza", icon: PanelBottom },
   { href: "/admin/beneficios", label: "Beneficios", icon: Sparkles },
   { href: "/admin/envio", label: "Envíos", icon: Truck },
   { href: "/admin/pagos", label: "Pagos", icon: CreditCard },
