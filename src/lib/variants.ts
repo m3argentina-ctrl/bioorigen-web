@@ -7,7 +7,7 @@ import type { Product, ProductVariant } from "@/lib/types";
  */
 export const CATEGORIES_WITH_VARIANTS: readonly string[] = [
   "Laminas antiadherentes",
-  "Mesadas y Estantes Profesionales de Acero Inoxidable",
+  "Mesadas, Bachas y Estantes Acero Inoxidable",
 ];
 
 /** @deprecated usar CATEGORIES_WITH_VARIANTS */
