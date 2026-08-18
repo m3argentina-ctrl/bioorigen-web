@@ -166,6 +166,12 @@ model Order {
 // Dropshipping
 // ---------------------------------------------------------------------------
 
+enum ShippingMode {
+  COORDINAR         // Bio Origen coordina el envío con el cliente
+  PROVEEDOR_DIRECTO // El proveedor envía directamente al cliente
+  RETIRO_SOLO       // Solo retiro en fábrica
+}
+
 model Supplier {
   id             String          @id @default(cuid())
   name           String
@@ -174,6 +180,7 @@ model Supplier {
   address        String?
   notes          String?
   paymentTerms   String?
+  shippingMode   ShippingMode    @default(COORDINAR)
   active         Boolean         @default(true)
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt

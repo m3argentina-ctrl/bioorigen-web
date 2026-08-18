@@ -36,6 +36,8 @@ export type Product = {
   supplierCost: number | null;
 };
 
+export type ShippingMode = "COORDINAR" | "PROVEEDOR_DIRECTO" | "RETIRO_SOLO";
+
 export type Supplier = {
   id: string;
   name: string;
@@ -44,6 +46,7 @@ export type Supplier = {
   address: string | null;
   notes: string | null;
   paymentTerms: string | null;
+  shippingMode: ShippingMode;
   active: boolean;
   createdAt: string;
   updatedAt: string;

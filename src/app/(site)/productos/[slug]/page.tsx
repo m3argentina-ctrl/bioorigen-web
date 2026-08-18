@@ -4,7 +4,7 @@ import { Star, ChevronRight, FileDown } from "lucide-react";
 import { prisma } from "@/lib/db";
 import { isQuotePrice } from "@/lib/format";
 import { parseVariants } from "@/lib/variants";
-import type { Product } from "@/lib/types";
+import type { Product, ShippingMode } from "@/lib/types";
 import AddToCart from "./AddToCart";
 import ProductGallery from "./ProductGallery";
 import { ProductPrice, VariantProvider } from "@/components/products/VariantContext";
@@ -25,8 +25,12 @@ const CATEGORY_EMOJI: Record<string, string> = {
 };
 
 export default async function ProductoPage({ params }: { params: { slug: string } }) {
-  const raw = await prisma.product.findUnique({ where: { slug: params.slug } });
+  const raw = await prisma.product.findUnique({
+    where: { slug: params.slug },
+    include: { supplier: { select: { shippingMode: true } } },
+  });
   if (!raw) notFound();
+  const shippingMode = (raw.supplier?.shippingMode ?? "COORDINAR") as ShippingMode;
 
   // Si la categoría está pausada (SiteConfig), el producto también se considera inactivo.
   const categoryPaused = raw.active
@@ -168,7 +172,7 @@ export default async function ProductoPage({ params }: { params: { slug: string 
               </a>
             </div>
           ) : product.active ? (
-            <AddToCart product={product} />
+            <AddToCart product={product} shippingMode={shippingMode} />
           ) : (
             <div className="space-y-3">
               <div className="rounded-xl border border-red-100 bg-red-50 px-5 py-4 text-center">

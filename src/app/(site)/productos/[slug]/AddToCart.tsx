@@ -4,9 +4,15 @@ import { useState } from "react";
 import { ShoppingCart, Check, Minus, Plus } from "lucide-react";
 import { useCart } from "@/components/CartProvider";
 import { useVariant, VariantSelector } from "@/components/products/VariantContext";
-import type { Product } from "@/lib/types";
+import type { Product, ShippingMode } from "@/lib/types";
 
-export default function AddToCart({ product }: { product: Product }) {
+const SHIPPING_INFO: Record<ShippingMode, string> = {
+  COORDINAR: "Envío a coordinar — Te contactamos para definir el traslado.",
+  PROVEEDOR_DIRECTO: "Envío directo desde el proveedor — La entrega es de 7 a 10 días hábiles.",
+  RETIRO_SOLO: "Solo retiro en fábrica — Sin envío a domicilio.",
+};
+
+export default function AddToCart({ product, shippingMode = "COORDINAR" }: { product: Product; shippingMode?: ShippingMode }) {
   const { addItem } = useCart();
   // El stock y el precio salen de la medida elegida (o del producto si no tiene).
   const { selected, variants, stock } = useVariant();
@@ -80,6 +86,11 @@ export default function AddToCart({ product }: { product: Product }) {
               : "Este producto se fabrica a pedido. Te contactamos para coordinar la entrega."}
         </p>
       )}
+
+      <p className="flex items-start gap-2 rounded-xl bg-slate-50 px-4 py-3 text-xs text-bio-dark/60">
+        <span className="mt-0.5 shrink-0">🚚</span>
+        {SHIPPING_INFO[shippingMode]}
+      </p>
     </div>
   );
 }
