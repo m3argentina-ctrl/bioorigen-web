@@ -23,13 +23,13 @@ export default function PromoBanner() {
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
           <Link
-            href="/productos?categoria=Deshidratadores"
+            href="/productos?categoria=Deshidratadores&linea=Comercial"
             className="rounded-full bg-bio-orange px-8 py-3 text-sm font-bold text-white transition-opacity hover:opacity-90"
           >
             Ver modelos
           </Link>
           <Link
-            href="/contacto"
+            href="/productos?categoria=Deshidratadores&linea=Comercial"
             className="rounded-full border border-white/60 px-8 py-3 text-sm font-bold transition-colors hover:bg-white/10"
           >
             Consultar precio
