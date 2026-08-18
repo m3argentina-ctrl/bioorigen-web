@@ -13,13 +13,13 @@ export default function PromoBanner() {
 
       <div className="relative mx-auto max-w-6xl px-4 text-center">
         <span className="inline-block rounded-full bg-white/20 px-4 py-1 text-xs font-semibold uppercase tracking-widest">
-          Línea Industrial
+          Línea Comercial
         </span>
         <h2 className="mx-auto mt-4 max-w-2xl text-balance text-3xl font-extrabold md:text-4xl">
           Deshidratá tus alimentos como un profesional
         </h2>
         <p className="mt-3 text-white/80">
-          Conocé nuestra línea industrial FA-10T · Alta capacidad · Uso continuo 24hs
+          Conocé nuestra línea Comercial · Alta capacidad · Uso continuo 24hs
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
           <Link
