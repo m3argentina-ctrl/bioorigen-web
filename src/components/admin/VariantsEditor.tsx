@@ -1,7 +1,7 @@
 "use client";
 
 import { Plus, Trash2 } from "lucide-react";
-import { CATEGORY_WITH_VARIANTS } from "@/lib/variants";
+import { CATEGORIES_WITH_VARIANTS } from "@/lib/variants";
 
 export type VariantDraft = {
   id: string;
@@ -61,7 +61,7 @@ export default function VariantsEditor({
   variants: VariantDraft[];
   setVariants: (v: VariantDraft[]) => void;
 }) {
-  if (category !== CATEGORY_WITH_VARIANTS) return null;
+  if (!CATEGORIES_WITH_VARIANTS.includes(category)) return null;
 
   function update(i: number, patch: Partial<VariantDraft>) {
     setVariants(variants.map((v, idx) => (idx === i ? { ...v, ...patch } : v)));

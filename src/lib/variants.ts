@@ -1,11 +1,17 @@
 import type { Product, ProductVariant } from "@/lib/types";
 
 /**
- * Única categoría habilitada para vender por medida. El resto del catálogo
+ * Categorías habilitadas para vender por medida/modelo. El resto del catálogo
  * mantiene precio único: aunque un producto tuviera `variants` cargado, fuera
- * de esta categoría se ignora.
+ * de estas categorías se ignora.
  */
-export const CATEGORY_WITH_VARIANTS = "Laminas antiadherentes";
+export const CATEGORIES_WITH_VARIANTS: readonly string[] = [
+  "Laminas antiadherentes",
+  "Mesadas y Estantes Profesionales de Acero Inoxidable",
+];
+
+/** @deprecated usar CATEGORIES_WITH_VARIANTS */
+export const CATEGORY_WITH_VARIANTS = CATEGORIES_WITH_VARIANTS[0];
 
 /** Etiqueta del selector en la ficha. */
 export const VARIANT_LABEL = "Medida";
@@ -25,7 +31,7 @@ function toNumber(v: unknown): number | null {
  * no es de la categoría habilitada o si no hay ninguna variante válida.
  */
 export function parseVariants(product: MaybeProduct): ProductVariant[] {
-  if (product.category !== CATEGORY_WITH_VARIANTS) return [];
+  if (!CATEGORIES_WITH_VARIANTS.includes(product.category)) return [];
   const raw = product.variants;
   if (!Array.isArray(raw)) return [];
 
