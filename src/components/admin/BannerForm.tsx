@@ -101,22 +101,61 @@ export default function BannerForm({ banner, onSaved }: Props) {
         <fieldset className={styles.group}>
           <legend>Textos</legend>
 
+          {/* Volanta */}
           <label className={styles.field}>
             <span>Volanta <em>· opcional</em></span>
             <input type="text" maxLength={40} value={form.eyebrow ?? ''} onChange={(e) => set('eyebrow', e.target.value)} />
           </label>
+          <div className={styles.row}>
+            <label className={styles.field}>
+              <span>Tamaño volanta</span>
+              <select value={form.eyebrowSize} onChange={(e) => set('eyebrowSize', e.target.value as typeof form.eyebrowSize)}>
+                <option value="xs">Pequeño</option>
+                <option value="sm">Normal</option>
+                <option value="md">Grande</option>
+              </select>
+            </label>
+            <ColorField label="Color volanta" value={form.eyebrowColor ?? null} onChange={(v) => set('eyebrowColor', v)} placeholder="#ffffff" />
+          </div>
 
+          {/* Título */}
           <label className={styles.field}>
             <span>Título <em>· hasta 80 caracteres</em></span>
             <input type="text" maxLength={80} value={form.title ?? ''} onChange={(e) => set('title', e.target.value)} />
             <small>{(form.title ?? '').length}/80</small>
           </label>
+          <div className={styles.row}>
+            <label className={styles.field}>
+              <span>Tamaño título</span>
+              <select value={form.titleSize} onChange={(e) => set('titleSize', e.target.value as typeof form.titleSize)}>
+                <option value="sm">Pequeño</option>
+                <option value="md">Mediano</option>
+                <option value="lg">Grande</option>
+                <option value="xl">Muy grande</option>
+                <option value="2xl">Gigante</option>
+              </select>
+            </label>
+            <ColorField label="Color título" value={form.titleColor ?? null} onChange={(v) => set('titleColor', v)} placeholder="#ffffff" />
+          </div>
 
+          {/* Bajada */}
           <label className={styles.field}>
             <span>Bajada <em>· hasta 160 caracteres</em></span>
             <textarea rows={3} maxLength={160} value={form.subtitle ?? ''} onChange={(e) => set('subtitle', e.target.value)} />
             <small>{(form.subtitle ?? '').length}/160</small>
           </label>
+          <div className={styles.row}>
+            <label className={styles.field}>
+              <span>Tamaño bajada</span>
+              <select value={form.subtitleSize} onChange={(e) => set('subtitleSize', e.target.value as typeof form.subtitleSize)}>
+                <option value="xs">Muy pequeño</option>
+                <option value="sm">Pequeño</option>
+                <option value="md">Normal</option>
+                <option value="lg">Grande</option>
+              </select>
+            </label>
+            <ColorField label="Color bajada" value={form.subtitleColor ?? null} onChange={(v) => set('subtitleColor', v)} placeholder="#ffffff" />
+          </div>
         </fieldset>
 
         <fieldset className={styles.group}>
@@ -166,73 +205,10 @@ export default function BannerForm({ banner, onSaved }: Props) {
           </label>
 
           <div className={styles.row}>
-            <label className={styles.field}>
-              <span>Color del texto</span>
-              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                <input
-                  type="color"
-                  value={form.textColor || (form.theme === 'dark' ? '#ffffff' : '#12131a')}
-                  onChange={(e) => set('textColor', e.target.value)}
-                  style={{ width: 44, height: 36, border: '1px solid #d1d5db', borderRadius: 6, cursor: 'pointer', padding: 2 }}
-                />
-                <input
-                  type="text"
-                  placeholder="#ffffff"
-                  value={form.textColor ?? ''}
-                  onChange={(e) => set('textColor', e.target.value || null)}
-                  style={{ flex: 1, padding: '9px 11px', border: '1px solid #d1d5db', borderRadius: 7, fontSize: 13 }}
-                />
-                {form.textColor && (
-                  <button type="button" onClick={() => set('textColor', null)} title="Resetear" style={{ fontSize: 18, background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af' }}>×</button>
-                )}
-              </div>
-              <em>Dejá vacío para usar blanco (tema oscuro) o negro (tema claro)</em>
-            </label>
-
-            <label className={styles.field}>
-              <span>Color del botón</span>
-              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                <input
-                  type="color"
-                  value={form.ctaColor || '#ffffff'}
-                  onChange={(e) => set('ctaColor', e.target.value)}
-                  style={{ width: 44, height: 36, border: '1px solid #d1d5db', borderRadius: 6, cursor: 'pointer', padding: 2 }}
-                />
-                <input
-                  type="text"
-                  placeholder="#ffffff"
-                  value={form.ctaColor ?? ''}
-                  onChange={(e) => set('ctaColor', e.target.value || null)}
-                  style={{ flex: 1, padding: '9px 11px', border: '1px solid #d1d5db', borderRadius: 7, fontSize: 13 }}
-                />
-                {form.ctaColor && (
-                  <button type="button" onClick={() => set('ctaColor', null)} title="Resetear" style={{ fontSize: 18, background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af' }}>×</button>
-                )}
-              </div>
-            </label>
+            <ColorField label="Color de texto global" value={form.textColor ?? null} onChange={(v) => set('textColor', v)} placeholder="#ffffff" note="Fallback si no hay color por campo" />
+            <ColorField label="Color del botón" value={form.ctaColor ?? null} onChange={(v) => set('ctaColor', v)} placeholder="#ffffff" />
           </div>
-
-          <label className={styles.field}>
-            <span>Color del texto del botón</span>
-            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-              <input
-                type="color"
-                value={form.ctaTextColor || '#12131a'}
-                onChange={(e) => set('ctaTextColor', e.target.value)}
-                style={{ width: 44, height: 36, border: '1px solid #d1d5db', borderRadius: 6, cursor: 'pointer', padding: 2 }}
-              />
-              <input
-                type="text"
-                placeholder="#12131a"
-                value={form.ctaTextColor ?? ''}
-                onChange={(e) => set('ctaTextColor', e.target.value || null)}
-                style={{ flex: 1, padding: '9px 11px', border: '1px solid #d1d5db', borderRadius: 7, fontSize: 13 }}
-              />
-              {form.ctaTextColor && (
-                <button type="button" onClick={() => set('ctaTextColor', null)} title="Resetear" style={{ fontSize: 18, background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af' }}>×</button>
-              )}
-            </div>
-          </label>
+          <ColorField label="Color del texto del botón" value={form.ctaTextColor ?? null} onChange={(v) => set('ctaTextColor', v)} placeholder="#12131a" />
 
           <label className={styles.field}>
             <span>Oscurecer imagen <em>· {Math.round(form.overlay * 100)}%</em></span>
@@ -279,5 +255,38 @@ export default function BannerForm({ banner, onSaved }: Props) {
         )}
       </aside>
     </div>
+  );
+}
+
+function ColorField({ label, value, onChange, placeholder, note }: {
+  label: string;
+  value: string | null;
+  onChange: (v: string | null) => void;
+  placeholder?: string;
+  note?: string;
+}) {
+  return (
+    <label style={{ display: 'flex', flexDirection: 'column', gap: 6, fontSize: 13 }}>
+      <span style={{ fontWeight: 500 }}>{label}</span>
+      <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+        <input
+          type="color"
+          value={value || placeholder || '#ffffff'}
+          onChange={(e) => onChange(e.target.value)}
+          style={{ width: 40, height: 34, border: '1px solid #d1d5db', borderRadius: 6, cursor: 'pointer', padding: 2, flexShrink: 0 }}
+        />
+        <input
+          type="text"
+          placeholder={placeholder ?? '#ffffff'}
+          value={value ?? ''}
+          onChange={(e) => onChange(e.target.value || null)}
+          style={{ flex: 1, padding: '7px 10px', border: '1px solid #d1d5db', borderRadius: 7, fontSize: 13, minWidth: 0 }}
+        />
+        {value && (
+          <button type="button" onClick={() => onChange(null)} title="Resetear" style={{ fontSize: 16, lineHeight: 1, background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', flexShrink: 0 }}>×</button>
+        )}
+      </div>
+      {note && <em style={{ fontSize: 11, color: '#9ca3af' }}>{note}</em>}
+    </label>
   );
 }

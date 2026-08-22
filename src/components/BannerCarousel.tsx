@@ -13,6 +13,25 @@ const HEIGHT_MAP: Record<string, string> = {
   full:   '100svh',
 };
 
+const EYEBROW_SIZE: Record<string, string> = {
+  xs: 'clamp(9px, 0.85vw, 11px)',
+  sm: 'clamp(11px, 1.05vw, 13px)',
+  md: 'clamp(13px, 1.3vw, 16px)',
+};
+const TITLE_SIZE: Record<string, string> = {
+  sm:  'clamp(18px, 2.2vw, 28px)',
+  md:  'clamp(22px, 2.8vw, 36px)',
+  lg:  'clamp(26px, 3.4vw, 44px)',
+  xl:  'clamp(32px, 4.2vw, 56px)',
+  '2xl': 'clamp(40px, 5.5vw, 72px)',
+};
+const SUBTITLE_SIZE: Record<string, string> = {
+  xs: 'clamp(11px, 1.0vw, 13px)',
+  sm: 'clamp(12px, 1.1vw, 14px)',
+  md: 'clamp(14px, 1.35vw, 17px)',
+  lg: 'clamp(16px, 1.6vw, 20px)',
+};
+
 type Props = {
   banners: Banner[];
   interval?: number;
@@ -109,8 +128,20 @@ function Slide({ banner: b, active, position, total }: {
   const hasText = Boolean(b.eyebrow || b.title || b.subtitle || hasCta);
   const slideH = HEIGHT_MAP[b.height ?? 'medium'] ?? HEIGHT_MAP.medium;
 
-  // Colores personalizados (inline style) o colores del theme (CSS)
-  const textStyle = b.textColor ? { color: b.textColor } : undefined;
+  // Color base: usa campo específico → textColor global → theme CSS
+  const baseColor = b.textColor ?? undefined;
+  const eyebrowStyle: React.CSSProperties = {
+    fontSize: EYEBROW_SIZE[b.eyebrowSize ?? 'sm'] ?? EYEBROW_SIZE.sm,
+    ...(b.eyebrowColor ? { color: b.eyebrowColor } : baseColor ? { color: baseColor } : {}),
+  };
+  const titleStyle: React.CSSProperties = {
+    fontSize: TITLE_SIZE[b.titleSize ?? 'lg'] ?? TITLE_SIZE.lg,
+    ...(b.titleColor ? { color: b.titleColor } : baseColor ? { color: baseColor } : {}),
+  };
+  const subtitleStyle: React.CSSProperties = {
+    fontSize: SUBTITLE_SIZE[b.subtitleSize ?? 'md'] ?? SUBTITLE_SIZE.md,
+    ...(b.subtitleColor ? { color: b.subtitleColor } : baseColor ? { color: baseColor } : {}),
+  };
   const ctaStyle = (b.ctaColor || b.ctaTextColor)
     ? { background: b.ctaColor ?? '#fff', color: b.ctaTextColor ?? '#12131a' }
     : undefined;
@@ -142,13 +173,12 @@ function Slide({ banner: b, active, position, total }: {
 
       {hasText && (
         <div
-          className={`${styles.content} ${styles[b.align]} ${b.textColor ? '' : styles[b.theme]}`}
-          style={textStyle}
+          className={`${styles.content} ${styles[b.align]} ${(b.textColor || b.eyebrowColor || b.titleColor || b.subtitleColor) ? '' : styles[b.theme]}`}
         >
           <div className={styles.inner}>
-            {b.eyebrow && <p className={styles.eyebrow}>{b.eyebrow}</p>}
-            {b.title && <h2 className={styles.title}>{b.title}</h2>}
-            {b.subtitle && <p className={styles.subtitle}>{b.subtitle}</p>}
+            {b.eyebrow && <p className={styles.eyebrow} style={eyebrowStyle}>{b.eyebrow}</p>}
+            {b.title && <h2 className={styles.title} style={titleStyle}>{b.title}</h2>}
+            {b.subtitle && <p className={styles.subtitle} style={subtitleStyle}>{b.subtitle}</p>}
             {hasCta && (
               <Link
                 href={b.ctaHref!}

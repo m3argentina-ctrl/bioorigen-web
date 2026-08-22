@@ -14,7 +14,16 @@ export interface Banner {
   theme: 'light' | 'dark';
   overlay: number;
   height: 'small' | 'medium' | 'large' | 'full';
+  // Color global de texto (fallback si no hay color por campo)
   textColor?: string | null;
+  // Por campo: color y tamaño
+  eyebrowColor?: string | null;
+  eyebrowSize: 'xs' | 'sm' | 'md';
+  titleColor?: string | null;
+  titleSize: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+  subtitleColor?: string | null;
+  subtitleSize: 'xs' | 'sm' | 'md' | 'lg';
+  // Botón
   ctaColor?: string | null;
   ctaTextColor?: string | null;
   order: number;
@@ -37,6 +46,12 @@ export const EMPTY_BANNER: Omit<Banner, 'id'> = {
   overlay: 0.35,
   height: 'medium',
   textColor: null,
+  eyebrowColor: null,
+  eyebrowSize: 'sm',
+  titleColor: null,
+  titleSize: 'lg',
+  subtitleColor: null,
+  subtitleSize: 'md',
   ctaColor: null,
   ctaTextColor: null,
   order: 0,

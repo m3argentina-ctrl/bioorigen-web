@@ -94,9 +94,15 @@ model Banner {
   theme          String    @default("dark")
   overlay        Float     @default(0.35)
   height         String    @default("medium")   // small | medium | large | full
-  textColor      String?                         // hex custom; si null usa theme
-  ctaColor       String?                         // hex fondo botón; si null usa blanco
-  ctaTextColor   String?                         // hex texto botón; si null usa oscuro
+  textColor      String?                         // hex fallback (si no hay color por campo)
+  eyebrowColor   String?
+  eyebrowSize    String    @default("sm")        // xs | sm | md
+  titleColor     String?
+  titleSize      String    @default("lg")        // sm | md | lg | xl | 2xl
+  subtitleColor  String?
+  subtitleSize   String    @default("md")        // xs | sm | md | lg
+  ctaColor       String?                         // hex fondo botón
+  ctaTextColor   String?                         // hex texto botón
   order          Int       @default(0)
   active         Boolean   @default(true)
   startsAt       DateTime?
