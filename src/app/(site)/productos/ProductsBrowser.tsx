@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import ProductCard from "@/components/products/ProductCard";
 import { formatPrice, isQuotePrice } from "@/lib/format";
@@ -53,11 +54,27 @@ export default function ProductsBrowser({
   const [priceMin, setPriceMin] = useState(minLimit);
   const [priceMax, setPriceMax] = useState(maxLimit);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const router = useRouter();
+
+  function buildUrl(cat: string, ln: string) {
+    const params = new URLSearchParams();
+    if (cat !== "todos") params.set("categoria", cat);
+    if (cat === "Deshidratadores" && ln !== "todas") params.set("linea", ln);
+    const qs = params.toString();
+    return `/productos${qs ? `?${qs}` : ""}`;
+  }
 
   // Al cambiar de categoría, la sub-línea solo aplica a Deshidratadores.
   function selectCategory(cat: string) {
+    const nextLinea = cat !== "Deshidratadores" ? "todas" : linea;
     setCategory(cat);
     if (cat !== "Deshidratadores") setLinea("todas");
+    router.replace(buildUrl(cat, nextLinea), { scroll: false });
+  }
+
+  function selectLinea(ln: string) {
+    setLinea(ln);
+    router.replace(buildUrl(category, ln), { scroll: false });
   }
 
   const filtered = useMemo(
@@ -92,6 +109,7 @@ export default function ProductsBrowser({
     setLinea("todas");
     setPriceMin(minLimit);
     setPriceMax(maxLimit);
+    router.replace("/productos", { scroll: false });
   }
 
   function renderFilterPanel() {
@@ -121,7 +139,7 @@ export default function ProductsBrowser({
                         <button
                           key={l}
                           type="button"
-                          onClick={() => setLinea(l)}
+                          onClick={() => selectLinea(l)}
                           className={`rounded-lg px-3 py-1.5 text-left text-xs font-medium transition-colors ${
                             linea === l
                               ? "bg-bio-green/15 text-bio-green"
