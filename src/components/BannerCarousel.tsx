@@ -61,7 +61,7 @@ export default function BannerCarousel({ banners }: { banners: Banner[] }) {
             src={hero.image}
             alt=""
             aria-hidden
-            className="absolute right-0 top-0 hidden h-full w-2/3 object-cover md:block"
+            className="absolute right-0 top-0 hidden h-full w-2/3 object-cover object-right md:block"
           />
           {/* degradado de transición entre texto e imagen */}
           <div
