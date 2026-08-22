@@ -6,6 +6,13 @@ import Link from 'next/link';
 import type { Banner } from '@/types/banner';
 import styles from './BannerCarousel.module.css';
 
+const HEIGHT_MAP: Record<string, string> = {
+  small:  'clamp(180px, 28vw, 260px)',
+  medium: 'clamp(260px, 40vw, 480px)',
+  large:  'clamp(380px, 52vw, 620px)',
+  full:   '100svh',
+};
+
 type Props = {
   banners: Banner[];
   interval?: number;
@@ -100,6 +107,13 @@ function Slide({ banner: b, active, position, total }: {
 }) {
   const hasCta = Boolean(b.ctaLabel && b.ctaHref);
   const hasText = Boolean(b.eyebrow || b.title || b.subtitle || hasCta);
+  const slideH = HEIGHT_MAP[b.height ?? 'medium'] ?? HEIGHT_MAP.medium;
+
+  // Colores personalizados (inline style) o colores del theme (CSS)
+  const textStyle = b.textColor ? { color: b.textColor } : undefined;
+  const ctaStyle = (b.ctaColor || b.ctaTextColor)
+    ? { background: b.ctaColor ?? '#fff', color: b.ctaTextColor ?? '#12131a' }
+    : undefined;
 
   const content = (
     <>
@@ -127,7 +141,10 @@ function Slide({ banner: b, active, position, total }: {
       )}
 
       {hasText && (
-        <div className={`${styles.content} ${styles[b.align]} ${styles[b.theme]}`}>
+        <div
+          className={`${styles.content} ${styles[b.align]} ${b.textColor ? '' : styles[b.theme]}`}
+          style={textStyle}
+        >
           <div className={styles.inner}>
             {b.eyebrow && <p className={styles.eyebrow}>{b.eyebrow}</p>}
             {b.title && <h2 className={styles.title}>{b.title}</h2>}
@@ -136,6 +153,7 @@ function Slide({ banner: b, active, position, total }: {
               <Link
                 href={b.ctaHref!}
                 className={styles.cta}
+                style={ctaStyle}
                 target={b.ctaNewTab ? '_blank' : undefined}
                 rel={b.ctaNewTab ? 'noopener noreferrer' : undefined}
                 tabIndex={active ? 0 : -1}
@@ -152,6 +170,7 @@ function Slide({ banner: b, active, position, total }: {
   return (
     <div
       className={styles.slide}
+      style={{ '--slide-h': slideH } as React.CSSProperties}
       role="group"
       aria-roledescription="banner"
       aria-label={`${position} de ${total}`}

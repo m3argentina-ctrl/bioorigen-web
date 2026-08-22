@@ -93,6 +93,10 @@ model Banner {
   align          String    @default("left")
   theme          String    @default("dark")
   overlay        Float     @default(0.35)
+  height         String    @default("medium")   // small | medium | large | full
+  textColor      String?                         // hex custom; si null usa theme
+  ctaColor       String?                         // hex fondo botón; si null usa blanco
+  ctaTextColor   String?                         // hex texto botón; si null usa oscuro
   order          Int       @default(0)
   active         Boolean   @default(true)
   startsAt       DateTime?

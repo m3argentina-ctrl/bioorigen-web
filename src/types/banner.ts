@@ -13,6 +13,10 @@ export interface Banner {
   align: 'left' | 'center' | 'right';
   theme: 'light' | 'dark';
   overlay: number;
+  height: 'small' | 'medium' | 'large' | 'full';
+  textColor?: string | null;
+  ctaColor?: string | null;
+  ctaTextColor?: string | null;
   order: number;
   active: boolean;
   startsAt?: string | null;
@@ -31,6 +35,10 @@ export const EMPTY_BANNER: Omit<Banner, 'id'> = {
   align: 'left',
   theme: 'dark',
   overlay: 0.35,
+  height: 'medium',
+  textColor: null,
+  ctaColor: null,
+  ctaTextColor: null,
   order: 0,
   active: true,
   startsAt: null,

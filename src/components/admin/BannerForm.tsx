@@ -147,6 +147,16 @@ export default function BannerForm({ banner, onSaved }: Props) {
           <legend>Presentación</legend>
 
           <label className={styles.field}>
+            <span>Alto del banner</span>
+            <select value={form.height} onChange={(e) => set('height', e.target.value as Banner['height'])}>
+              <option value="small">Pequeño (~220 px)</option>
+              <option value="medium">Mediano (~380 px) — recomendado</option>
+              <option value="large">Grande (~500 px)</option>
+              <option value="full">Pantalla completa</option>
+            </select>
+          </label>
+
+          <label className={styles.field}>
             <span>Alineación del texto</span>
             <select value={form.align} onChange={(e) => set('align', e.target.value as Banner['align'])}>
               <option value="left">Izquierda</option>
@@ -155,12 +165,73 @@ export default function BannerForm({ banner, onSaved }: Props) {
             </select>
           </label>
 
+          <div className={styles.row}>
+            <label className={styles.field}>
+              <span>Color del texto</span>
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                <input
+                  type="color"
+                  value={form.textColor || (form.theme === 'dark' ? '#ffffff' : '#12131a')}
+                  onChange={(e) => set('textColor', e.target.value)}
+                  style={{ width: 44, height: 36, border: '1px solid #d1d5db', borderRadius: 6, cursor: 'pointer', padding: 2 }}
+                />
+                <input
+                  type="text"
+                  placeholder="#ffffff"
+                  value={form.textColor ?? ''}
+                  onChange={(e) => set('textColor', e.target.value || null)}
+                  style={{ flex: 1, padding: '9px 11px', border: '1px solid #d1d5db', borderRadius: 7, fontSize: 13 }}
+                />
+                {form.textColor && (
+                  <button type="button" onClick={() => set('textColor', null)} title="Resetear" style={{ fontSize: 18, background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af' }}>×</button>
+                )}
+              </div>
+              <em>Dejá vacío para usar blanco (tema oscuro) o negro (tema claro)</em>
+            </label>
+
+            <label className={styles.field}>
+              <span>Color del botón</span>
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                <input
+                  type="color"
+                  value={form.ctaColor || '#ffffff'}
+                  onChange={(e) => set('ctaColor', e.target.value)}
+                  style={{ width: 44, height: 36, border: '1px solid #d1d5db', borderRadius: 6, cursor: 'pointer', padding: 2 }}
+                />
+                <input
+                  type="text"
+                  placeholder="#ffffff"
+                  value={form.ctaColor ?? ''}
+                  onChange={(e) => set('ctaColor', e.target.value || null)}
+                  style={{ flex: 1, padding: '9px 11px', border: '1px solid #d1d5db', borderRadius: 7, fontSize: 13 }}
+                />
+                {form.ctaColor && (
+                  <button type="button" onClick={() => set('ctaColor', null)} title="Resetear" style={{ fontSize: 18, background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af' }}>×</button>
+                )}
+              </div>
+            </label>
+          </div>
+
           <label className={styles.field}>
-            <span>Color del texto</span>
-            <select value={form.theme} onChange={(e) => set('theme', e.target.value as Banner['theme'])}>
-              <option value="dark">Claro (sobre imagen oscura)</option>
-              <option value="light">Oscuro (sobre imagen clara)</option>
-            </select>
+            <span>Color del texto del botón</span>
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+              <input
+                type="color"
+                value={form.ctaTextColor || '#12131a'}
+                onChange={(e) => set('ctaTextColor', e.target.value)}
+                style={{ width: 44, height: 36, border: '1px solid #d1d5db', borderRadius: 6, cursor: 'pointer', padding: 2 }}
+              />
+              <input
+                type="text"
+                placeholder="#12131a"
+                value={form.ctaTextColor ?? ''}
+                onChange={(e) => set('ctaTextColor', e.target.value || null)}
+                style={{ flex: 1, padding: '9px 11px', border: '1px solid #d1d5db', borderRadius: 7, fontSize: 13 }}
+              />
+              {form.ctaTextColor && (
+                <button type="button" onClick={() => set('ctaTextColor', null)} title="Resetear" style={{ fontSize: 18, background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af' }}>×</button>
+              )}
+            </div>
           </label>
 
           <label className={styles.field}>
