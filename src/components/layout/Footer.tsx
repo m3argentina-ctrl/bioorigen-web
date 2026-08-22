@@ -16,13 +16,18 @@ const INFO = [
   { href: "/checkout", label: "Mi carrito" },
 ];
 
-const PAYMENT_METHODS = ["Visa", "Mastercard", "MercadoPago", "Débito", "Transferencia"];
+const PAYMENT_METHODS = [
+  "Visa",
+  "Mastercard",
+  "MercadoPago",
+  "Débito",
+  "Transferencia",
+];
 
 export default function Footer() {
   return (
     <footer className="mt-20 bg-bio-dark text-white">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:grid-cols-2 lg:grid-cols-4">
-
         {/* Col 1: Logo + descripción + social */}
         <div>
           <div className="flex items-center gap-2">
@@ -32,8 +37,8 @@ export default function Footer() {
             <span className="text-base font-bold">Bio Origen</span>
           </div>
           <p className="mt-3 text-sm leading-relaxed text-white/70">
-            Fabricamos deshidratadores de alimentos de alta calidad. Línea familiar e industrial
-            con garantía oficial. Del campo a tu mesa.
+            Fabricamos deshidratadores de alimentos de alta calidad. Línea
+            familiar e industrial con garantía oficial.
           </p>
           <div className="mt-5 flex gap-2">
             <a
@@ -68,11 +73,16 @@ export default function Footer() {
 
         {/* Col 2: Productos */}
         <div>
-          <h3 className="text-sm font-semibold uppercase tracking-wide">Productos</h3>
+          <h3 className="text-sm font-semibold uppercase tracking-wide">
+            Productos
+          </h3>
           <ul className="mt-3 space-y-2 text-sm text-white/70">
             {PRODUCTS.map((link) => (
               <li key={link.href}>
-                <Link href={link.href} className="transition-colors hover:text-bio-orange">
+                <Link
+                  href={link.href}
+                  className="transition-colors hover:text-bio-orange"
+                >
                   {link.label}
                 </Link>
               </li>
@@ -82,18 +92,25 @@ export default function Footer() {
 
         {/* Col 3: Información + medios de pago */}
         <div>
-          <h3 className="text-sm font-semibold uppercase tracking-wide">Información</h3>
+          <h3 className="text-sm font-semibold uppercase tracking-wide">
+            Información
+          </h3>
           <ul className="mt-3 space-y-2 text-sm text-white/70">
             {INFO.map((link) => (
               <li key={link.href}>
-                <Link href={link.href} className="transition-colors hover:text-bio-orange">
+                <Link
+                  href={link.href}
+                  className="transition-colors hover:text-bio-orange"
+                >
                   {link.label}
                 </Link>
               </li>
             ))}
           </ul>
           <div className="mt-6">
-            <p className="text-xs font-semibold uppercase tracking-wide text-white/40">Medios de pago</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-white/40">
+              Medios de pago
+            </p>
             <div className="mt-2 flex flex-wrap gap-1.5">
               {PAYMENT_METHODS.map((m) => (
                 <span
@@ -109,15 +126,20 @@ export default function Footer() {
 
         {/* Col 4: Contacto + sello */}
         <div>
-          <h3 className="text-sm font-semibold uppercase tracking-wide">Contacto</h3>
+          <h3 className="text-sm font-semibold uppercase tracking-wide">
+            Contacto
+          </h3>
           <ul className="mt-3 space-y-3 text-sm text-white/70">
             <li className="flex items-start gap-2">
               <MapPin size={16} className="mt-0.5 shrink-0 text-bio-orange" />
-              <span>Jose Cebey s/n, Tigre, Buenos Aires</span>
+              <span>Gral Pacheco, Buenos Aires, Argentina </span>
             </li>
             <li className="flex items-center gap-2">
               <Phone size={16} className="shrink-0 text-bio-orange" />
-              <a href="tel:+5491169819981" className="transition-colors hover:text-bio-orange">
+              <a
+                href="tel:+5491169819981"
+                className="transition-colors hover:text-bio-orange"
+              >
                 +54 911 6981-9981
               </a>
             </li>
@@ -145,7 +167,8 @@ export default function Footer() {
       </div>
 
       <div className="border-t border-white/10 py-4 text-center text-xs text-white/60">
-        © {new Date().getFullYear()} Bio Origen SRL. Todos los derechos reservados.
+        © {new Date().getFullYear()} Bio Origen SRL. Todos los derechos
+        reservados.
       </div>
     </footer>
   );
