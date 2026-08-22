@@ -48,13 +48,33 @@ export default function BannerCarousel({ banners }: { banners: Banner[] }) {
 
   return (
     <section
-      className="relative overflow-hidden text-white"
+      className="relative min-h-[380px] overflow-hidden text-white"
       style={{ backgroundColor: hero.bgColor, transition: "background-color 0.6s ease" }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <div key={current} className="mx-auto grid max-w-6xl gap-8 px-4 py-20 animate-fade-in md:grid-cols-2 md:items-center">
-        <div>
+      {/* Imagen — ocupa 2/3 derecha, alto completo */}
+      {hero.image && (
+        <>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={hero.image}
+            alt=""
+            aria-hidden
+            className="absolute right-0 top-0 hidden h-full w-2/3 object-cover md:block"
+          />
+          {/* degradado de transición entre texto e imagen */}
+          <div
+            className="absolute right-1/3 top-0 hidden h-full w-40 md:block"
+            style={{ background: `linear-gradient(to right, ${hero.bgColor}, transparent)` }}
+            aria-hidden
+          />
+        </>
+      )}
+
+      {/* Contenido */}
+      <div key={current} className="relative mx-auto max-w-6xl px-4 py-20 animate-fade-in">
+        <div className="max-w-lg">
           <p className="text-sm font-semibold uppercase tracking-widest text-white/70">
             Del campo a tu mesa
           </p>
@@ -91,18 +111,16 @@ export default function BannerCarousel({ banners }: { banners: Banner[] }) {
           </div>
         </div>
 
-        <div className="flex items-center justify-center">
-          {hero.image ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={hero.image}
-              alt={hero.title}
-              className="max-h-72 w-full rounded-2xl object-cover"
-            />
-          ) : (
-            <span className="text-[10rem] leading-none">🌿</span>
-          )}
-        </div>
+        {/* Mobile: imagen debajo del texto */}
+        {hero.image && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={hero.image}
+            alt={hero.title}
+            className="mt-8 w-full rounded-2xl object-cover md:hidden"
+            style={{ maxHeight: "220px" }}
+          />
+        )}
       </div>
 
       {slides.length > 1 && (
