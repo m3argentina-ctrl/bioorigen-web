@@ -79,18 +79,26 @@ model Admin {
 }
 
 model Banner {
-  id          String   @id @default(cuid())
-  title       String
-  subtitle    String?
-  description String?  @db.Text
-  image       String
-  buttonText  String?
-  buttonLink  String?
-  bgColor     String   @default("#4A7C59")
-  order       Int      @default(0)
-  active      Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id             String    @id @default(cuid())
+  imageUrl       String    @default("")
+  imageUrlMobile String?
+  alt            String    @default("")
+  eyebrow        String?
+  title          String?
+  subtitle       String?
+  ctaLabel       String?
+  ctaHref        String?
+  ctaNewTab      Boolean   @default(false)
+  href           String?
+  align          String    @default("left")
+  theme          String    @default("dark")
+  overlay        Float     @default(0.35)
+  order          Int       @default(0)
+  active         Boolean   @default(true)
+  startsAt       DateTime?
+  endsAt         DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
   @@index([order])
   @@index([active])

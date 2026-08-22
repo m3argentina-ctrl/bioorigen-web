@@ -7,10 +7,10 @@ import toast, { Toaster } from "react-hot-toast";
 
 type Banner = {
   id: string;
-  title: string;
+  imageUrl: string;
+  alt: string;
+  title: string | null;
   subtitle: string | null;
-  image: string;
-  bgColor: string;
   order: number;
   active: boolean;
 };
@@ -117,13 +117,15 @@ export default function BannersAdminPage() {
                     </div>
                   </td>
                   <td className="px-4 py-3">
-                    <div
-                      className="h-10 w-20 rounded"
-                      style={{ backgroundColor: banner.bgColor }}
-                    />
+                    {banner.imageUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={banner.imageUrl} alt={banner.alt} className="h-10 w-20 rounded object-cover" />
+                    ) : (
+                      <div className="h-10 w-20 rounded bg-slate-200" />
+                    )}
                   </td>
                   <td className="px-4 py-3">
-                    <p className="font-medium text-slate-700">{banner.title}</p>
+                    <p className="font-medium text-slate-700">{banner.title || banner.alt || "—"}</p>
                     {banner.subtitle && <p className="text-xs text-slate-400">{banner.subtitle}</p>}
                   </td>
                   <td className="px-4 py-3">

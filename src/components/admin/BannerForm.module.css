@@ -1,0 +1,72 @@
+.layout {
+  display: grid;
+  grid-template-columns: minmax(320px, 460px) 1fr;
+  gap: 40px;
+  align-items: start;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: #12131a;
+}
+@media (max-width: 1000px) { .layout { grid-template-columns: 1fr; } }
+
+.h2 { margin: 0 0 20px; font-size: 18px; font-weight: 700; }
+.h3 { margin: 0 0 12px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: #6b7280; font-weight: 600; }
+
+.form { display: flex; flex-direction: column; gap: 20px; }
+
+.group {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 16px 18px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: #fff;
+}
+.group legend { padding: 0 6px; font-size: 13px; font-weight: 600; color: #374151; }
+
+.field { display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
+.field > span { font-weight: 500; }
+.field em { font-style: normal; font-weight: 400; color: #9ca3af; }
+.field input[type="text"],
+.field input[type="url"],
+.field input[type="number"],
+.field input[type="datetime-local"],
+.field select,
+.field textarea {
+  padding: 9px 11px;
+  border: 1px solid #d1d5db;
+  border-radius: 7px;
+  font: inherit;
+  font-size: 14px;
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+  outline: 2px solid #4A7C59; outline-offset: 1px; border-color: transparent;
+}
+.field small { color: #9ca3af; align-self: flex-end; }
+
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.checkbox { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; }
+
+.errors {
+  margin: 0; padding: 12px 14px 12px 30px;
+  background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px;
+  color: #991b1b; font-size: 13px;
+}
+
+.submit {
+  padding: 12px 20px;
+  border: 0; border-radius: 8px;
+  background: #4A7C59; color: #fff;
+  font-size: 15px; font-weight: 600; cursor: pointer;
+  transition: opacity 150ms;
+}
+.submit:hover { opacity: 0.9; }
+.submit:disabled { opacity: 0.55; cursor: default; }
+
+.preview { position: sticky; top: 32px; }
+.empty {
+  display: grid; place-items: center;
+  aspect-ratio: 12 / 5;
+  border: 2px dashed #d1d5db; border-radius: 12px;
+  color: #9ca3af; font-size: 14px; text-align: center; padding: 20px;
+}

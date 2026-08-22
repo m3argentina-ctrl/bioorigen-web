@@ -1,162 +1,181 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useCallback } from "react";
-import Link from "next/link";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import type { Banner } from '@/types/banner';
+import styles from './BannerCarousel.module.css';
 
-type Banner = {
-  id: string;
-  title: string;
-  subtitle: string | null;
-  description: string | null;
-  image: string;
-  buttonText: string | null;
-  buttonLink: string | null;
-  bgColor: string;
+type Props = {
+  banners: Banner[];
+  interval?: number;
+  className?: string;
 };
 
-const FALLBACK: Banner = {
-  id: "fallback",
-  title: "Alimentos deshidratados naturales",
-  subtitle: "Sin conservantes, colorantes ni azúcar agregada.",
-  description: null,
-  image: "",
-  buttonText: null,
-  buttonLink: null,
-  bgColor: "#4A7C59",
-};
-
-export default function BannerCarousel({ banners }: { banners: Banner[] }) {
-  const slides = banners.length > 0 ? banners : [FALLBACK];
-  const [current, setCurrent] = useState(0);
+export default function BannerCarousel({ banners, interval = 6000, className }: Props) {
+  const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  const rootRef = useRef<HTMLElement | null>(null);
+  const touchX = useRef<number | null>(null);
+  const count = banners.length;
 
-  const next = useCallback(
-    () => setCurrent((c) => (c + 1) % slides.length),
-    [slides.length],
-  );
-  const prev = () =>
-    setCurrent((c) => (c - 1 + slides.length) % slides.length);
+  const goTo = useCallback((i: number) => setIndex(((i % count) + count) % count), [count]);
+  const next = useCallback(() => goTo(index + 1), [goTo, index]);
+  const prev = useCallback(() => goTo(index - 1), [goTo, index]);
 
   useEffect(() => {
-    if (slides.length <= 1 || paused) return;
-    const timer = setInterval(next, 5000);
-    return () => clearInterval(timer);
-  }, [slides.length, next, paused]);
+    if (!interval || count < 2 || paused) return;
+    const reduce =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) return;
+    const t = setTimeout(next, interval);
+    return () => clearTimeout(t);
+  }, [index, interval, count, paused, next]);
 
-  const hero = slides[current];
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'ArrowRight') { e.preventDefault(); next(); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+  };
+
+  if (count === 0) return null;
 
   return (
     <section
-      className="relative min-h-[380px] overflow-hidden text-white"
-      style={{ backgroundColor: hero.bgColor, transition: "background-color 0.6s ease" }}
+      ref={rootRef}
+      className={[styles.root, className].filter(Boolean).join(' ')}
+      aria-roledescription="carrusel"
+      aria-label="Banners destacados"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
+      onFocusCapture={() => setPaused(true)}
+      onBlurCapture={() => setPaused(false)}
+      onKeyDown={onKeyDown}
+      onTouchStart={(e) => { touchX.current = e.touches[0].clientX; }}
+      onTouchEnd={(e) => {
+        if (touchX.current === null) return;
+        const dx = e.changedTouches[0].clientX - touchX.current;
+        if (Math.abs(dx) > 50) (dx < 0 ? next : prev)();
+        touchX.current = null;
+      }}
     >
-      {/* Imagen — ocupa 2/3 derecha, alto completo */}
-      {hero.image && (
-        <>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={hero.image}
-            alt=""
-            aria-hidden
-            className="absolute right-0 top-0 hidden h-full w-2/3 object-cover object-right md:block"
-          />
-          {/* degradado de transición entre texto e imagen */}
-          <div
-            className="absolute right-1/3 top-0 hidden h-full w-40 md:block"
-            style={{ background: `linear-gradient(to right, ${hero.bgColor}, transparent)` }}
-            aria-hidden
-          />
-        </>
-      )}
-
-      {/* Contenido */}
-      <div key={current} className="relative mx-auto max-w-6xl px-4 py-20 animate-fade-in">
-        <div className="max-w-lg">
-          <p className="text-sm font-semibold uppercase tracking-widest text-white/70">
-            Del campo a tu mesa
-          </p>
-          <h1 className="mt-3 text-balance text-4xl font-extrabold leading-tight md:text-5xl">
-            {hero.title}
-          </h1>
-          {(hero.subtitle ?? hero.description) && (
-            <p className="mt-4 max-w-md text-white/85">
-              {hero.subtitle ?? hero.description}
-            </p>
-          )}
-          <div className="mt-7 flex flex-wrap gap-3">
-            {hero.buttonText && hero.buttonLink ? (
-              <Link
-                href={hero.buttonLink}
-                className="rounded-full bg-white/20 px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-white/30"
-              >
-                {hero.buttonText}
-              </Link>
-            ) : (
-              <Link
-                href="/productos"
-                className="rounded-full bg-bio-orange px-6 py-3 text-sm font-bold text-white transition-colors hover:opacity-90"
-              >
-                Ver productos
-              </Link>
-            )}
-            <Link
-              href="/recetas"
-              className="rounded-full border border-white/50 px-6 py-3 text-sm font-bold transition-colors hover:bg-white/10"
-            >
-              Recetas
-            </Link>
-          </div>
+      <div className={styles.viewport}>
+        <div className={styles.track} style={{ transform: `translate3d(-${index * 100}%,0,0)` }}>
+          {banners.map((b, i) => (
+            <Slide key={b.id} banner={b} active={i === index} position={i + 1} total={count} />
+          ))}
         </div>
-
-        {/* Mobile: imagen debajo del texto */}
-        {hero.image && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={hero.image}
-            alt={hero.title}
-            className="mt-8 w-full rounded-2xl object-cover md:hidden"
-            style={{ maxHeight: "220px" }}
-          />
-        )}
       </div>
 
-      {slides.length > 1 && (
+      {count > 1 && (
         <>
-          <button
-            type="button"
-            onClick={prev}
-            aria-label="Banner anterior"
-            className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/20 p-2 text-white transition-colors hover:bg-black/40"
-          >
-            <ChevronLeft size={20} />
+          <button type="button" className={`${styles.arrow} ${styles.prev}`} onClick={prev} aria-label="Banner anterior">
+            <Chevron dir="left" />
           </button>
-          <button
-            type="button"
-            onClick={next}
-            aria-label="Banner siguiente"
-            className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/20 p-2 text-white transition-colors hover:bg-black/40"
-          >
-            <ChevronRight size={20} />
+          <button type="button" className={`${styles.arrow} ${styles.next}`} onClick={next} aria-label="Banner siguiente">
+            <Chevron dir="right" />
           </button>
 
-          <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-2">
-            {slides.map((_, i) => (
+          <div className={styles.dots} role="tablist" aria-label="Seleccionar banner">
+            {banners.map((b, i) => (
               <button
-                key={i}
+                key={b.id}
                 type="button"
-                onClick={() => setCurrent(i)}
-                aria-label={`Ir al banner ${i + 1}`}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  i === current ? "w-6 bg-white" : "w-2 bg-white/50"
-                }`}
+                role="tab"
+                aria-selected={i === index}
+                aria-label={`Banner ${i + 1}: ${b.title || b.alt}`}
+                className={`${styles.dot} ${i === index ? styles.dotActive : ''}`}
+                onClick={() => goTo(i)}
               />
             ))}
           </div>
         </>
       )}
     </section>
+  );
+}
+
+function Slide({ banner: b, active, position, total }: {
+  banner: Banner; active: boolean; position: number; total: number;
+}) {
+  const hasCta = Boolean(b.ctaLabel && b.ctaHref);
+  const hasText = Boolean(b.eyebrow || b.title || b.subtitle || hasCta);
+
+  const content = (
+    <>
+      <Image
+        src={b.imageUrl}
+        alt={b.alt}
+        fill
+        priority={position === 1}
+        loading={position === 1 ? undefined : 'lazy'}
+        sizes="100vw"
+        className={`${styles.image} ${b.imageUrlMobile ? styles.imageDesktopOnly : ''}`}
+      />
+      {b.imageUrlMobile && (
+        <Image
+          src={b.imageUrlMobile}
+          alt=""
+          aria-hidden
+          fill
+          sizes="100vw"
+          className={styles.imageMobile}
+        />
+      )}
+      {b.overlay > 0 && (
+        <div className={styles.overlay} style={{ opacity: b.overlay }} aria-hidden />
+      )}
+
+      {hasText && (
+        <div className={`${styles.content} ${styles[b.align]} ${styles[b.theme]}`}>
+          <div className={styles.inner}>
+            {b.eyebrow && <p className={styles.eyebrow}>{b.eyebrow}</p>}
+            {b.title && <h2 className={styles.title}>{b.title}</h2>}
+            {b.subtitle && <p className={styles.subtitle}>{b.subtitle}</p>}
+            {hasCta && (
+              <Link
+                href={b.ctaHref!}
+                className={styles.cta}
+                target={b.ctaNewTab ? '_blank' : undefined}
+                rel={b.ctaNewTab ? 'noopener noreferrer' : undefined}
+                tabIndex={active ? 0 : -1}
+              >
+                {b.ctaLabel}
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
+    </>
+  );
+
+  return (
+    <div
+      className={styles.slide}
+      role="group"
+      aria-roledescription="banner"
+      aria-label={`${position} de ${total}`}
+      aria-hidden={!active}
+      {...(!active ? { inert: '' as unknown as boolean } : {})}
+    >
+      {b.href && !hasCta ? (
+        <Link href={b.href} className={styles.fullLink} tabIndex={active ? 0 : -1} aria-label={b.title || b.alt}>
+          {content}
+        </Link>
+      ) : (
+        content
+      )}
+    </div>
+  );
+}
+
+function Chevron({ dir }: { dir: 'left' | 'right' }) {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden focusable="false">
+      <path
+        d={dir === 'left' ? 'M15 5l-7 7 7 7' : 'M9 5l7 7-7 7'}
+        stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+      />
+    </svg>
   );
 }

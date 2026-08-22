@@ -14,15 +14,23 @@ export async function GET(_req: Request, { params }: Params) {
 }
 
 const UpdateSchema = z.object({
-  title: z.string().min(1).optional(),
+  imageUrl: z.string().optional(),
+  imageUrlMobile: z.string().optional().nullable(),
+  alt: z.string().optional(),
+  eyebrow: z.string().optional().nullable(),
+  title: z.string().optional().nullable(),
   subtitle: z.string().optional().nullable(),
-  description: z.string().optional().nullable(),
-  image: z.string().optional(),
-  buttonText: z.string().optional().nullable(),
-  buttonLink: z.string().optional().nullable(),
-  bgColor: z.string().optional(),
+  ctaLabel: z.string().optional().nullable(),
+  ctaHref: z.string().optional().nullable(),
+  ctaNewTab: z.boolean().optional(),
+  href: z.string().optional().nullable(),
+  align: z.enum(["left", "center", "right"]).optional(),
+  theme: z.enum(["light", "dark"]).optional(),
+  overlay: z.number().min(0).max(1).optional(),
   order: z.number().int().optional(),
   active: z.boolean().optional(),
+  startsAt: z.string().optional().nullable(),
+  endsAt: z.string().optional().nullable(),
 });
 
 export async function PUT(request: Request, { params }: Params) {
@@ -31,10 +39,15 @@ export async function PUT(request: Request, { params }: Params) {
 
   try {
     const body = UpdateSchema.parse(await request.json());
-    const banner = await prisma.banner.update({ where: { id: params.id }, data: body });
+    const data = {
+      ...body,
+      ...(body.startsAt !== undefined && { startsAt: body.startsAt ? new Date(body.startsAt) : null }),
+      ...(body.endsAt !== undefined && { endsAt: body.endsAt ? new Date(body.endsAt) : null }),
+    };
+    const banner = await prisma.banner.update({ where: { id: params.id }, data });
     return NextResponse.json(banner);
   } catch (e) {
-    if (e instanceof z.ZodError) return NextResponse.json({ error: e.issues }, { status: 400 });
+    if (e instanceof z.ZodError) return NextResponse.json({ errors: e.issues.map(i => i.message) }, { status: 422 });
     return NextResponse.json({ error: "Error al actualizar" }, { status: 500 });
   }
 }

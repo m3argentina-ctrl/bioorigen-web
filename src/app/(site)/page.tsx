@@ -11,13 +11,24 @@ import FadeIn from "@/components/home/FadeIn";
 import { getFeaturedProducts } from "@/lib/queries";
 import { prisma } from "@/lib/db";
 import type { Recipe } from "@/lib/types";
+import type { Banner } from "@/types/banner";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [featured, banners, categories, recipeRows, trustbarCfg] = await Promise.all([
+  const now = new Date();
+  const [featured, bannersRaw, categories, recipeRows, trustbarCfg] = await Promise.all([
     getFeaturedProducts(),
-    prisma.banner.findMany({ where: { active: true }, orderBy: { order: "asc" } }),
+    prisma.banner.findMany({
+      where: {
+        active: true,
+        AND: [
+          { OR: [{ startsAt: null }, { startsAt: { lte: now } }] },
+          { OR: [{ endsAt: null }, { endsAt: { gte: now } }] },
+        ],
+      },
+      orderBy: { order: "asc" },
+    }),
     prisma.category.findMany({ where: { active: true }, orderBy: { order: "asc" } }).catch(() => []),
     prisma.recipe
       .findMany({ take: 3, orderBy: [{ featured: "desc" }, { name: "asc" }] })
@@ -25,6 +36,7 @@ export default async function HomePage() {
     prisma.siteConfig.findUnique({ where: { key: "trustbar_items" } }).catch(() => null),
   ]);
   const trustbarItems = trustbarCfg ? JSON.parse(trustbarCfg.value) : [];
+  const banners = bannersRaw as unknown as Banner[];
 
   const recipes = recipeRows as unknown as Recipe[];
 
