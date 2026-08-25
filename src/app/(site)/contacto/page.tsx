@@ -80,7 +80,7 @@ export default function ContactoPage() {
             {/* Mapa Google Maps embed */}
             <div className="overflow-hidden rounded-2xl shadow-sm">
               <iframe
-                src="https://maps.google.com/maps?q=Jose+Cebey+s%2Fn+Tigre+Buenos+Aires&output=embed&z=15"
+                src="https://maps.google.com/maps?q=Gral+Pacheco+Buenos+Aires+Argentina&output=embed&z=14"
                 width="100%"
                 height="220"
                 style={{ border: 0, display: "block" }}
