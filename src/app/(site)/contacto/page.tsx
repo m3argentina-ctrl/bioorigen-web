@@ -15,7 +15,8 @@ const WA_ICON = (
   </svg>
 );
 
-const INFO: { Icon?: React.ComponentType<{ size: number }>; customIcon?: React.ReactNode; label: string; value: string; href?: string }[] = [
+type InfoItem = { Icon?: React.ElementType; customIcon?: React.ReactNode; label: string; value: string; href?: string };
+const INFO: InfoItem[] = [
   { Icon: MapPin, label: "Dirección", value: "Gral Pacheco, Buenos Aires, Argentina" },
   { customIcon: WA_ICON, label: "Teléfono / WhatsApp", value: "+54 911 6981-9981 (solo mensajes)", href: "https://wa.me/5491169819981" },
   { Icon: Mail, label: "Email", value: "consultas@bioorigen.com.ar", href: "mailto:consultas@bioorigen.com.ar" },
