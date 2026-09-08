@@ -30,6 +30,8 @@ export type MuestraMini = {
   resWh: number | null;  // Wh de UNA resistencia (acumulado de la sesión)
   fanOnS: number | null; // segundos con turbina encendida (sesión)
   numMod: number | null; // cantidad de módulos
+  hum: number | null;    // % humedad relativa
+  humFault: boolean;
 };
 
 // Forma cruda del equipo tal como vuelve de Prisma (campos que usamos).
@@ -84,6 +86,8 @@ export type FleetItem = {
   lastResWh: number | null;
   lastFanOnS: number | null;
   lastNumMod: number | null;
+  lastHum: number | null;
+  lastHumFault: boolean;
 };
 
 export type FleetSummary = { total: number; online: number; offline: number; alarm: number };
@@ -128,6 +132,8 @@ export function shapeEquipo(e: EquipoRow, now: number): FleetItem {
     lastResWh: m?.resWh ?? null,
     lastFanOnS: m?.fanOnS ?? null,
     lastNumMod: m?.numMod ?? null,
+    lastHum: m?.hum ?? null,
+    lastHumFault: m?.humFault ?? false,
   };
 }
 

@@ -39,6 +39,8 @@ export async function GET(
               resWh: true,
               fanOnS: true,
               numMod: true,
+              hum: true,
+              humFault: true,
             },
           },
         },

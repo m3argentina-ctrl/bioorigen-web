@@ -14,6 +14,7 @@ import {
   Target,
   Zap,
   ChevronRight,
+  Droplets,
 } from "lucide-react";
 import {
   RUN_STATE_LABELS,
@@ -223,6 +224,12 @@ function EquipoCard({ e, onOpen }: { e: FleetItem; onOpen: () => void }) {
             {e.lastTemp.toFixed(1)}°C
           </span>
         )}
+        {e.lastHum !== null && !e.lastHumFault && (
+          <span className="inline-flex items-center gap-1 rounded-full bg-sky-50 px-2.5 py-0.5 text-xs font-semibold text-sky-600">
+            <Droplets size={11} />
+            {e.lastHum.toFixed(0)}%
+          </span>
+        )}
       </div>
 
       <SesionInfo e={e} />
@@ -400,6 +407,23 @@ function ControllerScreen({ e, onClose }: { e: FleetItem; onClose: () => void })
               </p>
             </div>
           </div>
+
+          {/* Humedad */}
+          {e.lastHum !== null && (
+            <div className="rounded-2xl bg-slate-800/50 px-5 py-4">
+              <p className="flex items-center gap-1.5 text-[11px] uppercase tracking-wide text-slate-400">
+                <Droplets size={12} className="text-sky-400" /> Humedad
+              </p>
+              {e.lastHumFault ? (
+                <p className="mt-1 text-lg font-semibold text-red-400">Sensor falla</p>
+              ) : (
+                <p className="mt-1 text-3xl font-bold text-sky-400">
+                  {e.lastHum.toFixed(1)}
+                  <span className="ml-1 text-lg font-semibold text-sky-300/70">%</span>
+                </p>
+              )}
+            </div>
+          )}
 
           {/* Resistencia / Turbinas */}
           <div className="grid grid-cols-2 gap-3">
