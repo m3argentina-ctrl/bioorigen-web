@@ -1,7 +1,21 @@
 "use client";
 
 import { useEffect, useState, useCallback, useRef } from "react";
-import { RefreshCw, Cpu, Wifi, WifiOff, AlertTriangle, Thermometer, Link2, Check } from "lucide-react";
+import {
+  RefreshCw,
+  Cpu,
+  Wifi,
+  WifiOff,
+  AlertTriangle,
+  Thermometer,
+  Link2,
+  Check,
+  Plus,
+  X,
+  Copy,
+  Key,
+} from "lucide-react";
+import toast, { Toaster } from "react-hot-toast";
 import {
   RUN_STATE_LABELS,
   OP_MODE_LABELS,
@@ -16,7 +30,6 @@ import {
 
 const POLL_MS = 20_000;
 
-// El admin además recibe el link de acceso del cliente (para copiar/compartir).
 type Equipo = FleetItem & { clienteToken: string | null };
 type Summary = FleetSummary;
 
@@ -51,14 +64,19 @@ export default function FlotaAdminPage() {
   const [refreshing, setRefreshing] = useState(false);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [showNew, setShowNew] = useState(false);
   const firstLoad = useRef(true);
+
+  function copyText(id: string, text: string) {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopiedId(id);
+      setTimeout(() => setCopiedId((c) => (c === id ? null : c)), 1800);
+    });
+  }
 
   function copyLink(equipoId: string, token: string) {
     const url = `${window.location.origin}/cliente/${token}`;
-    navigator.clipboard.writeText(url).then(() => {
-      setCopiedId(equipoId);
-      setTimeout(() => setCopiedId((id) => (id === equipoId ? null : id)), 1800);
-    });
+    copyText(equipoId, url);
   }
 
   const load = useCallback(() => {
@@ -86,6 +104,8 @@ export default function FlotaAdminPage() {
 
   return (
     <div className="space-y-5">
+      <Toaster position="top-right" />
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold text-slate-800">Flota</h1>
@@ -101,6 +121,14 @@ export default function FlotaAdminPage() {
           >
             <RefreshCw size={14} className={refreshing ? "animate-spin" : ""} />
             Actualizar
+          </button>
+          <button
+            type="button"
+            onClick={() => setShowNew(true)}
+            className="flex items-center gap-1.5 rounded-lg bg-bio-green px-4 py-1.5 font-semibold text-white hover:opacity-90"
+          >
+            <Plus size={14} />
+            Nuevo equipo
           </button>
         </div>
       </div>
@@ -129,7 +157,7 @@ export default function FlotaAdminPage() {
                 <th className="px-4 py-3 text-left">Modo</th>
                 <th className="px-4 py-3 text-right">Temp.</th>
                 <th className="px-4 py-3 text-left">Tiempo</th>
-                <th className="px-4 py-3 text-left">Último contacto</th>
+                <th className="px-4 py-3 text-left">Ultimo contacto</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
@@ -149,7 +177,7 @@ export default function FlotaAdminPage() {
                         className={`inline-block h-2.5 w-2.5 rounded-full ${
                           e.online ? "bg-emerald-500" : "bg-slate-300"
                         }`}
-                        title={e.online ? "En línea" : "Offline"}
+                        title={e.online ? "En linea" : "Offline"}
                       />
                     </td>
                     {/* Equipo */}
@@ -258,7 +286,7 @@ export default function FlotaAdminPage() {
                         <span className="text-slate-300">—</span>
                       )}
                     </td>
-                    {/* Último contacto */}
+                    {/* Ultimo contacto */}
                     <td className={`px-4 py-3 text-xs ${e.online ? "text-slate-400" : "text-slate-400"}`}>
                       {fmtAgo(e.secondsSinceSeen)}
                     </td>
@@ -274,6 +302,217 @@ export default function FlotaAdminPage() {
           )}
         </div>
       )}
+
+      {showNew && (
+        <NewEquipoModal
+          onClose={() => setShowNew(false)}
+          onCreated={() => {
+            setShowNew(false);
+            load();
+          }}
+        />
+      )}
     </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Modal: Nuevo equipo
+// ---------------------------------------------------------------------------
+function NewEquipoModal({
+  onClose,
+  onCreated,
+}: {
+  onClose: () => void;
+  onCreated: () => void;
+}) {
+  const [deviceId, setDeviceId] = useState("");
+  const [nombre, setNombre] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [result, setResult] = useState<{ deviceId: string; token: string } | null>(null);
+  const [tokenCopied, setTokenCopied] = useState(false);
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!deviceId.trim()) {
+      toast.error("El Device ID es obligatorio");
+      return;
+    }
+    setSaving(true);
+    const res = await fetch("/api/admin/flota", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ deviceId: deviceId.trim(), nombre: nombre.trim() || null }),
+    });
+    setSaving(false);
+    if (res.ok) {
+      const data = await res.json();
+      setResult(data);
+      toast.success("Equipo creado");
+    } else {
+      const d = await res.json().catch(() => null);
+      toast.error(typeof d?.error === "string" ? d.error : "No se pudo crear");
+    }
+  }
+
+  function copyToken() {
+    if (!result) return;
+    navigator.clipboard.writeText(result.token).then(() => {
+      setTokenCopied(true);
+      toast.success("Token copiado");
+    });
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+      onClick={onClose}
+    >
+      <div
+        className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-lg font-bold text-slate-800">
+            {result ? "Equipo creado" : "Nuevo equipo"}
+          </h2>
+          <button
+            type="button"
+            onClick={result ? () => { onCreated(); } : onClose}
+            className="rounded p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        {!result ? (
+          <form onSubmit={submit} className="space-y-3">
+            <Field label="Device ID *" hint="Identificador unico del equipo (ej: IND30S-0001)">
+              <input
+                autoFocus
+                value={deviceId}
+                onChange={(e) => setDeviceId(e.target.value.replace(/[^A-Za-z0-9_-]/g, ""))}
+                className="input font-mono"
+                placeholder="IND30S-0001"
+              />
+            </Field>
+            <Field label="Nombre (alias visible)" hint="Lo que se muestra en la flota">
+              <input
+                value={nombre}
+                onChange={(e) => setNombre(e.target.value)}
+                className="input"
+                placeholder="IND-30MTO-SMART #1"
+              />
+            </Field>
+
+            <div className="flex justify-end gap-2 pt-2">
+              <button
+                type="button"
+                onClick={onClose}
+                className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                disabled={saving}
+                className="rounded-lg bg-bio-green px-4 py-2 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-50"
+              >
+                {saving ? "Creando…" : "Crear equipo"}
+              </button>
+            </div>
+          </form>
+        ) : (
+          <div className="space-y-4">
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4">
+              <p className="text-sm font-medium text-emerald-800">
+                Equipo <span className="font-mono">{result.deviceId}</span> registrado.
+              </p>
+              <p className="mt-1 text-xs text-emerald-600">
+                Copiá el token y usalo para provisionar el firmware.
+              </p>
+            </div>
+
+            <Field label="Token del equipo (secreto Bearer)">
+              <div className="flex gap-2">
+                <input
+                  readOnly
+                  value={result.token}
+                  className="input font-mono text-xs flex-1"
+                />
+                <button
+                  type="button"
+                  onClick={copyToken}
+                  className={`flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                    tokenCopied
+                      ? "bg-emerald-100 text-emerald-700"
+                      : "border border-slate-300 text-slate-600 hover:bg-slate-50"
+                  }`}
+                >
+                  {tokenCopied ? <Check size={14} /> : <Copy size={14} />}
+                  {tokenCopied ? "Copiado" : "Copiar"}
+                </button>
+              </div>
+            </Field>
+
+            <div className="rounded-lg border border-amber-200 bg-amber-50 p-3">
+              <div className="flex items-start gap-2">
+                <Key size={14} className="mt-0.5 text-amber-600" />
+                <div className="text-xs text-amber-700">
+                  <p className="font-semibold">Provision en el firmware:</p>
+                  <code className="mt-1 block rounded bg-amber-100 px-2 py-1 font-mono text-[11px] leading-relaxed">
+                    .\tools\provision\provision.ps1 -DevId &quot;{result.deviceId}&quot; -Token &quot;{result.token}&quot; -Port COM3
+                  </code>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end pt-1">
+              <button
+                type="button"
+                onClick={onCreated}
+                className="rounded-lg bg-bio-green px-4 py-2 text-sm font-semibold text-white hover:opacity-90"
+              >
+                Listo
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <style jsx>{`
+        :global(.input) {
+          width: 100%;
+          border-radius: 0.5rem;
+          border: 1px solid rgb(203 213 225);
+          padding: 0.5rem 0.75rem;
+          font-size: 0.875rem;
+          color: rgb(51 65 85);
+          outline: none;
+        }
+        :global(.input:focus) {
+          border-color: #4a7c59;
+          box-shadow: 0 0 0 1px #4a7c59;
+        }
+      `}</style>
+    </div>
+  );
+}
+
+function Field({
+  label,
+  hint,
+  children,
+}: {
+  label: string;
+  hint?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <label className="block">
+      <span className="mb-1 block text-xs font-medium text-slate-500">{label}</span>
+      {hint && <span className="mb-1 block text-[11px] text-slate-400">{hint}</span>}
+      {children}
+    </label>
   );
 }
