@@ -47,6 +47,8 @@ const schema = z
     res_wh: z.number().optional(),
     fan_on_s: z.number().optional(),
     num_mod: z.number().optional(),
+    // Programas memorizados en el equipo (slots usados).
+    progs: z.array(z.object({ s: z.number(), n: z.string() })).optional(),
   })
   .passthrough();
 
@@ -145,6 +147,7 @@ export async function POST(req: Request) {
       lastProg: d.prog ?? equipo.lastProg,
       modelo: d.modelo ?? equipo.modelo,
       serie: d.serie ?? equipo.serie,
+      ...(d.progs ? { programs: d.progs } : {}),
     },
   });
 
@@ -192,5 +195,39 @@ export async function POST(req: Request) {
     });
   }
 
-  return NextResponse.json({ ok: true });
+  // 4) Comandos pendientes → viajan en la respuesta del heartbeat.
+  const pendingCmds = await prisma.comando.findMany({
+    where: {
+      equipoId: equipo.id,
+      status: "pending",
+      expiresAt: { gt: now },
+    },
+    orderBy: { createdAt: "asc" },
+    take: 5,
+  });
+
+  if (pendingCmds.length > 0) {
+    await prisma.comando.updateMany({
+      where: { id: { in: pendingCmds.map((c) => c.id) } },
+      data: { status: "sent", sentAt: now },
+    });
+  }
+
+  // Expirar comandos viejos (no bloquea; fire-and-forget).
+  prisma.comando.updateMany({
+    where: {
+      equipoId: equipo.id,
+      status: "pending",
+      expiresAt: { lte: now },
+    },
+    data: { status: "expired" },
+  }).catch(() => {});
+
+  const cmds = pendingCmds.map((c) => ({
+    id: c.id,
+    type: c.type,
+    ...(c.payload ? { payload: c.payload } : {}),
+  }));
+
+  return NextResponse.json({ ok: true, cmds });
 }

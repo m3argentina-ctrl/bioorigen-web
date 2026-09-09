@@ -20,7 +20,21 @@ export async function GET(
       equipos: {
         where: { activo: true },
         orderBy: [{ lastSeenAt: "desc" }],
-        include: {
+        select: {
+          id: true,
+          deviceId: true,
+          nombre: true,
+          modelo: true,
+          serie: true,
+          activo: true,
+          clienteId: true,
+          lastSeenAt: true,
+          lastReason: true,
+          lastRunState: true,
+          lastTemp: true,
+          lastOpMode: true,
+          lastProg: true,
+          programs: true,
           // Última muestra → tiempo y etapa de la sesión en curso.
           muestras: {
             take: 1,

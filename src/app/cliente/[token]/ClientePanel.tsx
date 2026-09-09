@@ -15,6 +15,11 @@ import {
   Zap,
   ChevronRight,
   Droplets,
+  Play,
+  Pause,
+  Square,
+  Loader2,
+  BookOpen,
 } from "lucide-react";
 import {
   RUN_STATE_LABELS,
@@ -29,6 +34,7 @@ import {
   PROG_STAGE_COUNT,
   type FleetItem,
   type FleetSummary,
+  type DeviceProgram,
 } from "@/lib/fleet";
 
 const POLL_MS = 20_000;
@@ -137,7 +143,7 @@ export default function ClientePanel({
       </main>
 
       {selected && (
-        <ControllerScreen e={selected} onClose={() => setSelectedId(null)} />
+        <ControllerScreen e={selected} token={token} onClose={() => setSelectedId(null)} />
       )}
     </div>
   );
@@ -296,8 +302,34 @@ function SesionInfo({ e }: { e: FleetItem }) {
 }
 
 // Vista "Controlador": modal oscuro que imita la pantalla LCD del equipo.
-// Sólo lectura. Muestra la etapa actual (no el detalle de las 3 etapas).
-function ControllerScreen({ e, onClose }: { e: FleetItem; onClose: () => void }) {
+function ControllerScreen({ e, token, onClose }: { e: FleetItem; token: string; onClose: () => void }) {
+  const [cmdLoading, setCmdLoading] = useState(false);
+  const [cmdSent, setCmdSent] = useState<string | null>(null);
+  const [showStartForm, setShowStartForm] = useState(false);
+  const [showPrograms, setShowPrograms] = useState(false);
+  const [startSp, setStartSp] = useState(55);
+  const [startDurH, setStartDurH] = useState(4);
+  const [startHum, setStartHum] = useState(0);
+
+  const sendCommand = async (type: string, payload?: Record<string, number>) => {
+    setCmdLoading(true);
+    setCmdSent(null);
+    try {
+      const res = await fetch(`/api/cliente/${token}/command`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ equipoId: e.id, type, payload }),
+      });
+      if (res.ok) {
+        setCmdSent(type);
+        setShowStartForm(false);
+        setShowPrograms(false);
+        setTimeout(() => setCmdSent(null), 5000);
+      }
+    } finally {
+      setCmdLoading(false);
+    }
+  };
   const st =
     e.lastRunState !== null
       ? RUN_STATE_LABELS[e.lastRunState] ??
@@ -329,7 +361,7 @@ function ControllerScreen({ e, onClose }: { e: FleetItem; onClose: () => void })
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-md overflow-hidden rounded-3xl border border-slate-700 bg-slate-900 text-slate-100 shadow-2xl"
+        className="relative w-full max-w-md max-h-[95vh] overflow-y-auto rounded-3xl border border-slate-700 bg-slate-900 text-slate-100 shadow-2xl"
         onClick={(ev) => ev.stopPropagation()}
       >
         {/* Barra de estado (como el header del Controlador) */}
@@ -365,7 +397,7 @@ function ControllerScreen({ e, onClose }: { e: FleetItem; onClose: () => void })
           </div>
         </div>
 
-        <div className="space-y-4 p-5">
+        <div className="space-y-3 p-4 sm:space-y-4 sm:p-5">
           {/* Estado + modo */}
           <div className="flex flex-wrap items-center gap-2">
             {st && (
@@ -390,10 +422,10 @@ function ControllerScreen({ e, onClose }: { e: FleetItem; onClose: () => void })
           </div>
 
           {/* Temperatura grande + Set Point */}
-          <div className="flex items-end justify-between rounded-2xl bg-slate-800/50 px-5 py-4">
+          <div className="flex items-end justify-between rounded-2xl bg-slate-800/50 px-4 py-3 sm:px-5 sm:py-4">
             <div>
               <p className="text-[11px] uppercase tracking-wide text-slate-400">Temperatura</p>
-              <p className="text-5xl font-bold leading-none text-orange-400">
+              <p className="text-4xl font-bold leading-none text-orange-400 sm:text-5xl">
                 {e.lastTemp !== null ? e.lastTemp.toFixed(1) : "--"}
                 <span className="ml-1 text-2xl text-orange-300/70">°C</span>
               </p>
@@ -410,14 +442,14 @@ function ControllerScreen({ e, onClose }: { e: FleetItem; onClose: () => void })
 
           {/* Humedad */}
           {e.lastHum !== null && (
-            <div className="rounded-2xl bg-slate-800/50 px-5 py-4">
+            <div className="rounded-2xl bg-slate-800/50 px-4 py-3 sm:px-5 sm:py-4">
               <p className="flex items-center gap-1.5 text-[11px] uppercase tracking-wide text-slate-400">
                 <Droplets size={12} className="text-sky-400" /> Humedad
               </p>
               {e.lastHumFault ? (
                 <p className="mt-1 text-lg font-semibold text-red-400">Sensor falla</p>
               ) : (
-                <p className="mt-1 text-3xl font-bold text-sky-400">
+                <p className="mt-1 text-2xl font-bold text-sky-400 sm:text-3xl">
                   {e.lastHum.toFixed(1)}
                   <span className="ml-1 text-lg font-semibold text-sky-300/70">%</span>
                 </p>
@@ -445,7 +477,7 @@ function ControllerScreen({ e, onClose }: { e: FleetItem; onClose: () => void })
 
           {/* Tiempo (reloj grande + barra) */}
           {session ? (
-            <div className="rounded-2xl bg-slate-800/50 px-5 py-4">
+            <div className="rounded-2xl bg-slate-800/50 px-4 py-3 sm:px-5 sm:py-4">
               {calentando ? (
                 <p className="text-center text-lg font-semibold text-amber-400">Calentando…</p>
               ) : (
@@ -458,7 +490,7 @@ function ControllerScreen({ e, onClose }: { e: FleetItem; onClose: () => void })
                       Programado {fmtDuration(e.lastTotalS)}
                     </span>
                   </div>
-                  <p className="mt-1 text-center font-mono text-4xl font-bold tracking-wider text-bio-green">
+                  <p className="mt-1 text-center font-mono text-3xl font-bold tracking-wider text-bio-green sm:text-4xl">
                     {fmtHMS(e.lastRemainingS)}
                   </p>
                   <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-slate-700">
@@ -474,22 +506,24 @@ function ControllerScreen({ e, onClose }: { e: FleetItem; onClose: () => void })
               )}
             </div>
           ) : (
-            <div className="rounded-2xl bg-slate-800/30 px-5 py-4 text-center text-sm text-slate-400">
+            <div className="rounded-2xl bg-slate-800/30 px-4 py-3 text-center sm:px-5 sm:py-4 text-sm text-slate-400">
               Sin sesión activa
             </div>
           )}
 
-          {/* T MIN / T MAX */}
-          <div className="grid grid-cols-2 gap-3">
-            <MinMaxBox label="T MÍN" value={e.lastTMin} cls="text-sky-300" />
-            <MinMaxBox label="T MÁX" value={e.lastTMax} cls="text-orange-300" />
-          </div>
+          {/* T MIN / T MAX — solo con sesión activa o completada */}
+          {(session || completado) && (
+            <div className="grid grid-cols-2 gap-3">
+              <MinMaxBox label="T MÍN" value={e.lastTMin} cls="text-sky-300" />
+              <MinMaxBox label="T MÁX" value={e.lastTMax} cls="text-orange-300" />
+            </div>
+          )}
 
           {/* Consumo de energía de la sesión (mismo cálculo que el LCD).
               Visible con sesión activa o al COMPLETAR (total del proceso);
               en reposo el acumulador queda en 0 y se oculta. */}
           {(session || completado) && kwh !== null && (
-            <div className="rounded-2xl bg-slate-800/50 px-5 py-4">
+            <div className="rounded-2xl bg-slate-800/50 px-4 py-3 sm:px-5 sm:py-4">
               <p className="flex items-center gap-1.5 text-[11px] uppercase tracking-wide text-slate-400">
                 <Zap size={12} className="text-green-400" /> Consumo de energía
                 {completado && (
@@ -498,10 +532,170 @@ function ControllerScreen({ e, onClose }: { e: FleetItem; onClose: () => void })
                   </span>
                 )}
               </p>
-              <p className="mt-1 text-3xl font-bold text-green-400">
+              <p className="mt-1 text-2xl font-bold text-green-400 sm:text-3xl">
                 {kwh.toFixed(2)}
                 <span className="ml-1 text-lg font-semibold text-green-300/70">kWh</span>
               </p>
+            </div>
+          )}
+
+          {/* Controles remotos */}
+          {e.online && (
+            <div className="rounded-2xl bg-slate-800/50 px-4 py-3 sm:px-5 sm:py-4">
+              <p className="mb-3 text-[11px] uppercase tracking-wide text-slate-400">
+                Control remoto
+              </p>
+
+              {cmdSent && (
+                <p className="mb-3 text-center text-sm font-medium text-emerald-400">
+                  Comando enviado — se ejecutará en máx. 5s
+                </p>
+              )}
+
+              {showStartForm ? (
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <label className="w-16 shrink-0 text-xs text-slate-400">Temp</label>
+                    <input
+                      type="range" min={30} max={80} value={startSp}
+                      onChange={(ev) => setStartSp(Number(ev.target.value))}
+                      className="min-w-0 flex-1 accent-emerald-500"
+                    />
+                    <span className="w-12 text-right text-sm font-semibold text-emerald-300">{startSp}°C</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <label className="w-16 shrink-0 text-xs text-slate-400">Duración</label>
+                    <input
+                      type="range" min={1} max={24} value={startDurH}
+                      onChange={(ev) => setStartDurH(Number(ev.target.value))}
+                      className="min-w-0 flex-1 accent-emerald-500"
+                    />
+                    <span className="w-12 text-right text-sm font-semibold text-emerald-300">{startDurH}h</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <label className="w-16 shrink-0 text-xs text-slate-400">Hum %</label>
+                    <input
+                      type="range" min={0} max={50} value={startHum}
+                      onChange={(ev) => setStartHum(Number(ev.target.value))}
+                      className="min-w-0 flex-1 accent-sky-500"
+                    />
+                    <span className="w-12 text-right text-sm font-semibold text-sky-300">
+                      {startHum > 0 ? `${startHum}%` : "OFF"}
+                    </span>
+                  </div>
+                  <div className="flex gap-2 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => setShowStartForm(false)}
+                      className="flex-1 rounded-xl bg-slate-700 py-2 text-sm font-semibold text-slate-300 transition-colors hover:bg-slate-600"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      type="button"
+                      disabled={cmdLoading}
+                      onClick={() => sendCommand("start_manual", {
+                        sp: startSp,
+                        dur_s: startDurH * 3600,
+                        hum: startHum,
+                      })}
+                      className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-emerald-600 py-2 text-sm font-semibold text-white transition-colors hover:bg-emerald-500 disabled:opacity-50"
+                    >
+                      {cmdLoading ? <Loader2 size={16} className="animate-spin" /> : <Play size={16} />}
+                      Iniciar
+                    </button>
+                  </div>
+                </div>
+              ) : showPrograms ? (
+                <ProgramPicker
+                  programs={e.programs}
+                  loading={cmdLoading}
+                  onSelect={(slot) => sendCommand("start_program", { slot })}
+                  onCancel={() => setShowPrograms(false)}
+                />
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  {/* IDLE o COMPLETED → mostrar Iniciar manual + Programas */}
+                  {(e.lastRunState === 0 || e.lastRunState === 4) && (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => setShowStartForm(true)}
+                        className="flex items-center gap-1.5 rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-emerald-500"
+                      >
+                        <Play size={14} /> Iniciar manual
+                      </button>
+                      {e.programs && e.programs.length > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => setShowPrograms(true)}
+                          className="flex items-center gap-1.5 rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-violet-500"
+                        >
+                          <BookOpen size={14} /> Programas
+                        </button>
+                      )}
+                    </>
+                  )}
+                  {/* RUNNING → Pausar + Detener */}
+                  {e.lastRunState === 2 && (
+                    <>
+                      <button
+                        type="button"
+                        disabled={cmdLoading}
+                        onClick={() => sendCommand("pause")}
+                        className="flex items-center gap-1.5 rounded-xl bg-amber-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-amber-500 disabled:opacity-50"
+                      >
+                        {cmdLoading ? <Loader2 size={14} className="animate-spin" /> : <Pause size={14} />}
+                        Pausar
+                      </button>
+                      <button
+                        type="button"
+                        disabled={cmdLoading}
+                        onClick={() => sendCommand("stop")}
+                        className="flex items-center gap-1.5 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-red-500 disabled:opacity-50"
+                      >
+                        {cmdLoading ? <Loader2 size={14} className="animate-spin" /> : <Square size={14} />}
+                        Detener
+                      </button>
+                    </>
+                  )}
+                  {/* PAUSED → Reanudar + Detener */}
+                  {e.lastRunState === 3 && (
+                    <>
+                      <button
+                        type="button"
+                        disabled={cmdLoading}
+                        onClick={() => sendCommand("resume")}
+                        className="flex items-center gap-1.5 rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-emerald-500 disabled:opacity-50"
+                      >
+                        {cmdLoading ? <Loader2 size={14} className="animate-spin" /> : <Play size={14} />}
+                        Reanudar
+                      </button>
+                      <button
+                        type="button"
+                        disabled={cmdLoading}
+                        onClick={() => sendCommand("stop")}
+                        className="flex items-center gap-1.5 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-red-500 disabled:opacity-50"
+                      >
+                        {cmdLoading ? <Loader2 size={14} className="animate-spin" /> : <Square size={14} />}
+                        Detener
+                      </button>
+                    </>
+                  )}
+                  {/* ALARM → Detener (resetear alarma) */}
+                  {e.lastRunState === 5 && (
+                    <button
+                      type="button"
+                      disabled={cmdLoading}
+                      onClick={() => sendCommand("stop")}
+                      className="flex items-center gap-1.5 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-red-500 disabled:opacity-50"
+                    >
+                      {cmdLoading ? <Loader2 size={14} className="animate-spin" /> : <Square size={14} />}
+                      Detener / Reset alarma
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           )}
 
@@ -540,6 +734,56 @@ function StatBox({
         </span>
         {detail && <span className="text-xs text-slate-400">{detail}</span>}
       </div>
+    </div>
+  );
+}
+
+// Selector de programas memorizados en el equipo.
+function ProgramPicker({
+  programs,
+  loading,
+  onSelect,
+  onCancel,
+}: {
+  programs: DeviceProgram[] | null;
+  loading: boolean;
+  onSelect: (slot: number) => void;
+  onCancel: () => void;
+}) {
+  if (!programs || programs.length === 0) return null;
+  return (
+    <div className="space-y-2">
+      <p className="text-xs text-slate-400">Seleccioná un programa memorizado:</p>
+      <div className="grid gap-2">
+        {programs.map((p) => (
+          <button
+            key={p.s}
+            type="button"
+            disabled={loading}
+            onClick={() => onSelect(p.s)}
+            className="flex items-center justify-between rounded-xl bg-violet-600/20 px-4 py-3 text-left transition-colors hover:bg-violet-600/40 disabled:opacity-50"
+          >
+            <div className="flex items-center gap-2">
+              <BookOpen size={14} className="text-violet-400" />
+              <span className="text-sm font-semibold text-violet-200">{p.n}</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              {loading ? (
+                <Loader2 size={14} className="animate-spin text-violet-400" />
+              ) : (
+                <Play size={14} className="text-violet-400" />
+              )}
+            </div>
+          </button>
+        ))}
+      </div>
+      <button
+        type="button"
+        onClick={onCancel}
+        className="w-full rounded-xl bg-slate-700 py-2 text-sm font-semibold text-slate-300 transition-colors hover:bg-slate-600"
+      >
+        Cancelar
+      </button>
     </div>
   );
 }

@@ -34,6 +34,8 @@ export type MuestraMini = {
   humFault: boolean;
 };
 
+export type DeviceProgram = { s: number; n: string };
+
 // Forma cruda del equipo tal como vuelve de Prisma (campos que usamos).
 export type EquipoRow = {
   id: string;
@@ -49,6 +51,7 @@ export type EquipoRow = {
   lastTemp: number | null;
   lastOpMode: number | null;
   lastProg: string | null;
+  programs?: unknown;
   cliente?: { nombre: string } | null;
   muestras?: MuestraMini[];
 };
@@ -88,6 +91,7 @@ export type FleetItem = {
   lastNumMod: number | null;
   lastHum: number | null;
   lastHumFault: boolean;
+  programs: DeviceProgram[] | null;
 };
 
 export type FleetSummary = { total: number; online: number; offline: number; alarm: number };
@@ -134,6 +138,7 @@ export function shapeEquipo(e: EquipoRow, now: number): FleetItem {
     lastNumMod: m?.numMod ?? null,
     lastHum: m?.hum ?? null,
     lastHumFault: m?.humFault ?? false,
+    programs: Array.isArray(e.programs) ? (e.programs as DeviceProgram[]) : null,
   };
 }
 

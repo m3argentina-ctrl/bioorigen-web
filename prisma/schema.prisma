@@ -345,9 +345,11 @@ model Equipo {
   lastTemp     Float?
   lastOpMode   Int?                          // 0 reposo · 1 manual · 2 programa
   lastProg     String?                       // nombre del programa en curso
+  programs     Json?                         // [{s:slot,n:nombre}] reportados por telemetría
 
   muestras  Muestra[]
   eventos   Evento[]
+  comandos  Comando[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -415,4 +417,25 @@ model Evento {
 
   @@index([equipoId, createdAt])
   @@index([notified])
+}
+
+// Cola de comandos remotos. El panel cliente (o admin) crea un Comando con
+// status "pending"; el siguiente heartbeat del equipo lo transporta en la
+// respuesta del ingest; el ESP32 lo ejecuta y envía ACK.
+model Comando {
+  id       String @id @default(cuid())
+  equipo   Equipo @relation(fields: [equipoId], references: [id], onDelete: Cascade)
+  equipoId String
+
+  type     String              // stop | pause | resume | start_manual | start_program
+  payload  Json?               // start_manual: {sp, dur_s, hum} · start_program: {slot}
+  status   String @default("pending") // pending | sent | acked | expired | rejected
+  source   String @default("cliente") // cliente | admin
+
+  createdAt DateTime  @default(now())
+  sentAt    DateTime?
+  ackedAt   DateTime?
+  expiresAt DateTime
+
+  @@index([equipoId, status])
 }
