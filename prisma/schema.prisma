@@ -350,6 +350,7 @@ model Equipo {
   muestras  Muestra[]
   eventos   Evento[]
   comandos  Comando[]
+  lotes     Lote[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -417,6 +418,35 @@ model Evento {
 
   @@index([equipoId, createdAt])
   @@index([notified])
+}
+
+// Lote de producción: un ciclo completo (manual o programa). Se crea
+// automáticamente en el ingest al detectar la transición a COMPLETED o ALARM.
+// El CSV se genera on-demand consultando las Muestras entre startedAt..completedAt.
+model Lote {
+  id       String @id @default(cuid())
+  equipo   Equipo @relation(fields: [equipoId], references: [id], onDelete: Cascade)
+  equipoId String
+
+  programa   String?              // nombre del programa (null = manual)
+  opMode     Int                  // 1 manual · 2 programa
+  result     String               // ok | alarm | stopped
+  startedAt  DateTime
+  completedAt DateTime
+
+  // Resumen (snapshot del momento de cierre).
+  tempMax    Float?
+  tempMin    Float?
+  spEff      Float?               // setpoint efectivo
+  humFinal   Float?               // humedad al cerrar
+  durationS  Int                  // segundos reales de proceso
+  resWh      Float?               // consumo resistencia (Wh por módulo)
+  fanOnS     Float?               // segundos turbina encendida
+  numMod     Int?                 // cantidad de módulos
+
+  createdAt DateTime @default(now())
+
+  @@index([equipoId, completedAt])
 }
 
 // Cola de comandos remotos. El panel cliente (o admin) crea un Comando con

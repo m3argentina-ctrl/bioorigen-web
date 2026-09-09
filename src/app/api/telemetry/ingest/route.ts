@@ -151,8 +151,36 @@ export async function POST(req: Request) {
     },
   });
 
-  // 3) Eventos accionables.
-  //    - Alarma: sólo en el flanco (estado previo no era alarma) → no duplica.
+  // 3) Lote de producción: detectar transición a COMPLETED o ALARM.
+  const wasRunning =
+    equipo.lastRunState === 2 || equipo.lastRunState === 3; // RUNNING | PAUSED
+  const justCompleted = d.run_state === 4 && wasRunning; // → COMPLETED
+  const justAlarmed = d.run_state === 5 && wasRunning;   // → ALARM
+  if (justCompleted || justAlarmed) {
+    const durationS = d.elapsed_s ?? 0;
+    const startedAt = new Date(now.getTime() - durationS * 1000);
+    await prisma.lote.create({
+      data: {
+        equipoId: equipo.id,
+        programa: d.prog || null,
+        opMode: d.op_mode ?? equipo.lastOpMode ?? 1,
+        result: justCompleted ? "ok" : "alarm",
+        startedAt,
+        completedAt: now,
+        tempMax: d.t_max ?? null,
+        tempMin: d.t_min ?? null,
+        spEff: d.sp_eff ?? null,
+        humFinal: d.hum ?? null,
+        durationS,
+        resWh: d.res_wh ?? null,
+        fanOnS: d.fan_on_s ?? null,
+        numMod: d.num_mod ?? null,
+      },
+    });
+  }
+
+  // 4) Eventos accionables.
+  //    - Alarma: sólo en el flanco.
   if (isAlarm && !wasAlarm) {
     const evento = await prisma.evento.create({
       data: {

@@ -20,6 +20,8 @@ import {
   Square,
   Loader2,
   BookOpen,
+  Download,
+  FileSpreadsheet,
 } from "lucide-react";
 import {
   RUN_STATE_LABELS,
@@ -39,6 +41,25 @@ import {
 
 const POLL_MS = 20_000;
 
+type LoteItem = {
+  id: string;
+  equipoId: string;
+  equipoNombre: string;
+  programa: string | null;
+  opMode: number;
+  result: string;
+  startedAt: string;
+  completedAt: string;
+  tempMax: number | null;
+  tempMin: number | null;
+  spEff: number | null;
+  humFinal: number | null;
+  durationS: number;
+  resWh: number | null;
+  fanOnS: number | null;
+  numMod: number | null;
+};
+
 export default function ClientePanel({
   token,
   clienteNombre,
@@ -52,6 +73,8 @@ export default function ClientePanel({
   const [refreshing, setRefreshing] = useState(false);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [lotes, setLotes] = useState<LoteItem[]>([]);
+  const [showHistory, setShowHistory] = useState(false);
   const first = useRef(true);
 
   // Equipo seleccionado re-derivado de `items` para que siga vivo con el polling.
@@ -76,11 +99,22 @@ export default function ClientePanel({
       });
   }, [token]);
 
+  const loadLotes = useCallback(() => {
+    fetch(`/api/cliente/${token}/lotes`)
+      .then((r) => r.json())
+      .then((d) => { if (d?.lotes) setLotes(d.lotes); })
+      .catch(() => {});
+  }, [token]);
+
   useEffect(() => {
     load();
     const id = setInterval(load, POLL_MS);
     return () => clearInterval(id);
   }, [load]);
+
+  useEffect(() => {
+    if (showHistory) loadLotes();
+  }, [showHistory, loadLotes]);
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -131,6 +165,33 @@ export default function ClientePanel({
             {items.map((e) => (
               <EquipoCard key={e.id} e={e} onOpen={() => setSelectedId(e.id)} />
             ))}
+          </div>
+        )}
+
+        {/* Historial de lotes */}
+        {!loading && items.length > 0 && (
+          <div className="mt-8">
+            <button
+              type="button"
+              onClick={() => setShowHistory(!showHistory)}
+              className="flex items-center gap-2 text-sm font-semibold text-slate-600 transition-colors hover:text-bio-green"
+            >
+              <FileSpreadsheet size={16} />
+              Historial de producción
+              <ChevronRight size={14} className={`transition-transform ${showHistory ? "rotate-90" : ""}`} />
+            </button>
+
+            {showHistory && (
+              <div className="mt-3 space-y-2">
+                {lotes.length === 0 ? (
+                  <p className="py-6 text-center text-sm text-slate-400">
+                    No hay lotes de producción registrados todavía.
+                  </p>
+                ) : (
+                  lotes.map((l) => <LoteCard key={l.id} lote={l} token={token} />)
+                )}
+              </div>
+            )}
           </div>
         )}
 
@@ -784,6 +845,69 @@ function ProgramPicker({
       >
         Cancelar
       </button>
+    </div>
+  );
+}
+
+// Tarjeta de un lote de producción con botón de descarga CSV.
+function LoteCard({ lote, token }: { lote: LoteItem; token: string }) {
+  const date = new Date(lote.completedAt);
+  const dateStr = date.toLocaleDateString("es-AR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+  const timeStr = date.toLocaleTimeString("es-AR", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  const h = Math.floor(lote.durationS / 3600);
+  const m = Math.floor((lote.durationS % 3600) / 60);
+  const durStr = `${h}h ${m.toString().padStart(2, "0")}m`;
+  const isOk = lote.result === "ok";
+
+  return (
+    <div className="flex items-center justify-between rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-2">
+          <span
+            className={`inline-block h-2 w-2 rounded-full ${
+              isOk ? "bg-emerald-500" : "bg-red-500"
+            }`}
+          />
+          <span className="truncate text-sm font-semibold text-slate-700">
+            {lote.programa ?? "Manual"}
+          </span>
+          <span
+            className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${
+              isOk
+                ? "bg-emerald-100 text-emerald-700"
+                : "bg-red-100 text-red-600"
+            }`}
+          >
+            {isOk ? "OK" : "ALARMA"}
+          </span>
+        </div>
+        <div className="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-slate-400">
+          <span>{dateStr} {timeStr}</span>
+          <span>{durStr}</span>
+          {lote.spEff !== null && <span>{lote.spEff.toFixed(0)}°C</span>}
+          {lote.tempMax !== null && (
+            <span>máx {lote.tempMax.toFixed(1)}°C</span>
+          )}
+          {lote.humFinal !== null && lote.humFinal > 0 && (
+            <span>hum {lote.humFinal.toFixed(0)}%</span>
+          )}
+        </div>
+      </div>
+      <a
+        href={`/api/cliente/${token}/lotes/${lote.id}/csv`}
+        download
+        className="ml-3 flex shrink-0 items-center gap-1 rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-50"
+      >
+        <Download size={13} />
+        CSV
+      </a>
     </div>
   );
 }
