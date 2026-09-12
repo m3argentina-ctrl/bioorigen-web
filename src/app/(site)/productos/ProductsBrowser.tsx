@@ -241,6 +241,7 @@ export default function ProductsBrowser({
           </button>
         </div>
 
+        <h2 className="sr-only">Listado de productos</h2>
         <p className="mt-4 text-sm text-bio-dark/60">
           Mostrando {filtered.length} de {products.length} productos
         </p>
