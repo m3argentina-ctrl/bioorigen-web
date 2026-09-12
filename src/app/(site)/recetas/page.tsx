@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Recetas — Bio Origen",
-  description: "Recetas saludables con frutas deshidratadas, charqui y snacks naturales Bio Origen. Fácil preparación, ingredientes artesanales sin conservantes.",
+  description: "Recetas para aprovechar al máximo tu deshidratador Bio Origen. Guías paso a paso para deshidratar frutas, verduras, carnes y más en casa o de forma profesional.",
   alternates: { canonical: "/recetas" },
 };
 

@@ -11,9 +11,9 @@ const sans = localFont({
 // Usar || (no ??) para que un valor vacío "" también caiga al default.
 const siteUrl =
   process.env.NEXT_PUBLIC_BASE_URL?.trim() || "http://localhost:3000";
-const title = "Bio Origen — Alimentos deshidratados naturales";
+const title = "Bio Origen — Hornos deshidratadores para alimentos";
 const description =
-  "Charqui, snacks y frutas deshidratadas sin conservantes. Del campo a tu mesa.";
+  "Fabricamos y comercializamos hornos deshidratadores para alimentos. Equipos familiares y comerciales para deshidratar frutas, verduras, carnes y más. Envíos a todo el país.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

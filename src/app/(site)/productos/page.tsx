@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Productos — Bio Origen",
-  description: "Comprá deshidratadores, charqui, snacks y frutas deshidratadas artesanales. Envíos a todo el país.",
+  description: "Hornos deshidratadores familiares y comerciales, accesorios y láminas antiadherentes. Fabricación nacional. Envíos a todo el país.",
   alternates: { canonical: "/productos" },
 };
 

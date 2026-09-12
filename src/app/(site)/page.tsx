@@ -45,7 +45,7 @@ export default async function HomePage() {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     name: "Bio Origen",
-    description: "Alimentos deshidratados naturales: charqui, snacks, frutas y deshidratadores. Sin conservantes, del campo a tu mesa.",
+    description: "Fabricamos y comercializamos hornos deshidratadores para alimentos. Equipos familiares y comerciales para deshidratar frutas, verduras, carnes y más.",
     url: process.env.NEXT_PUBLIC_BASE_URL?.trim() || "https://bioorigen.com.ar",
     telephone: "+54 911 6981-9981",
     address: {
@@ -61,7 +61,7 @@ export default async function HomePage() {
     <>
     <JsonLd data={localBusinessJsonLd} />
     <div>
-      <h1 className="sr-only">Bio Origen — Alimentos deshidratados naturales</h1>
+      <h1 className="sr-only">Bio Origen — Hornos deshidratadores para alimentos</h1>
 
       {/* Hero slider */}
       <BannerCarousel banners={banners} />
