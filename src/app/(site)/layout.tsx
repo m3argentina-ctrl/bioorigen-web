@@ -2,40 +2,11 @@ import { CartProvider } from "@/components/CartProvider";
 import HeaderWrapper from "@/components/layout/HeaderWrapper";
 import Footer from "@/components/layout/Footer";
 import CartSidebar from "@/components/CartSidebar";
-import TopBar from "@/components/home/TopBar";
-import { prisma } from "@/lib/db";
-
-async function getTopBarData() {
-  try {
-    const [configs, paymentCfg, freeShipping] = await Promise.all([
-      prisma.siteConfig.findMany({
-        where: { key: { in: ["contact_phone", "topbar_items"] } },
-      }),
-      prisma.paymentConfig.findFirst(),
-      prisma.freeShippingConfig.findFirst({
-        where: { enabled: true, type: "minimum_amount", minimumAmount: { not: null } },
-        orderBy: { priority: "desc" },
-      }),
-    ]);
-    const cfg = Object.fromEntries(configs.map((c) => [c.key, c.value]));
-    const customItems = cfg.topbar_items ? JSON.parse(cfg.topbar_items) : [];
-    return {
-      freeShippingFrom: freeShipping?.minimumAmount ?? null,
-      phone: cfg.contact_phone ?? "+54 911 6981-9981",
-      transferDiscount: paymentCfg?.bankTransferDiscount ?? 0,
-      customItems,
-    };
-  } catch {
-    return { freeShippingFrom: null, phone: "+54 911 6981-9981", transferDiscount: 0, customItems: [] };
-  }
-}
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
-  const topBarData = await getTopBarData();
   return (
     <CartProvider>
       <div className="sticky top-0 z-50">
-        <TopBar {...topBarData} />
         <HeaderWrapper />
       </div>
       <main className="min-h-[70vh]">{children}</main>
