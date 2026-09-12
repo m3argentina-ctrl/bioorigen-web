@@ -7,7 +7,9 @@ import { parseVariants } from "@/lib/variants";
 import type { Product, ShippingMode } from "@/lib/types";
 import AddToCart from "./AddToCart";
 import ProductGallery from "./ProductGallery";
+import CustomDimensions from "./CustomDimensions";
 import { ProductPrice, VariantProvider } from "@/components/products/VariantContext";
+import { CATEGORIES_WITH_CUSTOM_DIMENSIONS } from "@/lib/variants";
 
 export const dynamic = "force-dynamic";
 
@@ -60,6 +62,9 @@ export default async function ProductoPage({ params }: { params: { slug: string 
         : [];
   const onSale = discounts.length > 0;
   const discount = onSale ? Math.max(...discounts) : 0;
+  const showCustomDimensions =
+    CATEGORIES_WITH_CUSTOM_DIMENSIONS.includes(product.category) &&
+    !product.name.toLowerCase().includes("bacha");
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
@@ -187,6 +192,8 @@ export default async function ProductoPage({ params }: { params: { slug: string 
               </a>
             </div>
           )}
+
+          {showCustomDimensions && <CustomDimensions productName={product.name} />}
 
           {product.dataSheet && (
             <a

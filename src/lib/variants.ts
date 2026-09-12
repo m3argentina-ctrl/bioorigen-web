@@ -10,6 +10,12 @@ export const CATEGORIES_WITH_VARIANTS: readonly string[] = [
   "Mesadas, Bachas y Estantes Acero Inoxidable",
 ];
 
+export const CATEGORIES_WITH_CUSTOM_DIMENSIONS: readonly string[] = [
+  "Laminas antiadherentes",
+  "Mesadas, Bachas y Estantes Acero Inoxidable",
+  "Estanterías",
+];
+
 /** @deprecated usar CATEGORIES_WITH_VARIANTS */
 export const CATEGORY_WITH_VARIANTS = CATEGORIES_WITH_VARIANTS[0];
 

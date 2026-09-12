@@ -275,7 +275,7 @@ export default function CheckoutForm() {
             <div className="flex items-start gap-3 rounded-xl border-2 border-bio-green bg-bio-green/5 px-4 py-3">
               <span className="mt-0.5 text-xl">🚚</span>
               <div>
-                <p className="text-sm font-medium text-bio-dark">Envío directo desde el proveedor</p>
+                <p className="text-sm font-medium text-bio-dark">Envío a domicilio</p>
                 <p className="text-xs text-bio-dark/50">La entrega es de 7 a 10 días hábiles a partir de la confirmación del pedido. Te contactamos para coordinar los detalles.</p>
               </div>
             </div>

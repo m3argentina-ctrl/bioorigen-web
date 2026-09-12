@@ -8,7 +8,7 @@ import type { Product, ShippingMode } from "@/lib/types";
 
 const SHIPPING_INFO: Record<ShippingMode, string> = {
   COORDINAR: "Envío a coordinar — Te contactamos para definir el traslado.",
-  PROVEEDOR_DIRECTO: "Envío directo desde el proveedor — La entrega es de 7 a 10 días hábiles.",
+  PROVEEDOR_DIRECTO: "La entrega es de 7 a 10 días hábiles a partir de la confirmación del pago.",
   RETIRO_SOLO: "Solo retiro en fábrica — Sin envío a domicilio.",
 };
 
