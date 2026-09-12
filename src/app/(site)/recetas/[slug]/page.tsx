@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Clock, Thermometer, ChevronLeft } from "lucide-react";
 import { getRecipeBySlug } from "@/lib/queries";
+import JsonLd from "@/components/JsonLd";
 
 export const dynamic = "force-dynamic";
 
@@ -11,9 +12,16 @@ type Props = { params: { slug: string } };
 export async function generateMetadata({ params }: Props) {
   const recipe = await getRecipeBySlug(params.slug);
   if (!recipe) return {};
+  const image = recipe.image || recipe.images?.[0];
   return {
-    title: `${recipe.name} — Bio Origen`,
+    title: `${recipe.name} — Receta Bio Origen`,
     description: recipe.description,
+    openGraph: {
+      title: `${recipe.name} — Receta Bio Origen`,
+      description: recipe.description,
+      type: "article",
+      ...(image && { images: [{ url: image, alt: recipe.name }] }),
+    },
   };
 }
 
@@ -28,8 +36,28 @@ export default async function RecetaDetailPage({ params }: Props) {
   if (!recipe) notFound();
 
   const color = CATEGORY_COLOR[recipe.category] ?? "bg-bio-beige text-bio-dark";
+  const recipeImage = recipe.image || recipe.images?.[0];
+
+  const recipeJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Recipe",
+    name: recipe.name,
+    description: recipe.description,
+    ...(recipeImage && { image: recipeImage }),
+    author: { "@type": "Organization", name: "Bio Origen" },
+    recipeCategory: recipe.category,
+    totalTime: recipe.time,
+    recipeIngredient: recipe.ingredients,
+    recipeInstructions: recipe.steps.map((step, i) => ({
+      "@type": "HowToStep",
+      position: i + 1,
+      text: step,
+    })),
+  };
 
   return (
+    <>
+    <JsonLd data={recipeJsonLd} />
     <div className="mx-auto max-w-3xl px-4 py-12">
       <Link
         href="/recetas"
@@ -161,5 +189,6 @@ export default async function RecetaDetailPage({ params }: Props) {
         )}
       </div>
     </div>
+    </>
   );
 }

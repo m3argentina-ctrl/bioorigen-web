@@ -12,6 +12,7 @@ import { getFeaturedProducts } from "@/lib/queries";
 import { prisma } from "@/lib/db";
 import type { Recipe } from "@/lib/types";
 import type { Banner } from "@/types/banner";
+import JsonLd from "@/components/JsonLd";
 
 export const dynamic = "force-dynamic";
 
@@ -40,7 +41,25 @@ export default async function HomePage() {
 
   const recipes = recipeRows as unknown as Recipe[];
 
+  const localBusinessJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: "Bio Origen",
+    description: "Alimentos deshidratados naturales: charqui, snacks, frutas y deshidratadores. Sin conservantes, del campo a tu mesa.",
+    url: process.env.NEXT_PUBLIC_BASE_URL?.trim() || "https://bioorigen.com.ar",
+    telephone: "+54 911 6981-9981",
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Gral Pacheco",
+      addressRegion: "Buenos Aires",
+      addressCountry: "AR",
+    },
+    sameAs: ["https://bioorigen.com.ar"],
+  };
+
   return (
+    <>
+    <JsonLd data={localBusinessJsonLd} />
     <div>
       <h1 className="sr-only">Bio Origen — Alimentos deshidratados naturales</h1>
 
@@ -127,5 +146,6 @@ export default async function HomePage() {
       {/* Newsletter */}
       <Newsletter />
     </div>
+    </>
   );
 }

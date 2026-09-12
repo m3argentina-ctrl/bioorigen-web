@@ -10,15 +10,23 @@ import ProductGallery from "./ProductGallery";
 import CustomDimensions from "./CustomDimensions";
 import { ProductPrice, VariantProvider } from "@/components/products/VariantContext";
 import { CATEGORIES_WITH_CUSTOM_DIMENSIONS } from "@/lib/variants";
+import JsonLd from "@/components/JsonLd";
 
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   const product = await prisma.product.findUnique({ where: { slug: params.slug } });
   if (!product) return {};
+  const image = product.images?.[0];
   return {
     title: `${product.name} — Bio Origen`,
     description: product.description.slice(0, 155),
+    openGraph: {
+      title: `${product.name} — Bio Origen`,
+      description: product.description.slice(0, 155),
+      type: "website",
+      ...(image && { images: [{ url: image, alt: product.name }] }),
+    },
   };
 }
 
@@ -66,7 +74,36 @@ export default async function ProductoPage({ params }: { params: { slug: string 
     CATEGORIES_WITH_CUSTOM_DIMENSIONS.includes(product.category) &&
     !product.name.toLowerCase().includes("bacha");
 
+  const siteUrl = process.env.NEXT_PUBLIC_BASE_URL?.trim() || "https://bioorigen.com.ar";
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    description: product.description,
+    image: product.images,
+    brand: { "@type": "Brand", name: "Bio Origen" },
+    offers: {
+      "@type": "Offer",
+      priceCurrency: "ARS",
+      price: product.salePrice ?? product.price,
+      availability: product.active && product.stock > 0
+        ? "https://schema.org/InStock"
+        : "https://schema.org/OutOfStock",
+      url: `${siteUrl}/productos/${product.slug}`,
+      seller: { "@type": "Organization", name: "Bio Origen" },
+    },
+    ...(product.rating != null && {
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: product.rating,
+        reviewCount: product.reviewCount,
+      },
+    }),
+  };
+
   return (
+    <>
+    <JsonLd data={productJsonLd} />
     <div className="mx-auto max-w-6xl px-4 py-10">
       {/* Breadcrumb */}
       <nav className="mb-6 flex items-center gap-1.5 text-sm text-bio-dark/50">
@@ -217,5 +254,6 @@ export default async function ProductoPage({ params }: { params: { slug: string 
         </VariantProvider>
       </div>
     </div>
+    </>
   );
 }
