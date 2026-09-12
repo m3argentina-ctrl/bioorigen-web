@@ -13,7 +13,7 @@ const siteUrl =
   process.env.NEXT_PUBLIC_BASE_URL?.trim() || "http://localhost:3000";
 const title = "Bio Origen — Hornos deshidratadores para alimentos";
 const description =
-  "Fabricamos hornos deshidratadores para alimentos. Equipos familiares y comerciales para deshidratar frutas, verduras, carnes y más.";
+  "Fabricamos hornos deshidratadores para alimentos. Equipos familiares y comerciales. Envíos a todo el país.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
