@@ -7,7 +7,7 @@ import { DynamicIcon } from "@/lib/icons";
 type CustomItem = { id: string; icon: string; text: string; active: boolean; order: number };
 
 type Props = {
-  freeShippingFrom: number;
+  freeShippingFrom: number | null;
   phone: string;
   transferDiscount: number;
   customItems: CustomItem[];
@@ -27,7 +27,9 @@ export default function TopBar({ freeShippingFrom, phone, transferDiscount, cust
     transferDiscount > 0 ? `Transferencia ${transferDiscount}% OFF` : "Descuento por transferencia";
 
   const dynamicItems = [
-    { id: "_shipping", Icon: Truck,       text: `Envío gratis desde ${fmt(freeShippingFrom)}` },
+    ...(freeShippingFrom != null
+      ? [{ id: "_shipping", Icon: Truck, text: `Envío gratis desde ${fmt(freeShippingFrom)}` }]
+      : []),
     { id: "_discount", Icon: Banknote,    text: discountLabel },
     { id: "_phone",    Icon: Phone,       text: phone },
   ];
