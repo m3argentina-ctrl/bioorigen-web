@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { prisma } from "@/lib/db";
 
-const BASE = process.env.NEXT_PUBLIC_BASE_URL?.trim() || "https://bioorigen.com.ar";
+const BASE = "https://bioorigen.com.ar";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [products, recipes] = await Promise.all([
