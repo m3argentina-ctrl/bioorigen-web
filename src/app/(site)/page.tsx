@@ -42,6 +42,8 @@ export default async function HomePage() {
 
   return (
     <div>
+      <h1 className="sr-only">Bio Origen — Alimentos deshidratados naturales</h1>
+
       {/* Hero slider */}
       <BannerCarousel banners={banners} />
 

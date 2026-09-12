@@ -30,6 +30,13 @@ export const metadata: Metadata = {
     siteName: "Bio Origen",
     locale: "es_AR",
     type: "website",
+    images: [{ url: "/apple-touch-icon.png", width: 180, height: 180, alt: "Bio Origen" }],
+  },
+  twitter: {
+    card: "summary",
+    title,
+    description,
+    images: ["/apple-touch-icon.png"],
   },
 };
 
