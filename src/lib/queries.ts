@@ -21,7 +21,13 @@ async function getPausedCategoryNames(): Promise<Set<string>> {
 export function getProducts(): Promise<Product[]> {
   return safe(async () => {
     const [rows, pausedCats] = await Promise.all([
-      prisma.product.findMany({ orderBy: { name: "asc" } }),
+      prisma.product.findMany({
+        orderBy: [
+          { supplierId: { sort: "asc", nulls: "first" } },
+          { featured: "desc" },
+          { name: "asc" },
+        ],
+      }),
       getPausedCategoryNames(),
     ]);
     // Un producto está disponible si está activo individualmente Y su categoría está activa.
