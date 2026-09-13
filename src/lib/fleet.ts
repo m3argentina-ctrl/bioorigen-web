@@ -9,10 +9,10 @@ export const RUN_ALARM = 5; // run_state == 5 → RUN_STATE_ALARM (firmware app_
 export const RUN_COMPLETED = 4; // run_state == 4 → RUN_STATE_COMPLETED (proceso terminado)
 export const PROG_STAGE_COUNT = 3; // etapas por programa (firmware PROG_STAGE_COUNT)
 
-// Potencia de UNA turbina: motor polo de sombra 220V × 0,40A ≈ 88 W.
+// Potencia de UNA turbina: motor polo de sombra 220 V, 35 W de chapa (activa).
 // Igual a FAN_WATTS_PER_MODULE del firmware (app_config.h). La resistencia ya
 // viene integrada en Wh (resWh), así que sólo necesitamos esta constante.
-export const FAN_WATTS_PER_MODULE = 88;
+export const FAN_WATTS_PER_MODULE = 35;
 
 // Última muestra de telemetría (sub-select con take:1). Trae los datos de la
 // sesión en curso que NO están cacheados en Equipo: tiempo y etapa.
@@ -143,7 +143,7 @@ export function shapeEquipo(e: EquipoRow, now: number): FleetItem {
 }
 
 // kWh de la sesión (mismo cálculo que el LCD del equipo): integra la energía de
-// la resistencia (ya en Wh) más la de las turbinas (segundos encendidas × 88 W),
+// la resistencia (ya en Wh) más la de las turbinas (segundos encendidas × 35 W),
 // todo por módulo y multiplicado por la cantidad de módulos. Devuelve null si la
 // muestra no trae datos de consumo (equipos con firmware viejo).
 export function sessionKwh(e: {
