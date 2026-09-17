@@ -376,6 +376,7 @@ model Muestra {
   fan      Float?
   aux      Float?
   hum      Float?
+  humTgt   Float?                  // % humedad objetivo (0 = sin corte por humedad)
   humFault Boolean @default(false)
 
   opMode     Int?

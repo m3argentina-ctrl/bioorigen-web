@@ -37,6 +37,7 @@ export async function GET() {
           fanOnS: true,
           numMod: true,
           hum: true,
+          humTgt: true,
           humFault: true,
         },
       },

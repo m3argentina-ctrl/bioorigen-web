@@ -31,6 +31,7 @@ export type MuestraMini = {
   fanOnS: number | null; // segundos con turbina encendida (sesión)
   numMod: number | null; // cantidad de módulos
   hum: number | null;    // % humedad relativa
+  humTgt: number | null; // % humedad objetivo (0 = sin corte por humedad)
   humFault: boolean;
 };
 
@@ -90,6 +91,7 @@ export type FleetItem = {
   lastFanOnS: number | null;
   lastNumMod: number | null;
   lastHum: number | null;
+  lastHumTgt: number | null;
   lastHumFault: boolean;
   programs: DeviceProgram[] | null;
 };
@@ -137,6 +139,7 @@ export function shapeEquipo(e: EquipoRow, now: number): FleetItem {
     lastFanOnS: m?.fanOnS ?? null,
     lastNumMod: m?.numMod ?? null,
     lastHum: m?.hum ?? null,
+    lastHumTgt: m?.humTgt ?? null,
     lastHumFault: m?.humFault ?? false,
     programs: Array.isArray(e.programs) ? (e.programs as DeviceProgram[]) : null,
   };

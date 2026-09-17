@@ -501,20 +501,34 @@ function ControllerScreen({ e, token, onClose }: { e: FleetItem; token: string; 
             </div>
           </div>
 
-          {/* Humedad */}
+          {/* Humedad + objetivo (sólo en proceso y con corte por humedad) */}
           {e.lastHum !== null && (
-            <div className="rounded-2xl bg-slate-800/50 px-4 py-3 sm:px-5 sm:py-4">
-              <p className="flex items-center gap-1.5 text-[11px] uppercase tracking-wide text-slate-400">
-                <Droplets size={12} className="text-sky-400" /> Humedad
-              </p>
-              {e.lastHumFault ? (
-                <p className="mt-1 text-lg font-semibold text-red-400">Sensor falla</p>
-              ) : (
-                <p className="mt-1 text-2xl font-bold text-sky-400 sm:text-3xl">
-                  {e.lastHum.toFixed(1)}
-                  <span className="ml-1 text-lg font-semibold text-sky-300/70">%</span>
+            <div className="flex items-end justify-between rounded-2xl bg-slate-800/50 px-4 py-3 sm:px-5 sm:py-4">
+              <div>
+                <p className="flex items-center gap-1.5 text-[11px] uppercase tracking-wide text-slate-400">
+                  <Droplets size={12} className="text-sky-400" /> Humedad
                 </p>
-              )}
+                {e.lastHumFault ? (
+                  <p className="mt-1 text-lg font-semibold text-red-400">Sensor falla</p>
+                ) : (
+                  <p className="mt-1 text-2xl font-bold text-sky-400 sm:text-3xl">
+                    {e.lastHum.toFixed(1)}
+                    <span className="ml-1 text-lg font-semibold text-sky-300/70">%</span>
+                  </p>
+                )}
+              </div>
+              {(e.lastRunState === 2 || e.lastRunState === 3) &&
+                e.lastHumTgt !== null &&
+                e.lastHumTgt > 0 && (
+                  <div className="text-right">
+                    <p className="flex items-center justify-end gap-1 text-[11px] uppercase tracking-wide text-slate-400">
+                      <Target size={11} /> Objetivo
+                    </p>
+                    <p className="text-2xl font-semibold text-emerald-300">
+                      {e.lastHumTgt.toFixed(0)}%
+                    </p>
+                  </div>
+                )}
             </div>
           )}
 
