@@ -8,6 +8,8 @@ import {
   WifiOff,
   AlertTriangle,
   Thermometer,
+  Droplets,
+  Target,
   Link2,
   Check,
   Plus,
@@ -156,6 +158,7 @@ export default function FlotaAdminPage() {
                 <th className="px-4 py-3 text-left">Estado</th>
                 <th className="px-4 py-3 text-left">Modo</th>
                 <th className="px-4 py-3 text-right">Temp.</th>
+                <th className="px-4 py-3 text-right">Humedad</th>
                 <th className="px-4 py-3 text-left">Tiempo</th>
                 <th className="px-4 py-3 text-left">Ultimo contacto</th>
               </tr>
@@ -253,6 +256,32 @@ export default function FlotaAdminPage() {
                           <Thermometer size={13} className="text-slate-400" />
                           {e.lastTemp.toFixed(1)}°
                         </span>
+                      ) : (
+                        <span className="text-slate-300">—</span>
+                      )}
+                    </td>
+                    {/* Humedad + objetivo (sólo en proceso y con corte por humedad;
+                        el equipo conserva el objetivo de la última sesión) */}
+                    <td className="px-4 py-3 text-right">
+                      {e.lastHum !== null ? (
+                        <div className="flex flex-col items-end gap-0.5">
+                          {e.lastHumFault ? (
+                            <span className="text-xs font-medium text-red-500">Sensor falla</span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 font-medium text-slate-700">
+                              <Droplets size={13} className="text-sky-400" />
+                              {e.lastHum.toFixed(0)}%
+                            </span>
+                          )}
+                          {(e.lastRunState === 2 || e.lastRunState === 3) &&
+                            e.lastHumTgt !== null &&
+                            e.lastHumTgt > 0 && (
+                              <span className="inline-flex items-center gap-1 text-xs text-slate-400">
+                                <Target size={11} />
+                                obj {e.lastHumTgt.toFixed(0)}%
+                              </span>
+                            )}
+                        </div>
                       ) : (
                         <span className="text-slate-300">—</span>
                       )}
