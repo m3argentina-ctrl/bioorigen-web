@@ -2,8 +2,8 @@
 // IMPORTANTE: sin imports server-only (ni prisma ni next/headers) para que
 // pueda usarse también desde componentes "use client".
 
-// El firmware empuja heartbeat cada 60s; damos margen de 3 latidos (180s)
-// para considerar un equipo "offline".
+// El firmware empuja heartbeat cada 10 s (CLOUD_PUSH_INTERVAL_S); 180 s sin
+// datos cubre cortes breves de WiFi antes de considerar un equipo "offline".
 export const OFFLINE_THRESHOLD_MS = 180_000;
 export const RUN_ALARM = 5; // run_state == 5 → RUN_STATE_ALARM (firmware app_state.h)
 export const RUN_COMPLETED = 4; // run_state == 4 → RUN_STATE_COMPLETED (proceso terminado)

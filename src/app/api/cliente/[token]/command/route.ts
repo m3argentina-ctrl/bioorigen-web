@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
+import { CMD_FLAG_TTL_S, K, liveEnabled, redis } from "@/lib/live";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -31,7 +32,7 @@ export async function POST(
 
   const cliente = await prisma.cliente.findUnique({
     where: { accessToken: token },
-    include: { equipos: { where: { activo: true }, select: { id: true } } },
+    include: { equipos: { where: { activo: true }, select: { id: true, deviceId: true } } },
   });
   if (!cliente) {
     return NextResponse.json({ error: "no encontrado" }, { status: 404 });
@@ -54,7 +55,8 @@ export async function POST(
   const { equipoId, type, payload } = parsed.data;
 
   // Verificar que el equipo pertenece a este cliente.
-  if (!cliente.equipos.some((e) => e.id === equipoId)) {
+  const equipo = cliente.equipos.find((e) => e.id === equipoId);
+  if (!equipo) {
     return NextResponse.json({ error: "equipo no asociado" }, { status: 403 });
   }
 
@@ -88,6 +90,17 @@ export async function POST(
       expiresAt: new Date(now.getTime() + COMMAND_TTL_MS),
     },
   });
+
+  // Con Redis, el ingest no consulta Neon en cada heartbeat: esta marca le
+  // avisa que tiene comandos para entregar. Si Redis falla, el comando sale
+  // igual en el próximo cambio de estado o volcado horario del historial.
+  if (liveEnabled()) {
+    try {
+      await redis([["SET", K.cmd(equipo.deviceId), "1", "EX", CMD_FLAG_TTL_S]]);
+    } catch (e) {
+      console.error("[command] no se pudo marcar el comando en Redis:", (e as Error).message);
+    }
+  }
 
   return NextResponse.json({ id: comando.id, status: "pending" }, { status: 201 });
 }

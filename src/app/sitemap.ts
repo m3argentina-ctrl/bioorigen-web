@@ -3,11 +3,18 @@ import { prisma } from "@/lib/db";
 
 const BASE = "https://bioorigen.com.ar";
 
+// Se genera al pedirlo, no durante el build: si la base no responde (p. ej.
+// Neon suspendida) el deploy no falla, y el sitemap sale con las páginas fijas.
+export const dynamic = "force-dynamic";
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [products, recipes] = await Promise.all([
     prisma.product.findMany({ where: { active: true }, select: { slug: true, updatedAt: true } }),
     prisma.recipe.findMany({ select: { slug: true, updatedAt: true } }),
-  ]);
+  ]).catch((e) => {
+    console.error("[sitemap] base no disponible:", (e as Error).message);
+    return [[], []] as const;
+  });
 
   const statics: MetadataRoute.Sitemap = [
     { url: BASE,               lastModified: new Date(), changeFrequency: "daily",   priority: 1.0 },

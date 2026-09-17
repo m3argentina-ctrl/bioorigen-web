@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { requireAdmin } from "@/lib/admin-auth";
+import { invalidateFleet } from "@/lib/live";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -31,6 +32,7 @@ export async function PATCH(request: Request, ctx: Ctx) {
 
   try {
     const equipo = await prisma.equipo.update({ where: { id }, data });
+    await invalidateFleet([equipo.deviceId]);
     return NextResponse.json({ id: equipo.id, deviceId: equipo.deviceId });
   } catch {
     return NextResponse.json({ error: "Equipo no encontrado" }, { status: 404 });
@@ -44,7 +46,8 @@ export async function DELETE(_request: Request, ctx: Ctx) {
   const { id } = await ctx.params;
 
   try {
-    await prisma.equipo.delete({ where: { id } });
+    const equipo = await prisma.equipo.delete({ where: { id } });
+    await invalidateFleet([equipo.deviceId]);
     return NextResponse.json({ ok: true });
   } catch {
     return NextResponse.json({ error: "Equipo no encontrado" }, { status: 404 });

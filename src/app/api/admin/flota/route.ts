@@ -4,6 +4,7 @@ import { randomBytes } from "node:crypto";
 import { prisma } from "@/lib/db";
 import { requireAdmin } from "@/lib/admin-auth";
 import { shapeEquipo, summarize } from "@/lib/fleet";
+import { K, cachedPanel, invalidateFleet, overlayLive, readLiveSafe } from "@/lib/live";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -16,7 +17,23 @@ export async function GET() {
   const authError = await requireAdmin();
   if (authError) return authError;
 
-  const equipos = await prisma.equipo.findMany({
+  // Parte fija cacheada (1 h o hasta que cambie algo); el estado en vivo se
+  // superpone desde Redis (ver lib/live.ts).
+  const equipos = (await cachedPanel(K.panelAdmin, queryEquipos)) ?? [];
+  const live = await readLiveSafe(equipos.map((e) => e.deviceId));
+
+  const now = Date.now();
+  const items = equipos.map((e) => ({
+    ...shapeEquipo(overlayLive(e, live.get(e.deviceId) ?? null), now),
+    clienteToken: e.cliente?.accessToken ?? null,
+  }));
+
+  return NextResponse.json({ items, summary: summarize(items) });
+}
+
+// Sin el token de cada equipo: esta lista se cachea en Redis y no lo necesita.
+async function queryEquipos() {
+  const rows = await prisma.equipo.findMany({
     include: {
       cliente: { select: { nombre: true, accessToken: true } },
       muestras: {
@@ -44,14 +61,11 @@ export async function GET() {
     },
     orderBy: [{ activo: "desc" }, { lastSeenAt: "desc" }],
   });
-
-  const now = Date.now();
-  const items = equipos.map((e) => ({
-    ...shapeEquipo(e, now),
-    clienteToken: e.cliente?.accessToken ?? null,
-  }));
-
-  return NextResponse.json({ items, summary: summarize(items) });
+  return rows.map((r) => {
+    const { token, ...rest } = r;
+    void token;
+    return rest;
+  });
 }
 
 const CreateSchema = z.object({
@@ -83,6 +97,7 @@ export async function POST(request: Request) {
       },
     });
 
+    await invalidateFleet();
     return NextResponse.json(
       { id: equipo.id, deviceId: equipo.deviceId, token },
       { status: 201 },

@@ -4,6 +4,7 @@ import { z } from "zod";
 import { randomBytes } from "node:crypto";
 import { prisma } from "@/lib/db";
 import { requireAdmin } from "@/lib/admin-auth";
+import { invalidateFleet } from "@/lib/live";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -76,6 +77,7 @@ export async function PUT(request: Request, { params }: Params) {
       where: { id: params.id },
       data,
     });
+    await invalidateFleet(); // nombre o link del cliente cambiado → paneles
     return NextResponse.json(cliente);
   } catch (e) {
     if (e instanceof z.ZodError) {
@@ -101,5 +103,6 @@ export async function DELETE(_req: Request, { params }: Params) {
     }),
     prisma.cliente.delete({ where: { id: params.id } }),
   ]);
+  await invalidateFleet();
   return NextResponse.json({ ok: true });
 }

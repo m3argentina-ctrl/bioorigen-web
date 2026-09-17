@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { requireAdmin } from "@/lib/admin-auth";
+import { invalidateFleet } from "@/lib/live";
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +21,7 @@ export async function POST(request: Request, { params }: Params) {
       where: { id: equipoId },
       data: { clienteId: params.id },
     });
+    await invalidateFleet();
     return NextResponse.json({ ok: true });
   } catch (e) {
     if (e instanceof z.ZodError) {
@@ -40,6 +42,7 @@ export async function DELETE(request: Request, { params }: Params) {
       where: { id: equipoId, clienteId: params.id },
       data: { clienteId: null },
     });
+    await invalidateFleet();
     return NextResponse.json({ ok: true });
   } catch (e) {
     if (e instanceof z.ZodError) {
