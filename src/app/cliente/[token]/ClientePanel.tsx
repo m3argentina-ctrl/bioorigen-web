@@ -108,8 +108,18 @@ export default function ClientePanel({
 
   useEffect(() => {
     load();
-    const id = setInterval(load, POLL_MS);
-    return () => clearInterval(id);
+    // Sólo consulta mientras la pestaña está a la vista: un panel olvidado
+    // abierto no despierta la base ni gasta comandos de Redis.
+    let id: ReturnType<typeof setInterval> | null = null;
+    const start = () => { if (id === null) id = setInterval(load, POLL_MS); };
+    const stop = () => { if (id !== null) { clearInterval(id); id = null; } };
+    const onVisibility = () => {
+      if (document.hidden) stop();
+      else { load(); start(); }
+    };
+    if (!document.hidden) start();
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => { stop(); document.removeEventListener("visibilitychange", onVisibility); };
   }, [load]);
 
   useEffect(() => {
@@ -196,7 +206,7 @@ export default function ClientePanel({
         )}
 
         <p className="mt-8 text-center text-xs text-slate-400">
-          La información se actualiza cada 60 segundos
+          La información se actualiza cada 20 segundos
         </p>
         <p className="mt-1 text-center text-xs text-slate-300">
           Bio Origen · Monitoreo de equipos

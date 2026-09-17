@@ -4,13 +4,14 @@ import type { Equipo } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { notifyAlert } from "@/lib/notify";
 import {
-  FLUSH_EVERY_MS,
   HIST_EVERY_MS,
   K,
   META_TTL_S,
   RedisError,
+  flushDue,
   liveEnabled,
   metaFromEquipo,
+  nextPushS,
   muestraData,
   parseJson,
   progsHash,
@@ -168,7 +169,7 @@ async function ingestDb(token: string, d: Datos) {
   }
   const now = Date.now();
   const r = await persistFull(equipo, d, toSample(d, now), equipo.online);
-  return NextResponse.json({ ok: true, cmds: r.cmds });
+  return NextResponse.json({ ok: true, cmds: r.cmds, next_push_s: nextPushS(d.run_state) });
 }
 
 // ---------------------------------------------------------------------------
@@ -201,7 +202,7 @@ async function ingestLive(token: string, d: Datos) {
   const prev = parseJson<LiveState>(liveRaw);
   const sample = toSample(d, nowMs);
   const histDue = !prev?.histTs || nowMs - prev.histTs >= HIST_EVERY_MS;
-  const flushDue = prev?.histStart != null && nowMs - prev.histStart >= FLUSH_EVERY_MS;
+  const flush = flushDue(prev?.histStart, nowMs);
 
   const stateChange =
     d.reason !== "heartbeat" ||
@@ -230,11 +231,11 @@ async function ingestLive(token: string, d: Datos) {
       ...(r.notifyFailed ? [["SET", K.evPending, "0"]] : []), // el watchdog reintenta ya
       ["INCR", K.panelVer],
     ]);
-    return NextResponse.json({ ok: true, cmds: r.cmds });
+    return NextResponse.json({ ok: true, cmds: r.cmds, next_push_s: nextPushS(d.run_state) });
   }
 
   // B) Buffer de historial con más de FLUSH_EVERY_MS → un solo volcado.
-  if (flushDue) {
+  if (flush) {
     await flushHist(meta.id, d.id, histDue ? [sample] : []);
     await prisma.equipo.update({
       where: { id: meta.id },
@@ -253,7 +254,7 @@ async function ingestLive(token: string, d: Datos) {
         JSON.stringify(liveState(sample, histDue ? nowMs : prev?.histTs ?? null, null)),
       ],
     ]);
-    return NextResponse.json({ ok: true, cmds: c.cmds });
+    return NextResponse.json({ ok: true, cmds: c.cmds, next_push_s: nextPushS(d.run_state) });
   }
 
   // C) Heartbeat normal → sólo Redis.
@@ -266,7 +267,7 @@ async function ingestLive(token: string, d: Datos) {
     ],
     ...(histDue ? [["RPUSH", K.hist(d.id), JSON.stringify(sample)]] : []),
   ]);
-  return NextResponse.json({ ok: true, cmds: [] });
+  return NextResponse.json({ ok: true, cmds: [], next_push_s: nextPushS(d.run_state) });
 }
 
 function liveState(s: LiveSample, histTs: number | null, histStart: number | null): LiveState {

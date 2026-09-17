@@ -40,8 +40,18 @@ const envS = (name: string, def: number) => {
 };
 /** Cada cuánto se guarda una muestra de historial (antes: cada heartbeat). */
 export const HIST_EVERY_MS = envS("LIVE_HIST_EVERY_S", 60) * 1000;
-/** Cada cuánto se vuelca el buffer de historial a Neon. */
+/**
+ * Cada cuánto se vuelca el buffer de historial a Neon. El corte se calcula por
+ * ventana de reloj (ver flushDue): así TODOS los equipos vuelcan en el mismo
+ * minuto de cada hora y la base se despierta una sola vez para toda la flota.
+ */
 export const FLUSH_EVERY_MS = envS("LIVE_FLUSH_EVERY_S", 3600) * 1000;
+
+/** ¿El buffer quedó en una ventana horaria anterior a la actual? */
+export function flushDue(histStart: number | null | undefined, now: number): boolean {
+  if (histStart === null || histStart === undefined) return false;
+  return Math.floor(now / FLUSH_EVERY_MS) > Math.floor(histStart / FLUSH_EVERY_MS);
+}
 /** Vida de la ficha del equipo (auth + último estado persistido). */
 export const META_TTL_S = envS("LIVE_META_TTL_S", 24 * 3600);
 /** Vida de la parte cacheada de los paneles. */
@@ -50,6 +60,15 @@ export const PANEL_TTL_S = envS("LIVE_PANEL_TTL_S", 3600);
 export const INDEX_TTL_S = envS("LIVE_INDEX_TTL_S", 24 * 3600);
 /** Vida de la marca "hay comandos pendientes" (el comando vence a los 5 min). */
 export const CMD_FLAG_TTL_S = 600;
+/** Heartbeat que se le pide al equipo con un proceso en marcha o en pausa. */
+export const PUSH_RUNNING_S = envS("LIVE_PUSH_RUNNING_S", 10);
+/** Heartbeat en reposo: el panel no necesita más y baja el costo a la mitad. */
+export const PUSH_IDLE_S = envS("LIVE_PUSH_IDLE_S", 30);
+
+/** Ritmo de heartbeat según el estado del equipo (run_state del firmware). */
+export function nextPushS(runState: number | null | undefined): number {
+  return runState === 2 || runState === 3 ? PUSH_RUNNING_S : PUSH_IDLE_S;
+}
 
 // ---------------------------------------------------------------------------
 // Cliente REST mínimo (pipeline): sin dependencias.

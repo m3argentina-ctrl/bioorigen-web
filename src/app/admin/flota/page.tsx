@@ -100,8 +100,18 @@ export default function FlotaAdminPage() {
 
   useEffect(() => {
     load();
-    const id = setInterval(load, POLL_MS);
-    return () => clearInterval(id);
+    // Sólo consulta mientras la pestaña está a la vista: un panel olvidado
+    // abierto no despierta la base ni gasta comandos de Redis.
+    let id: ReturnType<typeof setInterval> | null = null;
+    const start = () => { if (id === null) id = setInterval(load, POLL_MS); };
+    const stop = () => { if (id !== null) { clearInterval(id); id = null; } };
+    const onVisibility = () => {
+      if (document.hidden) stop();
+      else { load(); start(); }
+    };
+    if (!document.hidden) start();
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => { stop(); document.removeEventListener("visibilitychange", onVisibility); };
   }, [load]);
 
   return (
