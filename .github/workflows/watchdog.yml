@@ -1,9 +1,9 @@
 name: Watchdog flota
 
-# Dispara el watchdog de la nube cada ~5 min: detecta equipos que dejaron de
-# reportar y envía/reintenta avisos por Telegram. El horario de GitHub Actions
-# es aproximado (puede demorarse algunos minutos bajo carga), suficiente para un
-# deshidratador. También se puede correr a mano desde la pestaña Actions.
+# RESPALDO del watchdog de la nube. El disparador principal es Upstash QStash
+# cada 5 min (ver src/lib/qstash.ts): el "*/5" de GitHub Actions en la práctica
+# corría cada ~5 h. Esta corrida además crea/confirma la programación en QStash.
+# También se puede correr a mano desde la pestaña Actions.
 
 on:
   schedule:

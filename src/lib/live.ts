@@ -113,6 +113,10 @@ export const K = {
   panelVer: `${P}panelver`,
   panelCliente: (token: string) => `${P}panel:cli:${token}`,
   panelAdmin: `${P}panel:admin`,
+  /** Hora (epoch ms) de la última corrida del watchdog. */
+  wdLast: `${P}wdlast`,
+  /** Marca "programación del watchdog en QStash confirmada" (por configuración). */
+  qsched: (sig: string) => `${P}qsched:${sig}`,
 };
 
 // ---------------------------------------------------------------------------

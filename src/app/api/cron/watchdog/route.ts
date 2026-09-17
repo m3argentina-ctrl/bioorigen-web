@@ -1,8 +1,9 @@
 // Watchdog de flota: detecta equipos que dejaron de reportar (offline = ausencia
 // de datos, no se puede ver en el ingest) y envía/reintenta avisos por Telegram.
 //
-// Lo dispara un cron externo (GitHub Actions, ver .github/workflows/watchdog.yml)
-// cada ~5 min con:  Authorization: Bearer <CRON_SECRET>.
+// Lo dispara Upstash QStash cada 5 min (programación creada por este mismo
+// endpoint, ver lib/qstash.ts) y, de respaldo, GitHub Actions
+// (.github/workflows/watchdog.yml), ambos con:  Authorization: Bearer <CRON_SECRET>.
 //
 // Hace dos cosas:
 //   1) Marca offline a los equipos online cuyo último dato superó el umbral, y
@@ -16,6 +17,7 @@ import { prisma } from "@/lib/db";
 import { OFFLINE_THRESHOLD_MS } from "@/lib/fleet";
 import { offlineDetail } from "@/lib/telegram";
 import { notifyAlert } from "@/lib/notify";
+import { ensureWatchdogSchedule } from "@/lib/qstash";
 import {
   INDEX_TTL_S,
   K,
@@ -221,16 +223,20 @@ export async function POST(req: Request) {
   if (!authorized(req)) {
     return NextResponse.json({ error: "no autorizado" }, { status: 401 });
   }
+  const schedule = await ensureWatchdogSchedule();
   if (liveEnabled()) {
     try {
-      return NextResponse.json({ ok: true, ...(await runLive()) });
+      // Hace cuánto corrió el watchdog anterior: con QStash activo, ≤ 5 min.
+      const [prev] = await redis([["SET", K.wdLast, String(Date.now()), "GET"]]);
+      const prevRunAgoS = prev ? Math.round((Date.now() - Number(prev)) / 1000) : null;
+      return NextResponse.json({ ok: true, ...(await runLive()), schedule, prevRunAgoS });
     } catch (e) {
       if (!(e instanceof RedisError)) throw e;
       console.error("[watchdog] Redis no disponible, uso Neon directo:", e.message);
     }
   }
   const result = await run();
-  return NextResponse.json({ ok: true, ...result });
+  return NextResponse.json({ ok: true, ...result, schedule });
 }
 
 // Permitimos GET además de POST: algunos schedulers sólo hacen GET.
